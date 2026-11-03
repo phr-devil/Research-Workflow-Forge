@@ -76,7 +76,7 @@ class ResearchDiscoveryTests(unittest.TestCase):
             "paper_record_ids":["paper-A"],
         }
 
-    def run(self, name, offset):
+    def make_run(self, name, offset):
         preds = [{"row_index":i,"prediction":row[2]+offset} for i,row in self.dev]
         pred = write(self.project/(name+"-pred.json"), preds)
         log = write(self.project/(name+"-log.json"), {"synthetic": True})
@@ -105,8 +105,8 @@ class ResearchDiscoveryTests(unittest.TestCase):
         return write(self.project/(name+"-RUN.json"),run)
 
     def seed_file(self, reference=False):
-        a=self.run("Candidate",1)
-        b=self.run("Reference",2) if reference else None
+        a=self.make_run("Candidate",1)
+        b=self.make_run("Reference",2) if reference else None
         seed=make_observation_seeds(self.project,a,b,metric="MAE" if reference else None)
         return _write_new(self.project/"seeds.json",seed), a
 
