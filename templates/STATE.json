@@ -1,0 +1,11 @@
+{
+  "schema_version": "0.1",
+  "project_id": "replace-me",
+  "goal": "Actual research goal",
+  "phase": "DISCOVERY",
+  "active_task_id": null,
+  "best_valid_run_id": null,
+  "evidence_refs": [],
+  "authorization_refs": [],
+  "next_action": "Verify scope and gather sources"
+}

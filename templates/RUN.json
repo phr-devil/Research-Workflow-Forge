@@ -1,0 +1,13 @@
+{
+  "schema_version": "0.1",
+  "run_id": "R1",
+  "task_id": "T1",
+  "protocol_id": "pending-protocol",
+  "dataset_version": "NOT_RUN",
+  "code_commit": "NOT_RUN",
+  "evaluator_version": "NOT_RUN",
+  "split": "dev",
+  "status": "NOT_RUN",
+  "metrics": {},
+  "artifact_refs": []
+}

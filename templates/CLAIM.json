@@ -1,0 +1,12 @@
+{
+  "schema_version": "0.1",
+  "claim_id": "C1",
+  "task_id": "T1",
+  "statement": "Candidate claim, not a confirmed result",
+  "status": "CANDIDATE",
+  "evidence_run_ids": [],
+  "nearest_work": [],
+  "unknowns": [
+    "No independent confirmation performed"
+  ]
+}

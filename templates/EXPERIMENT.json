@@ -1,0 +1,14 @@
+{
+  "schema_version": "0.1",
+  "experiment_id": "E1",
+  "task_id": "T1",
+  "hypothesis": "Testable difference, not a result",
+  "evaluator_ref": "pending-evaluator",
+  "split": "dev",
+  "budget": {
+    "gpu_hours_max": 0
+  },
+  "decision_if_positive": "Evaluate and retain development evidence",
+  "decision_if_negative": "Diagnose fairness and mechanism, not automatic STOP",
+  "status": "PLAN_ONLY"
+}

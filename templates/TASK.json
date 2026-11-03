@@ -1,0 +1,17 @@
+{
+  "schema_version": "0.1",
+  "task_id": "T1",
+  "question": "Replace with testable scientific question",
+  "status": "DRAFT",
+  "protocol_id": null,
+  "data_refs": [],
+  "legal_inputs": [],
+  "metric": null,
+  "group_split": null,
+  "baseline": null,
+  "nearest_work": [],
+  "holdout_policy": null,
+  "unknowns": [
+    "Which group and label are valid?"
+  ]
+}
