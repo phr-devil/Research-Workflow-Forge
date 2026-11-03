@@ -52,7 +52,7 @@ class EfficiencyPolicyTests(unittest.TestCase):
         feasibility = (root / "04_feasibility" / "SKILL.md").read_text(encoding="utf-8")
         decision = (root / "06_decision" / "SKILL.md").read_text(encoding="utf-8")
         confirmation = (root / "07_confirmation" / "SKILL.md").read_text(encoding="utf-8")
-        self.assertIn("predecision", problem.lower())
+        self.assertIn("information available before prediction", problem.lower())
         self.assertIn("not automatic STOP", feasibility)
         self.assertIn("versioned Task", decision)
         self.assertIn("negative targets", confirmation)
