@@ -1,6 +1,8 @@
-# Research Workflow Forge · v0.11
+# Research Workflow Forge · v0.12
 
 An evidence-first research workflow with **one controller, three engines, seven on-demand Skills**. Starting point: the current scientific/engineering blocker, not a mandatory 7-step sequence. Optimize for **verified research progress per actual total resource cost**, not document count, number of Agent calls, or plots.
+
+**v0.12 evidence-first default**: first verify legal data/evaluator and existing baseline; favor the smallest falsifiable observation or simple correction, preserve a trustworthy simple reference, and escalate model complexity only for a distinct unresolved mechanism or deployment requirement. Separate viable signal, reliable performance and independent scientific novelty. This is a routing preference, not another gate; a complex model can be justified from physical/temporal needs. RWF executes/diagnoses evidence, while PD-RW remains the optional scientific decision lead.
 
 ## Quick use
 
