@@ -7,6 +7,12 @@
 3. Manifest-bound DEV audit, allowlisted opt-in grouped CPU pilot, group-disjoint comparisons, original prediction/log SHA receipts.
 4. **v0.6 efficiency pass:** shared [EXECUTION_POLICY.md](EXECUTION_POLICY.md), shorter on-demand Skills/AGENTS, compact `core.cli brief`, no routine plots/reports or automatic multi-Agent loops. Existing raw logs/tests remain intact.
 
+## v0.15 priority: finish real specialist-journal manuscripts, not larger pipelines
+
+- Primary prospective outcome: number of **evidence-backed, submission-ready manuscripts** (actual submission/acceptance tracked separately), time/Token/GPU/human cost to a complete Claim, and correct recognition of modest results without post-hoc overclaiming. `DRAFTABLE` is not a completed submission.
+- Before implementing new agents or sophisticated model search, validate the `RUN_RESULT / NO_GAIN / TASK_BLOCKED` → paper-opportunity handoff with frozen historical cases plus one authorized prospective paper-completion attempt. Record false premature rejection **and** false publishable-Claim promotion, including missing independent confirmation.
+- Prefer key matched baselines, claim-matched group tests and real published-paper analogs to unneeded architecture search or large catalogs of journals. PD-RW handles specific venue choice when actually needed. No automatic additional confirmation/testing permissions.
+
 ## Highest-value next changes
 
 - **P1**: verify real official data semantics/group splits and primary-paper nearest-method differences; avoid exhaustive paper search without a concrete decision.
