@@ -56,3 +56,7 @@
 - Real experiments remain with authorized Codex/WorkBuddy or existing allowlisted CPU executor. Run/Task/Claim contracts and protected evaluator remain authoritative. Future-scoped causal event semantics require additional provenance; stored predictions alone cannot certify execution.
 - Do not force a literature query, GPU Pilot, hypothesis bank or 1–3 candidates for already-certain Tasks; simply resume the existing verified state and next action.
 - Historical blind replay and prospective success-rate evaluation are **NOT_MEASURED**. Synthetic unit tests validate engineering behavior only.
+
+## Decision quality over hypothesis-card count
+
+Before an expensive new mechanism, use the strongest valid simple reference and the actual legal predecision inputs to ask what distinct residual behavior the mechanism predicts. Prefer one falsifiable low-cost probe with a specified response to positive, negative and invalid observations; keep at most one active challenger sharing the same failure premise. A negative DEV Pilot updates the mechanism, not the entire scientific area. The hypothesis bank is optional: existing clear Task/Run evidence must not be rewrapped into cards. Do not infer an objective success probability from ordinal opportunity routes.

@@ -61,3 +61,13 @@ python -m tools.feasibility_probe --project PROJECT --candidate PROJECT/runs/C/R
 将 HypoRefine / ResearchAgent 的**数据—文献联合构思**与 POPPER 的**最小证伪思想**接入现有七个 Skill，不增加默认 Agent 或强制阶段。新 `adapters.hypothesis_bank` 从已独立复算的 DEV Run 提取**描述性问题种子**，再把外部 Agent 撰写的 1–3 条研究假设绑定到原始 Run、文献元数据或明确标注未复算的数据笔记；`adapters.opportunity_review` 只选择下一项证据行动，不声称创新、成功率或论文贡献。已验证 Run 可回写假设的探索反馈，保留旧版本。
 
 使用范例和 JSON 卡片见 [Discovery playbook](docs/DISCOVERY_PLAYBOOK.md)。无真实 Run 也可先走文献/数据笔记入口，合法信息不足保留 UNKNOWN。不复制上游未授权代码，不自动训练、读取封存确认集或调用付费 LLM。**历史科研盲回放仍未执行，工作流有效性 NOT_MEASURED。**
+
+## PD-RW 按需可信指标交接（v0.11）
+
+当 PD-RW 某个关键 DEV Run 需要独立指标复算时，在 RWF 仓库环境运行：
+
+```bash
+python -m adapters.pd_rw_bridge --project FORGE_PROJECT --forge-run FORGE_PROJECT/runs/R/RUN.json --pd-root PD_PROJECT --pd-run PD_PROJECT/runs/R.json --metric macro_F1
+```
+
+只处理已由 RWF 重新计算原始 DEV 标签和逐样本预测的 Run。PD-RW Run 与 Forge Run 必须匹配任务/协议/样本/合法输入，且 **原始预测文件的字节 SHA 相同**；不同格式需先在合法开发池生成一致版本，不能仅拷贝成绩。返回 `METRIC_VERIFIED_DEV_ONLY`，不证明训练源码一致、时间因果、强基线公平性或科学独立确认。旧 Run 不强制迁移。更多限制见 `docs/ARTIFACT_CONTRACT.md`。
