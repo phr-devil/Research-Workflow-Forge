@@ -59,6 +59,12 @@
 - Do not force a literature query, GPU Pilot, hypothesis bank or 1–3 candidates for already-certain Tasks; simply resume the existing verified state and next action.
 - Historical blind replay and prospective success-rate evaluation are **NOT_MEASURED**. Synthetic unit tests validate engineering behavior only.
 
+## Incremental paper examples (concepts, not performance thresholds)
+- [LTSF-Linear (AAAI 2023)](https://github.com/cure-lab/LTSF-Linear): testing the assumed need for complex architectures can itself produce scientific insight.
+- [MiniRocket (KDD 2021)](https://doi.org/10.1145/3447548.3467231): a meaningful speed–accuracy tradeoff is different from claiming universally better accuracy.
+- [iTransformer (ICLR 2024)](https://github.com/thuml/iTransformer): reorganizing existing components may be useful when supported by comparisons and explanation.
+These are **illustrative patterns**, not automatic novelty certification or acceptance guarantees. Only inspect the particular original paper when it is a genuine closest neighbor; do not preload them on every run.
+
 ## Decision quality over hypothesis-card count
 
 Before an expensive new mechanism, use the strongest valid simple reference and the actual legal predecision inputs to ask what distinct residual behavior the mechanism predicts. Prefer one falsifiable low-cost probe with a specified response to positive, negative and invalid observations; keep at most one active challenger sharing the same failure premise. A negative DEV Pilot updates the mechanism, not the entire scientific area. The hypothesis bank is optional: existing clear Task/Run evidence must not be rewrapped into cards. Do not infer an objective success probability from ordinal opportunity routes.
