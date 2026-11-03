@@ -1,4 +1,4 @@
-# Trusted DEV metric and external-agent handoff · v0.7
+# Trusted DEV metric and external-agent handoff · v0.8
 
 Reportable DEV metrics are independently recomputed from SHA-bound DEV ground truth. Artifact hashes alone do not verify metrics.
 

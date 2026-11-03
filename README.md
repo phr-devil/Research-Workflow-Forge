@@ -1,4 +1,4 @@
-# Research Workflow Forge · v0.7
+# Research Workflow Forge · v0.8
 
 An evidence-first research workflow with **one controller, three engines, seven on-demand Skills**. Starting point: the current scientific/engineering blocker, not a mandatory 7-step sequence. Optimize for **verified research progress per actual total resource cost**, not document count, number of Agent calls, or plots.
 
