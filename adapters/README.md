@@ -13,3 +13,6 @@
 **v0.4 search/novelty behavior:** ResearchStudio ranking is retained but Forge conservatively avoids merging different DOI papers sharing a title. Search uses a broad historical window by default and stores conflicts as metadata_collisions. Novelty precheck exposes unreviewed candidates and `--candidate-id` for specific paper screening. These checks do NOT read primary papers or certify originality.
 
 **v0.5:** no third-party coding agent is installed. The new tools.experiment_runner is a bounded fixed-algorithm CPU DEV testbed, not AIDE or R&D-Agent. Integration via a trusted coding-agent adapter can follow after evaluator isolation and execution sandboxing are verified. Avoid copying those projects wholesale or treating their successful examples as our measured outcomes.
+
+
+**v0.10 optional hypothesis discovery:** `python -m adapters.hypothesis_bank seed|build|feedback` and `python -m adapters.opportunity_review`. These use existing signed DEV diagnostics and paper metadata; no LLM/fit is launched. See [playbook](../docs/DISCOVERY_PLAYBOOK.md) for source-bound JSON cards and exact CLI options.

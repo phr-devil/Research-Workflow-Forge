@@ -29,3 +29,13 @@ Before copying or linking any upstream file: verify its **exact** commit, file-l
 Forge-authored code still has **no distribution LICENSE** selected: maintainer must select one; the above licenses do not automatically license this new work.
 
 **v0.4:** Cross-platform receipt/lock and scoped task transitions are Forge-original, selectively adapting the quality receipt principle from ResearchStudio. Conservative DOI metadata merge uses upstream ResearchStudio lexical ranking but adds Forge conflict safeguards. See [docs/UPGRADE_V04.md](docs/UPGRADE_V04.md).
+
+
+## v0.10 hypothesis-discovery design references (conceptual reuse only)
+
+- ChicagoHAI/HypoGeniC and HypoRefine: https://github.com/ChicagoHAI/hypothesis-generation — evidence+literature hypothesis refinement patterns; no upstream code copied.
+- Baek et al., ResearchAgent, NAACL 2025: https://github.com/JinheonBaek/ResearchAgent — paper/knowledge-grounded problem ideation, compact critical feedback; no code copied or license inferred.
+- Stanford POPPER: https://github.com/snap-stanford/POPPER — falsification-first experiment proposals; Forge does not implement POPPER's sequential error-rate guarantees.
+- Technion data-to-paper: https://github.com/Technion-Kishony-lab/data-to-paper — traceable data-to-evidence loop; no paper-writing integration or code copied.
+- MOOSE-Chem: https://github.com/ZonglinY/MOOSE-Chem — cross-domain inspiration considered as an occasional human/Agent idea source, not an automatic novelty generator.
+- ScienceAgentBench: https://github.com/OSU-NLP-Group/ScienceAgentBench — real execution benchmarking inspiration; historical blind replay not yet performed.

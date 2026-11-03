@@ -1,4 +1,4 @@
-# Research Workflow Forge · v0.9
+# Research Workflow Forge · v0.10
 
 An evidence-first research workflow with **one controller, three engines, seven on-demand Skills**. Starting point: the current scientific/engineering blocker, not a mandatory 7-step sequence. Optimize for **verified research progress per actual total resource cost**, not document count, number of Agent calls, or plots.
 
@@ -55,3 +55,9 @@ python -m tools.feasibility_probe --project PROJECT --candidate PROJECT/runs/C/R
 ```
 
 `--reference` 和 `--out` 可省略；含多项指标的 Run 比较需指定任务的 `--metric`。可将输出交给 [PD-RW 的可行性判读](https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/FEASIBILITY_ENVELOPE.md)。不新建默认审批、训练或绘图步骤。
+
+## v0.10 · 证据驱动的科研假设发现（按需）
+
+将 HypoRefine / ResearchAgent 的**数据—文献联合构思**与 POPPER 的**最小证伪思想**接入现有七个 Skill，不增加默认 Agent 或强制阶段。新 `adapters.hypothesis_bank` 从已独立复算的 DEV Run 提取**描述性问题种子**，再把外部 Agent 撰写的 1–3 条研究假设绑定到原始 Run、文献元数据或明确标注未复算的数据笔记；`adapters.opportunity_review` 只选择下一项证据行动，不声称创新、成功率或论文贡献。已验证 Run 可回写假设的探索反馈，保留旧版本。
+
+使用范例和 JSON 卡片见 [Discovery playbook](docs/DISCOVERY_PLAYBOOK.md)。无真实 Run 也可先走文献/数据笔记入口，合法信息不足保留 UNKNOWN。不复制上游未授权代码，不自动训练、读取封存确认集或调用付费 LLM。**历史科研盲回放仍未执行，工作流有效性 NOT_MEASURED。**

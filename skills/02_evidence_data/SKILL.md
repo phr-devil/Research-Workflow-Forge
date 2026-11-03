@@ -12,3 +12,5 @@ Shared rules: [EXECUTION_POLICY](../../docs/EXECUTION_POLICY.md). Invoke when cr
 - Preserve search/data-access history across pivots; task/model selection exposure may make a purported holdout ineligible.
 
 **Handoff:** concise evidence + data manifest, decisive unknown, resource role and legal next action. Download/fitting remain permission-controlled by the shared policy.
+
+**v0.10 data-first entry:** After legal DEV preflight, favor factual group/condition/label and baseline-error phenomena. If signed verified DEV Runs exist, `python -m adapters.hypothesis_bank seed --project PROJECT --candidate-run RUN.json [--reference-run REF.json --metric MAE] --out PROJECT/seeds.json` obtains exploratory observation questions without retraining. Without baseline, an explicit project-contained data note may be linked as `AGENT_NOTE_NOT_RECOMPUTED`; never call that an observed learning signal. No automatic dataset fitting, holdout access or fabricated group effect.

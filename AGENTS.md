@@ -1,4 +1,4 @@
-# Research Workflow Forge · AI entry (v0.9)
+# Research Workflow Forge · AI entry (v0.10)
 
 **Read once:** [Execution Policy](docs/EXECUTION_POLICY.md), current project `STATE.json` (or `python -m core.cli brief --dir PROJECT`), and **only the Skill needed for the current blocker**. Do not preload all Skills, previous version notes, vendor code, papers or historical logs. Existing verified evidence takes precedence over repeating work.
 
@@ -20,3 +20,5 @@
 **v0.7 performance trust rule:** only `core.metric_verify` / `load_verified_run` can certify DEV metrics; a hashed log or self-reported RUN.metrics cannot become Champion. Event ledger requires verified chained history; legacy logs use explicit `migrate-ledger` (preview first). Sealed Runs are prohibited in development events. External Agent code is **not executed by Forge**; ingest only original DEV predictions through `adapters.agent_bridge`. See `docs/ARTIFACT_CONTRACT.md` when needed; do not read by default.
 
 **按需低成本机制诊断（v0.9）**：当已有可信 DEV Run、拟开发复杂机制时，可调用 `tools.feasibility_probe` 读取既有预测，检查独立组误差和同协议配对差值；残差≠可达增益，无匹配参照≠无信号。此工具不是模型训练、科研确认或必须执行的前置审批。按需读 `tools/README.md`，不要重复预加载全部文档。
+
+**v0.10 discovery (only when Task is unknown or research hypothesis changes):** inspect existing DEV observation via `adapters.hypothesis_bank seed` (no fit), then let the current Agent draft at most 1–3 distinct, falsifiable hypotheses anchored to those seeds and/or existing paper metadata. `hypothesis_bank build` checks receipt/source IDs; `adapters.opportunity_review` proposes one cheap evidence action. After an actual verified DEV Run, `hypothesis_bank feedback` creates a new version. Start with [discovery playbook](docs/DISCOVERY_PLAYBOOK.md) only when needed; no extra mandatory Skill, second controller or multi-agent debate.
