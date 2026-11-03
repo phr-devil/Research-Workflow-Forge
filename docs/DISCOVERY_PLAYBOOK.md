@@ -2,6 +2,8 @@
 
 **Purpose:** propose an experiment-worthy scientific question from real data/nearest literature, not generate a title and call it a paper. This is a conditional path through existing Skills 01–04, not a new gate. **No fitting, automatic LLM calls, sealed data, claim confirmation or user authorization** is performed by these adapters.
 
+**Publication-oriented opportunity selection:** prefer a feasible, legally evaluable question with a defensible *small* contribution and affordable claim-matched evidence, not the most ambitious hypothetical new architecture. When it changes selection, inspect 1–3 recent actually published analogous studies and their specific core tests (rather than citation counts, impact factor or abstract similarity alone). Record a one-line plausible narrow manuscript Claim and decisive missing evidence; mark `PAPER_VENUE_REFERENCE_UNKNOWN` if no reliable source. Do not use assumed journal quality as a Task elimination rule.
+
 ## Minimal path
 
 **Evidence-first discovery default:** before proposing an architecture, seek the smallest verifiable question: a repeatable between-condition effect, a residual correctable by legal low-cost feedback, or the condition where a strong simple method fails. Physical theory or concrete deployment constraints may justify another start. Distinguish legal signal, reliable result, and novelty relative to named predecessors. Use the smallest falsifiable probe; do not force complexity or claim that a simple positive DEV result is a publishable discovery.
