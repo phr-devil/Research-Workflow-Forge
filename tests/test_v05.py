@@ -67,7 +67,7 @@ class GuardrailTests(unittest.TestCase):
 
     def test_dev_binding_checks_hash_and_records_access(self):
         path,entry=bind_dev_dataset(self.project,self.manifest_path,"D",purpose="AUDIT_DEV")
-        self.assertEqual(path,self.data)
+        self.assertEqual(path.resolve(),self.data.resolve())
         self.assertEqual(entry["role"],"DEV")
         entries=(self.project/"DATA_ACCESS.jsonl").read_text(encoding="utf-8").splitlines()
         self.assertEqual(len(entries),1)
