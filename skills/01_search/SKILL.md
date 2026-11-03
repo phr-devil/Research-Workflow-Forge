@@ -12,3 +12,5 @@ Shared execution rules: [EXECUTION_POLICY](../../docs/EXECUTION_POLICY.md). Invo
 - Title/abstract search is **not** a full-text novelty verdict. Read original nearest papers only when a real decision depends on them.
 
 **Handoff:** short opportunity shortlist with source/version IDs, distinguishing risk, assets and `next_probe`; route to 02 if resource eligibility is unknown, else to 03.
+
+**v0.10 targeted literature-to-problem search:** For each genuine observed failure or predecision information constraint, search nearest methods by (a) actual Task and legal input/K, (b) claimed mechanism and its simple alternative, and (c) same failure symptom in another field. Use `adapters.researchstudio_search` once per new uncertainty; feed exact `record_id` into the hypothesis bank. Metadata only raises candidates, never verifies novelty; reread full original nearest paper if a publication decision hinges on overlap. No repeated wide scans after credible evidence exists.

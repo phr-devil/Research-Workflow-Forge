@@ -1,4 +1,4 @@
-# Current architecture · v0.8
+# Current architecture · v0.10
 
 ## One controller, three engines, seven callable Skills
 
@@ -16,3 +16,6 @@ The route follows the current blocker: `NO_GAIN` → 06 → back to 05 if a diff
 A compact status is **not** a verified result. Paper novelty requires original full text and named predecessors; strong independent confirmation is outside the current runtime.
 
 **How agents work efficiently:** [EXECUTION_POLICY.md](EXECUTION_POLICY.md). This file documents only system structure. Source attribution: [SOURCES.md](../SOURCES.md). Historical migrations: [UPGRADE_V04.md](UPGRADE_V04.md), [UPGRADE_V05.md](UPGRADE_V05.md).
+
+
+**v0.10 optional discovery adapter (no additional controller):** `adapters.hypothesis_bank` extracts descriptive seeds from verified DEV receipts and binds 1–3 Agent-authored hypotheses to hashed data-note / literature metadata / seed pointers. `adapters.opportunity_review` selects a transparent next evidence action; new DEV Run feedback creates an immutable bank revision. The seven Skills, STATE/Event contracts and external-Agent execution boundaries remain unchanged.

@@ -32,3 +32,9 @@ The observed APACE→SAFE-Gait change suggests a particularly useful conditional
 Delivered: `tools.feasibility_probe` reads only verified DEV Run receipts to describe classification/regression group error and trusted paired candidate-reference differences; event metrics receive no unsupported residual slice. Evidence is explicitly **exploratory**. There is no assumed Oracle, performance ceiling, guaranteed simple baseline, model fit, or mandatory gate.
 
 **Next actual experiment**, not further documentation: blind decision replay on APACE/CRIA/high-F1 baseline cases, with negative controls and frozen information/budget, then prospective comparison of invalid GO/STOP, time-to-valid-evidence and resource cost. Any improvement in scientific success rate remains **UNMEASURED**.
+
+## v0.10 discovery delivered / verification limits
+
+- Added verified DEV observation seeds (from prior independently recomputed Run), agent-authored 1–3 hypothesis cards linked to immutable source hashes, source-ID validation for metadata literature, ordinal next-probe review and versioned DEV Run feedback. No LLM or training backend is silently implied.
+- Separate observation from mechanism, predecision information and contribution. HypoRefine/ResearchAgent inspired the iterative evidence + literature cycle; POPPER inspired explicit falsifying predictions; neither upstream agent nor statistical guarantees are copied.
+- **Next real gate:** historical frozen-time decision replay and one prospective task under measured budgets. CI synthetic tests are engineering checks, not proof of higher publication success.

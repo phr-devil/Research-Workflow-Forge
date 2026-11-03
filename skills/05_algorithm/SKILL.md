@@ -19,3 +19,5 @@ Shared rules: [EXECUTION_POLICY](../../docs/EXECUTION_POLICY.md). Execution requ
 **v0.8真实实证**：支持在SHA固定DEV组清单上核回归/事件预测的原始标签、样本覆盖及指标。不同K、合法预测时点、聚合口径或事件容差不属于公平Challenger比较；负Pilot优先复核评价/训练/可辨识性，再决定独立新机制。内置训练器仍只含有限分类CPU基线；不能虚称支持任意GPU Agent自主训练。
 
 **Before expensive new mechanism (only when evidence exists):** identify an observed baseline failure, legitimate information/inductive-bias/optimization lever, and a distinct prediction testable with the smallest authorized run. If the model merely has more parameters, do not invent a new science hypothesis. Reuse verified group residual summary; if performance rises, still test fair strong simple alternatives and independent group/Task conditions.
+
+**v0.10 hypothesis→Run:** On an evidence-supported candidate, link `hypothesis_id` to the existing Task/Experiment IDs and parent Run; keep exact protected evaluator and legal inputs. Do not substitute model-size variation for a distinguishing prediction. The separate Agent runs only authorized work; once a DEV Run has independently verified receipts, register exploration feedback in a NEW hypothesis-bank version, not as confirmed mechanism evidence.
