@@ -21,7 +21,7 @@ ROUTES: dict[str, Route] = {
     "EXPERIMENT_PLAN_READY": Route("ALGORITHM", "skills/05_algorithm/SKILL.md", "Review experiment and real authorization; do not assume fitting is approved", "EXPERIMENT_PLAN"),
     "BASELINE_VALID": Route("ALGORITHM", "skills/05_algorithm/SKILL.md", "Develop traceable Champion and Challenger", "RUN"),
     "RUN_RESULT": Route("DECISION", "skills/06_decision/SKILL.md", "Assess minimum complete-paper opportunity before further algorithm search", "DECISION"),
-    "NO_GAIN": Route("DECISION", "skills/06_decision/SKILL.md", "Diagnose failed mechanism and assess narrow publishable result or boundary", "DECISION"),
+    "NO_GAIN": Route("DECISION", "skills/06_decision/SKILL.md", "Diagnose failed mechanism and assess narrow paper opportunity or boundary", "DECISION"),
     "RUN_INVALID": Route("DECISION", "skills/06_decision/SKILL.md", "Isolate invalid evidence and repair", "DECISION"),
     "CODE_FAILURE": Route("DECISION", "skills/06_decision/SKILL.md", "Reproduce earliest error, repair and verify", "DECISION"),
     "TASK_BLOCKED": Route("DECISION", "skills/06_decision/SKILL.md", "Review residual paper opportunity before holding or pivoting Task", "DECISION"),
