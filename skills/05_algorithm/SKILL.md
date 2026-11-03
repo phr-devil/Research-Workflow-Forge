@@ -16,3 +16,5 @@ description: Implement, debug and compare algorithms with traceable actual execu
 5. 将 RUN_RESULT、NO_GAIN、RUN_INVALID、CODE_FAILURE 送到 06。没有真实执行必须明确 NOT_RUN，不能填入模拟指标。
 
 **交接**：可复现代码与 RunRecord（VALID/INVALID/INCONCLUSIVE/NOT_RUN）及下一个具有信息价值的实验假设。
+
+**自动可比性检查（已实现）**：保存含真实 raw log 指针和合法输入/分组/样本集指纹的 VALID Run JSON 后，运行 `python -m core.cli compare --champion A.json --challenger B.json --metric macro_F1`；最小化误差指标加 `--lower-is-better`。不允许通过不同数据切片、评价器、输入条件或封存集改写“增益”。仅报告开发集差值，不把它冒充显著性或论文贡献。

@@ -1,11 +1,9 @@
-# Planned research tools
+# Tools — implemented vs planned
 
-**Already implemented:** python -m core.cli (init, route, record, validate) only. These are offline deterministic utilities, not search, experiment, training or confirmation tools.
+**Implemented offline:** \`python -m core.cli\` init, route, record, history, validate, compare. Handoff uses evidence-file hash; \`compare\` rejects noncomparable VALID developer runs and sealed experiments. The CLI does **not** execute models or certify scientific contribution.
 
-**Next interfaces:**
-- data_audit: official manifest, file integrity, schema, true labels/independent groups, holdout eligibility.
-- experiment_runner: fixed evaluator and protected split, bounded authorized execution, actual command/seed/hardware logs, code/dataset/evaluator versions.
-- result_tracker: only compare compatible task/protocol metrics, retain negative candidates and group-level predictions, resume from valid state.
-- claim_checker: named nearest prior work plus source-backed evidence, frozen protocol and untouched independent units.
+**Implemented explicit online:** \`python -m adapters.literature\` fetches public OpenAlex/Crossref metadata. CI tests use mocked responses. Need public network at runtime.
 
-Prefer existing verified modules (MLflow/DVC, AIDE journal, PaperQA2) over speculative reimplementation when the concrete need arises. Scientific correctness and human authorization are separate from structural tests.
+**Planned:** official data manifests/files/hashes/split safety audits; evaluator-isolated authorized runner; group-level effect+uncertainty; candidate journal/MLflow optional; full-text named-nearest-work checker; frozen independent confirmation.
+
+Prefer narrowly adapted verified upstream code over wholesale framework installs. No unnecessary images, all original logs retained.

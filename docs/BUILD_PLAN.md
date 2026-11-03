@@ -1,11 +1,25 @@
-# Implementation and verification plan
+# Build plan and measurable scientific evaluation
 
-**P0 — Foundation (this commit):** concise AGENTS entry, seven trigger-based Skills, sourced design ledger, 12-event deterministic router, five JSON artifact validators, local save/resume/event history and unit tests. No external research execution is implemented; no claimed experiment or autonomous success.
+## Implemented
 
-**P1 — Opportunity vertical slice:** connect ResearchStudio paper-search / IdeaSpark/Scoop Check by a narrow versioned adapter; official dataset metadata, primary-source links and DRAFT TaskSpec. Test de-duplication, source staleness, correct nearest-neighbor delta and no invented paper references. Avoid adding PaperQA2 unless real full-text needs justify it.
+**P0** (v0.1): seven modular Skills, short AI entry, sourced design ledger, deterministic route suggestions, five base artifact types and basic CI.
 
-**P2 — Authorized development slice:** connect one coding/execution Agent; protect evaluator and splits; data audits, strong simple baseline and one Champion/Challenger on an actual public dataset. Record commands, raw logs, group-level predictions, source versions and cost. Test train-only normalization, no sealed access during search, comparable metrics, failure recovery and honest NOT_RUN.
+**P1a** (v0.2): opt-in public OpenAlex/Crossref metadata adapter with two-provider normalization, DOI de-duplication and partial failure disclosure; extended evidence/dataset schemas; source-hashed handoff, no note-only phase promotion; DEV Run fair-comparison tool and regression tests. HTTP mocked in CI; actual public API connectivity has **not** been tested in CI. No full-text retrieval or novelty model has been implemented.
 
-**P3 — Research decisions and confirmation:** finite-cost repair/reframe choices with historical evidence, claim-to-Run provenance, frozen independent confirmation; optional MLflow/DVC/Inspect AI only when useful. Compare this Forge against chapter 08 and chapter 10 on the same blinded history and prospective tasks at equal GPU/Token/human budgets. Evaluate valid-first-result cost, false stops, pointless continued experiments, confirmed scientific claims, protocol/authorization violations.
+## Next, in priority order
 
-**Adoption rule:** use one external adapter at a time, check dependencies/licensing and measure benefit; never paste entire external frameworks or convert seven capabilities into seven mandatory gates. Keep original logs and negative evidence.
+1. **P1b:** attach authoritative official dataset catalog and Source → Observation → Claim graph; add direct nearest-paper full-text inspection and difference table; distinguish actual observations from hypothetical mechanisms. Do not treat metadata titles/DOIs as verified novelty.
+2. **P2:** authorized execution integration with one coding Agent. Protected evaluator and sealed split, train-only preprocessing audits, smallest credible baseline, one real Challenger, group-level predictions, immutable raw logs/versions/compute cost and recovery. Avoid parallel expensive Agent trees until proven useful.
+3. **P3:** confirm that Run and Claim refs point to original real results; independent held-out eligibility by task *after* task search, frozen protocol, named nearest prior method, group-level effect/uncertainty. Add blinded before/after research decision evaluation using tasks comparable to chapter 08 and 10 at equal resource budgets.
+
+## Optimization principles from high-star projects
+
+- **ResearchStudio:** source-backed ideas and version-bound audit receipts.
+- **Anthropic Skills:** metadata→SKILL→optional supporting resources, not preload everything.
+- **obra/superpowers:** trace the first real root cause and verify before claiming completion; no compulsory multi-agent for routine bugs.
+- **AutoResearch:** protect evaluation from algorithm search (concept only; upstream repo license undeclared).
+- **AIDE/R&D-Agent:** retain candidate lineage and let reliable experimental feedback suggest a **new** mechanism, not merely rename the same failure.
+
+### Evidence for claims about the workflow itself
+
+Measure earliest valid-result cost, correct task/agent routing, token/GPU/time cost, protocol violations, false project STOP, no-information continuation and truly independent claim support. CI passing is engineering evidence only; no success-rate improvement has yet been measured.

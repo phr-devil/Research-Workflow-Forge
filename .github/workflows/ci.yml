@@ -12,3 +12,8 @@ jobs:
           python-version: '3.11'
       - name: Structural contract and routing tests
         run: python -m unittest discover -s tests -v
+      - name: CLI and adapter entrypoint smoke (no network)
+        run: |
+          python -m core.cli --help
+          python -m adapters.literature --help
+          python -m core.cli validate --kind task --file templates/TASK.json

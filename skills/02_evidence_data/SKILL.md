@@ -16,3 +16,5 @@ description: Audit literature claims, dataset compatibility and independent-eval
 5. 下载、安装、外传、CPU/GPU 拟合等行为必须得到真实用户授权；权限不足输出下载清单和 WAITING_FOR_AUTH，不执行。
 
 **交接**：EVIDENCE 及 DATA_MANIFEST，记角色、来源、许可、标签/group、可用性、确认资格与阻碍；不把文件完整性当科学任务有效性。
+
+**元数据边界**：`EVIDENCE.json` 中的 `METADATA_ONLY` 仅证明某提供者返回了检索条目；不等于已阅读论文全文或核实创新。输入 `DATA_MANIFEST.json` 时明确官方 URL、group_unit、label_status 与 DEV/SEALED_CONFIRM 等角色；检索时使用过的切片不得在确认时重新宣称从未接触。

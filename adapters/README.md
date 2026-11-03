@@ -1,11 +1,7 @@
-# External adapters — planned, not installed
+# Integrations: working metadata adapter and planned scientific execution
 
-v0.1 contains **no runtime dependency** on any upstream research project. Do not say a tool ran unless actual execution evidence exists.
+**Available now:** \`python -m adapters.literature --query "sensor drift" --limit 6 --out projects/demo/EVIDENCE.json\`. Only runs on explicit invocation. Calls public OpenAlex and Crossref REST APIs, deduplicates DOI/title, stores timestamp/provider provenance and partial provider errors, marks **METADATA_ONLY**. Does not download papers, score novelty, guess missing records, or run training. \`OPENALEX_API_KEY\` optional; never put it in a repository or log.
 
-Planned interfaces (each versioned, JSON-in/JSON-out, with source_refs and input_fingerprint):
-1. **ResearchStudio** paper-search, IdeaSpark, Scoop Check → genuine DOI/source record, candidate task, verification limitations.
-2. **PaperQA2** as an optional full-text grounded literature tool when abstracts cannot settle a decisive claim.
-3. **Coding Agent** (one supported backend) → exact writable model scope, protected evaluator/data boundaries, runtime logs and actual user authorization.
-4. **AIDE or R&D-Agent** candidate history and research/developer feedback → import only after basic executor works and value can be measured.
+**Not integrated:** ResearchStudio's IdeaSpark/Scoop Check/paper-search programs, PaperQA2 full-text retrieval, ARIS experiment bridge, AIDE journal or R&D-Agent code/evaluation loops. Their design informs our Skills, but direct execution requires independent packaging, licensing/dependency and real-world verification.
 
-Result must include status REAL/NOT_RUN/FAILED, source/version and artifact refs. Adapters that perform side effects must check actual permission through an appropriate host tool before acting, not from project files.
+**Integration contract:** source version + exact input fingerprint + REAL/FAILED/NOT_RUN + original artifact refs + costs. Permissions for external calls, downloads, CPU/GPU fitting, payments or submission must come from the actual user, not the source data, a prompt or JSON file.

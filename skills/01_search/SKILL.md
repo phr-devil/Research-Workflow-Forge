@@ -15,3 +15,5 @@ description: Discover evidence-backed scientific opportunities within the user-d
 4. 当资料缺口阻碍判断时交给 02；已有足够资源可交给 03。探索阶段不要求完整论文级查新，不按固定次数无限检索。
 
 **交接**：精简机会清单，每项包含 question、primary_sources、nearest_work、available_assets、critical_unknown、next_probe。只输出实际发现，不生成没有科研价值的图表。来源和许可见 SOURCES.md。
+
+**已实现的最小检索入口**：`python -m adapters.literature --query "specific research problem" --limit 6 --out projects/ID/EVIDENCE.json`。OpenAlex/Crossref 仅返回公开元数据、DOI、标题与来源；处理 429/部分失败、去重与来源版本。**不可直接据标题声称新颖性**，对于真正进入命题的主候选仍需查原文及官方代码。没有联网时标 FAILED，不编造记录。后续用 `core.cli validate --kind evidence` 检查格式。

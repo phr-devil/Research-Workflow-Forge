@@ -1,0 +1,9 @@
+{
+  "schema_version": "0.1",
+  "query": "REPLACE_WITH_ACTUAL_QUERY",
+  "retrieved_at": "NOT_RETRIEVED",
+  "verification": "METADATA_ONLY",
+  "sources_checked": [],
+  "source_errors": [],
+  "records": []
+}

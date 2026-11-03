@@ -68,9 +68,9 @@ class WorkflowTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             p = Path(tmp)
             save_state(p / "STATE.json", self.state)
-            record_event(p, "SEARCH_READY", "Primary sources identified, no training")
-            record_event(p, "DATA_READY", "Verified real local data manifest")
-            self.assertEqual(load_state(p / "STATE.json")["phase"], "PROBLEM")
+            record_event(p, "SEARCH_READY", "Sources reported; no actual artifact")
+            record_event(p, "DATA_READY", "Metadata reported; no actual artifact")
+            self.assertEqual(load_state(p / "STATE.json")["phase"], "DISCOVERY")
             self.assertEqual(len((p / "EVENTS.jsonl").read_text().splitlines()), 2)
 
 if __name__ == "__main__":

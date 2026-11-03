@@ -1,6 +1,6 @@
 # Source provenance and integration ledger
 
-Last checked: **2026-11-03**, default branches on public GitHub. Exact pinned commits listed below. This scaffold is **originally written** using selectively adapted mechanisms: **no third-party source code, full Skill text, datasets or model weights have been copied in v0.1**. Do not assume an upstream component has been installed or verified merely because it appears in this ledger.
+Last checked: **2026-11-03**, default branches on public GitHub. Exact pinned commits listed below. This scaffold is **originally written** using selectively adapted mechanisms: **no third-party source code, full Skill text, datasets or model weights have been copied in v0.2**. Do not assume an upstream component has been installed or verified merely because it appears in this ledger.
 
 | Capability used in our framework | Verified upstream path / commit | Declared repo license | Reuse boundary |
 | --- | --- | --- | --- |
@@ -14,6 +14,11 @@ Last checked: **2026-11-03**, default branches on public GitHub. Exact pinned co
 | Candidate trees and journal | [AIDE / aide](https://github.com/WecoAI/aideml/tree/ad73d227af481bea3de06f884f41b2993dd6453a/aide) (ad73d227) | MIT | Draft/debug/improve candidate history; validation metrics != independent novelty |
 | Fixed evaluator / editable training | [AutoResearch / program.md](https://github.com/karpathy/autoresearch/blob/228791fb499afffb54b46200aca536f79142f117/program.md) (228791fb) | **Not declared** | Design idea only. **No code/prose may be copied without license/permission** |
 | Future behavior evaluation | [Inspect AI](https://github.com/UKGovernmentBEIS/inspect_ai/tree/c3360cea51762b3b2411f0d471da33de418724ba) (c3360cea) | MIT | Dataset/solver/scorer for future real Agent evaluations; not integrated |
+
+| Root-cause diagnosis / verification | [obra/superpowers](https://github.com/obra/superpowers/tree/2ce8aa15d05bd57213e6f746f953aafb7ded7a8b/skills) (2ce8aa15) | MIT | Verify actual command output and trace earliest error; conceptual adaptation, no copied Skill |
+| Progressive Skills loading | [anthropics/skills](https://github.com/anthropics/skills/tree/ca45fc496a3436251f191354091d557da31c15b5) (ca45fc49) | **Repository-level metadata not declared** | Load metadata, then one SKILL, then optional references; conceptual only |
+
+**New provider documentation for original `adapters/literature.py`:** [OpenAlex API](https://help.openalex.org/api/) and [authentication](https://help.openalex.org/api/authentication/); [Crossref REST access](https://www.crossref.org/documentation/retrieve-metadata/rest-api/access-and-authentication). Public metadata endpoints, no provider code copied. Only a user's explicit CLI invocation causes outbound requests. OpenAlex's free keyless access has limits; optional user-owned API key is read from the environment and transmitted by header, never logged. Crossref is queried sequentially at small volume with no claims of exhaustive review.
 
 Other inspiration: [GPT Researcher](https://github.com/assafelovic/gpt-researcher) for question-based retrieval. It is **not a dependency in v0.1**.
 

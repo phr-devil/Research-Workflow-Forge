@@ -24,4 +24,6 @@ The optional deterministic CLI (python -m core.cli route --dir PROJECT --event E
 4. Real evidence only: cite original paper/data source, actual log, code and protocol IDs. If not performed, NOT_RUN; if unknown, UNKNOWN. A simulated run, model judgment, structural test or past project's result must not be presented as a current experiment.
 5. Choose one highest-information next action, reuse existing assets, allow bounded automatic bug repair within approved scope, preserve failure logs and avoid empty/repetitive long reports.
 
+**Executable options (only when useful):** `python -m adapters.literature --query "..." --out PROJECT/EVIDENCE.json` retrieves **metadata only**; `core.cli record --artifact PROJECT/FILE` shape-checks + hashes an existing handoff; note-only records never advance phase. `core.cli compare` checks matching DEV Run protocols and inputs. No tool certifies scientific truth.
+
 **Output:** new verified evidence | what it supports/does not | next discriminating action | permission or resource gap. Cross-references: docs/CONTRACTS.md and SOURCES.md.

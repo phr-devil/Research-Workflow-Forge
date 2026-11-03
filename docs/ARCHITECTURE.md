@@ -31,3 +31,7 @@ See [CONTRACTS.md](CONTRACTS.md). A version change can invalidate comparability/
 ## Why these modules
 
 ResearchStudio supplies a model of **source-backed, version-aware idea design**; ARIS and AutoResearchClaw show handoff contracts; AIDE gives **auditable candidate branches**, R&D-Agent gives **feedback-driven new hypotheses**, AutoResearch suggests **evaluator isolation**; PaperQA2 is an optional citation source. This composition is a proposed architecture, **not experimentally proven superior**. Compare with chapters 08/10 under equal budgets.
+
+## v0.2 real handoffs and research safeguards
+
+The optional `adapters.literature` module retrieves raw OpenAlex/Crossref **metadata** with query/timestamp/provider provenance. Only a real source file can satisfy SEARCH_READY structurally. Stage events with note alone do not advance STATE. Handoffs hash local artifacts, require active task IDs for real Run/Claim events, and record a last_event_id to detect interrupted state writes. These are shape-level checks, not a scientific or authorization oracle. `core.comparison.compare_runs` rejects incomparable and sealed development candidates.
