@@ -42,3 +42,6 @@ VALID development metrics are now independently recomputed from original manifes
 
 
 **v0.8：新增可信DEV评价格式**：固定组清单下支持回归MAE/RMSE和单发事件定位的算术复算、源数据绑定与实验可比性保护。详细协议见[ARTIFACT_CONTRACT.md](docs/ARTIFACT_CONTRACT.md)。分类v0.7继续兼容；复杂模型仍由外部Agent执行，因果在线性与源码真实性不能仅由预测工件证明。
+
+
+外部Codex/WorkBuddy的回归或事件预测可用`python -m adapters.typed_agent_bridge` 导入；程序只复核合法DEV分组、标签、样本与指标，不运行Agent源码或证明真实因果执行。用法见[工件合同](docs/ARTIFACT_CONTRACT.md)。

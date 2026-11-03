@@ -135,6 +135,30 @@ class TypedMetricTests(unittest.TestCase):
         with self.assertRaisesRegex(ContractError,"complete frozen DEV query"):
             verify_metrics(self.root,run)
 
+    def test_external_typed_import_recomputes_only_dev(self):
+        from adapters.typed_agent_bridge import import_typed_predictions
+        from core.state import initial_state, save_state, record_event
+        save_state(self.root/"STATE.json",initial_state("test","synthetic only"))
+        task={"schema_version":"0.1","task_id":"T","protocol_id":"P",
+              "status":"ACTIVE","question":"evaluate regression","metric":"MAE",
+              "metric_direction":"minimize",
+              "group_split":"pinned-groups:"+self.ssha,
+              "baseline":"dummy","holdout_policy":"external untouched",
+              "legal_inputs":["sensor"],"data_refs":["D"],"nearest_work":[]}
+        taskfile=write_json(self.root/"TASK.json",task)
+        record_event(self.root,"TASK_DEFINED","Synthetic grouped Task",taskfile)
+        predicted=write_json(self.root/"external.json",
+                   [{"row_index":i,"prediction":float(self.rows[i][2])+1} for i in self.dev])
+        source=self.root/"model.py"
+        source.write_text("# provided by external Agent; never executed\n",encoding="utf-8")
+        result=import_typed_predictions(self.root,self.manifest,self.split,"D","typed1",predicted,source)
+        self.assertAlmostEqual(result["metrics"]["MAE"],1)
+        self.assertFalse(result["causal_execution_attested"])
+        run=json.loads(Path(result["run_path"]).read_text(encoding="utf-8"))
+        validate_run_evidence(self.root,run)
+        with self.assertRaises(FileExistsError):
+            import_typed_predictions(self.root,self.manifest,self.split,"D","typed1",predicted,source)
+
     def test_no_event_rows_are_false_alarms(self):
         # Create one no-event row in DEV and record no trigger; source manifest digest changes.
         self.rows[12]=(self.rows[12][0],self.rows[12][1],self.rows[12][2],"NONE")
