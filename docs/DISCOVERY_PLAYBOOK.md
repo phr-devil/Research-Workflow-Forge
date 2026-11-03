@@ -4,6 +4,8 @@
 
 ## Minimal path
 
+**Evidence-first discovery default:** before proposing an architecture, seek the smallest verifiable question: a repeatable between-condition effect, a residual correctable by legal low-cost feedback, or the condition where a strong simple method fails. Physical theory or concrete deployment constraints may justify another start. Distinguish legal signal, reliable result, and novelty relative to named predecessors. Use the smallest falsifiable probe; do not force complexity or claim that a simple positive DEV result is a publishable discovery.
+
 1. If a valid DEV Run exists, extract *descriptive* observation seeds; otherwise keep a project-contained raw-data note marked **UNVERIFIED** (or begin with paper metadata):
    ```bash
    python -m adapters.hypothesis_bank seed --project PROJECT --candidate-run PROJECT/runs/C/RUN.json --reference-run PROJECT/runs/B/RUN.json --metric MAE --out PROJECT/observation-seeds.json
