@@ -35,6 +35,9 @@ def _scores(truth: list[str], predictions: list[str], labels: list[str]) -> dict
 
 def verify_metrics(project: Path, run: dict, *, check_reported: bool = True) -> dict:
     spec=run.get("metric_spec")
+    if isinstance(spec,dict) and spec.get("format") in {"forge-dev-regression-v1", "forge-dev-event-v1"}:
+        from core.metric_extensions import verify_extended_metrics
+        return verify_extended_metrics(project,run,check_reported=check_reported)
     if not isinstance(spec,dict) or spec.get("format")!=FORMAT:
         raise ContractError("Run metrics UNRECOMPUTED: missing trusted metric_spec")
     required=("predictions_ref", "manifest_ref", "manifest_sha256", "dataset_id")

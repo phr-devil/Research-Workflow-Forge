@@ -19,6 +19,42 @@ def _prediction_rows(project:Path, run:dict)->dict:
 
 def group_bootstrap(project:Path,a:dict,b:dict,metric:str, *,
                     lower_is_better:bool=False,iterations:int=300,seed:int=17)->dict:
+    if type(iterations) is not int or not 100<=iterations<=5000:
+        raise ValueError("bootstrap iterations must be 100..5000")
+    if metric in {"MAE","RMSE"} and a.get("metric_spec",{}).get("format") == "forge-dev-regression-v1" and a.get("metric_spec",{}).get("aggregation") == "group_mean":
+        from core.metric_extensions import _setup
+        if b.get("metric_spec",{}).get("format") != "forge-dev-regression-v1":
+            raise ContractError("nonmatching evaluator formats")
+        spec, items, x, _ = _setup(project,a)
+        _, items_b, y, _ = _setup(project,b)
+        if items != items_b:
+            raise ContractError("paired regression datasets differ")
+        groups=defaultdict(list)
+        for i, (group, _, truth) in items.items():
+            baseline=float(x[i]["prediction"])-float(truth)
+            candidate=float(y[i]["prediction"])-float(truth)
+            groups[group].append((baseline,candidate))
+        gs=sorted(groups)
+        if len(gs)<4:
+            return {"status":"INSUFFICIENT_INDEPENDENT_GROUPS","n_groups":len(gs)}
+        rng=random.Random(seed)
+        deltas=[]
+        for _ in range(iterations):
+            sampled=[rng.choice(gs) for _ in gs]
+            def calc(side):
+                vals=[]
+                for g in sampled:
+                    residuals=[pair[side] for pair in groups[g]]
+                    score=sum(abs(v) for v in residuals)/len(residuals) if metric=="MAE" else (sum(v*v for v in residuals)/len(residuals))**0.5
+                    vals.append(score)
+                return sum(vals)/len(vals)
+            old,new=calc(0),calc(1)
+            deltas.append(old-new if lower_is_better else new-old)
+        deltas.sort()
+        return {"status":"EXPLORATORY_INTERVAL","method":"PAIRED_GROUP_BOOTSTRAP",
+                "n_groups":len(gs),"iterations":iterations,"seed":seed,
+                "directional_delta_ci95":[deltas[int((iterations-1)*0.025)],deltas[int((iterations-1)*0.975)]],
+                "decision":"NOT_A_FORMAL_CONFIRMATION"}
     if metric not in {"macro_F1","balanced_accuracy"}:
         return {"status":"NOT_SUPPORTED","metric":metric}
     if type(iterations) is not int or not 100<=iterations<=5000:
