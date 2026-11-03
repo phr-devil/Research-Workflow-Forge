@@ -7,6 +7,9 @@ from core.comparison import compare_runs
 from core.contracts import VALIDATORS, ContractError, validate
 from core.router import ROUTES, route
 from core.state import history_status, initial_state, load_state, record_event, save_state
+from core.selection import selection_history
+from core.journal import candidate_journal
+from core.receipts import check_state_task
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="research-forge")
@@ -33,6 +36,12 @@ def main(argv: list[str] | None = None) -> int:
     cmp.add_argument("--lower-is-better", action="store_true")
     hist = sub.add_parser("history")
     hist.add_argument("--dir", required=True, type=Path)
+    selection = sub.add_parser("selection", help="Read append-only task/protocol selection history")
+    selection.add_argument("--dir", required=True, type=Path)
+    receipt = sub.add_parser("check-task", help="Verify current active Task matches persisted receipt")
+    receipt.add_argument("--dir", required=True, type=Path)
+    journal = sub.add_parser("journal", help="Reconstruct candidate history from versioned Run receipts")
+    journal.add_argument("--dir", required=True, type=Path)
     args = parser.parse_args(argv)
     try:
         if args.command == "init":
@@ -56,9 +65,16 @@ def main(argv: list[str] | None = None) -> int:
                 challenger = json.load(f)
             result = compare_runs(champion, challenger, args.metric,
                                   lower_is_better=args.lower_is_better)
+        elif args.command == "selection":
+            result = selection_history(args.dir)
+        elif args.command == "journal":
+            result = candidate_journal(args.dir)
+        elif args.command == "check-task":
+            task = check_state_task(args.dir, load_state(args.dir / "STATE.json"))
+            result = {"receipt_valid": True, "task_id": task["task_id"] if task else None}
         else:
             result = history_status(args.dir)
-    except (ValueError, ContractError, OSError, json.JSONDecodeError, UnicodeError, KeyError) as exc:
+    except (ValueError, RuntimeError, ContractError, OSError, json.JSONDecodeError, UnicodeError, KeyError) as exc:
         parser.exit(2, f"error: {exc}\n")
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result.get("consistent", True) else 2

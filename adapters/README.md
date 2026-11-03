@@ -9,3 +9,5 @@
 **Experiment handoff:** `python -m adapters.experiment_plan --task TASK.json --hypothesis "..." --evaluator-ref "..." --gpu-hours-max 0 --positive "..." --negative "..." --out EXPERIMENT.json`. Requires ACTIVE/FROZEN TaskSpec; rejects a stale novelty review Task fingerprint. Never executes CPU/GPU or authorizes sealed confirmation. Uses the ARIS experiment-plan structure selectively, not its auto-run instructions.
 
 **Still NOT integrated:** full IdeaSpark LLM orchestrator, Scoop Check full-text fetcher, PaperQA2, ARIS auto-deploy/experiment bridge, AIDE journal or R&D-Agent coding loop. Do not mistake vendored reference text for executed scientific checks. Original source files, licenses and frozen commits: [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md).
+
+**v0.4 search/novelty behavior:** ResearchStudio ranking is retained but Forge conservatively avoids merging different DOI papers sharing a title. Search uses a broad historical window by default and stores conflicts as metadata_collisions. Novelty precheck exposes unreviewed candidates and `--candidate-id` for specific paper screening. These checks do NOT read primary papers or certify originality.

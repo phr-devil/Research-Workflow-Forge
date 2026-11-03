@@ -16,6 +16,8 @@ ROUTES: dict[str, Route] = {
     "DATA_READY": Route("PROBLEM", "skills/03_problem_design/SKILL.md", "Form one scientific task and reserve", "TASK"),
     "NOVELTY_PRECHECK_READY": Route("PROBLEM", "skills/03_problem_design/SKILL.md", "Compare primary nearest papers and refine falsifiable task", "NOVELTY"),
     "TASK_DEFINED": Route("FEASIBILITY", "skills/04_feasibility/SKILL.md", "Audit protocol and plan simplest valid baseline", "EXPERIMENT_PLAN"),
+    "TASK_PIVOT": Route("PROBLEM", "skills/03_problem_design/SKILL.md", "Examine newly selected task and preserved selection history", "TASK"),
+    "PROTOCOL_REVISED": Route("FEASIBILITY", "skills/04_feasibility/SKILL.md", "Revalidate revised protocol; previous Champion retired", "EXPERIMENT_PLAN"),
     "EXPERIMENT_PLAN_READY": Route("ALGORITHM", "skills/05_algorithm/SKILL.md", "Review experiment and real authorization; do not assume fitting is approved", "EXPERIMENT_PLAN"),
     "BASELINE_VALID": Route("ALGORITHM", "skills/05_algorithm/SKILL.md", "Develop traceable Champion and Challenger", "RUN"),
     "RUN_RESULT": Route("DECISION", "skills/06_decision/SKILL.md", "Interpret result and choose next evidence-producing action", "DECISION"),

@@ -14,3 +14,9 @@
 - Forge-original `adapters/experiment_plan.py` selectively adapts claim-to-evidence experimental planning, without adopting ARIS's default Reviewer/GPU authorizations, model provider assumptions or fixed experiment counts.
 
 **Other projects** listed in [SOURCES.md](SOURCES.md) are architectural inspirations, **not included or installed**. Copying additional upstream files requires a new provenance entry, the exact upstream revision and any LICENSE/NOTICE obligations. This repository's own distribution license has not yet been selected; upstream MIT permissions do not imply blanket licensing of unrelated project code.
+
+**Superpowers** — https://github.com/obra/superpowers
+- Pinned commit: `2ce8aa15d05bd57213e6f746f953aafb7ded7a8b`
+- MIT, copyright (c) 2025 Jesse Vincent, preserved at `vendor/superpowers/LICENSE`.
+- Copied unchanged: `skills/systematic-debugging/SKILL.md` and `skills/verification-before-completion/SKILL.md` to `vendor/superpowers/`. No automatic agent loop or dependency on the rest of Superpowers is installed.
+- Upstream Skill wording may assume other auxiliary documents or tools; treat these as reference checklists, not executable promises or user authorization.

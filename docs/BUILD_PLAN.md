@@ -25,3 +25,13 @@
 ### Evidence for claims about the workflow itself
 
 Measure earliest valid-result cost, correct task/agent routing, token/GPU/time cost, protocol violations, false project STOP, no-information continuation and truly independent claim support. CI passing is engineering evidence only; no success-rate improvement has yet been measured.
+
+## v0.4 implemented (this iteration)
+
+- **P0:** cross-platform file lock on event writes; active Task raw SHA and normalized content fingerprint; revalidation at plan/Run/novelty handoff; explicit TASK_PIVOT and PROTOCOL_REVISED with versioned Decision + new ACTIVE Task and history-preserving Champion reset; selection/journal commands.
+- **P1:** 1900-to-present search default (explicit narrowed windows still allowed), source conflict report, conservative DOI-safe dedup, novelty shortlist coverage + selected record IDs; vendored Superpowers optional debugging/verification Skills.
+- **P2 preflight only:** bounded read-only DEV CSV and manifest structure audit, no sealed data reading or fitting.
+- **P4 software-only:** deterministic routing fixtures and negative/positive regression tests, Windows+Ubuntu CI.
+- **P3:** read-only candidate Journal implemented, but an authorized executable AIDE/R&D-Agent backend is NOT yet integrated.
+
+Remaining high-value tasks are a genuine official dataset catalog + full-text nearest-work verification; a narrowly scoped, user-authorized coding/experiment runner with raw logs and split isolation; and blinded prospective scientific workflow evaluations at equal budgets. Do NOT pretend P2/P3/P4 are proven research-success improvements because CI passes.

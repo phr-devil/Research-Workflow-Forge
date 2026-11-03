@@ -9,7 +9,6 @@ import hashlib
 import json
 from pathlib import Path
 
-from adapters.literature import write_bundle
 from core.contracts import validate
 
 def fingerprint(obj: dict) -> str:
@@ -17,21 +16,34 @@ def fingerprint(obj: dict) -> str:
                        separators=(",", ":")).encode("utf-8")).hexdigest()
 
 def prepare_review(task: dict, evidence: dict, *, mechanism: str,
-                   expected_difference: str, top_n: int = 3) -> dict:
+                   expected_difference: str, top_n: int = 3,
+                   candidate_ids: list[str] | None = None) -> dict:
     validate("task", task)
     validate("evidence", evidence)
     if not mechanism.strip() or not expected_difference.strip():
         raise ValueError("Mechanism and its falsifiable proposed difference are required")
-    if type(top_n) is not int or not 1 <= top_n <= 5:
-        raise ValueError("top_n must be 1..5")
-    nearest = []
-    for row in evidence["records"][:top_n]:
+    if type(top_n) is not int or not 1 <= top_n <= 10:
+        raise ValueError("top_n must be 1..10")
+    all_records = evidence["records"]
+    by_id = {r["record_id"]: r for r in all_records}
+    if candidate_ids:
+        if len(set(candidate_ids)) != len(candidate_ids):
+            raise ValueError("duplicate candidate IDs")
+        unknown = [rid for rid in candidate_ids if rid not in by_id]
+        if unknown:
+            raise ValueError("unknown paper ID(s): " + ", ".join(unknown))
+        selected = [by_id[rid] for rid in candidate_ids]
+    else:
+        selected = all_records[:top_n]
+    nearest = []  # these are metadata SCREENING candidates, not verified nearest work
+    for row in selected:
         nearest.append({"record_id": row["record_id"], "title": row["title"],
                         "doi": row.get("doi"), "url": row.get("url"),
                         "source_providers": row["sources"],
                         "fulltext_review": "NOT_DONE",
                         "overlap_verdict": "UNKNOWN",
-                        "differentiating_evidence": None})
+                        "differentiating_evidence": None,
+                        "selection_basis": "EXPLICIT_ID" if candidate_ids else "METADATA_RELEVANCE_ONLY"})
     return {
         "schema_version": "0.1", "task_id": task["task_id"], "status": "UNVERIFIED",
         "origin": "Scoop Check four-axis decomposition adapted, not upstream execution",
@@ -42,6 +54,13 @@ def prepare_review(task: dict, evidence: dict, *, mechanism: str,
             "key_insight": expected_difference.strip(),
             "application_and_boundary": task.get("application_domain") or "UNKNOWN"},
         "closest_candidates": nearest,
+        "coverage": {
+            "total_metadata_records": len(all_records),
+            "screening_candidates": len(nearest),
+            "unreviewed_record_ids": [r["record_id"] for r in all_records if r["record_id"] not in {n["record_id"] for n in nearest}],
+            "selected_as": "SCREENING_SET_NOT_NEAREST_WORK",
+            "historical_work_window": evidence.get("search_window"),
+            "relevant_missing_papers_possible": True},
         "scientific_questions": [
             "Read full original nearest papers, not only metadata or abstracts",
             "Compare same task/legal inputs, algorithm mechanism, independent truth and evaluation",
@@ -58,13 +77,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--mechanism", required=True)
     parser.add_argument("--difference", required=True)
     parser.add_argument("--top-n", type=int, default=3)
+    parser.add_argument("--candidate-id", action="append", default=[], help="Explicit record_id to screen (repeatable)")
     parser.add_argument("--out", required=True, type=Path)
     args = parser.parse_args(argv)
     try:
         task = json.loads(args.task.read_text(encoding="utf-8"))
         evidence = json.loads(args.evidence.read_text(encoding="utf-8"))
         result = prepare_review(task, evidence, mechanism=args.mechanism,
-                                expected_difference=args.difference, top_n=args.top_n)
+                                expected_difference=args.difference, top_n=args.top_n,
+                                candidate_ids=args.candidate_id or None)
         if args.out.exists():
             parser.error("output already exists; choose a new versioned output path")
         args.out.parent.mkdir(parents=True, exist_ok=True)

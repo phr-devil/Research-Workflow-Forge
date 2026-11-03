@@ -8,3 +8,5 @@
 **Not implemented:** official dataset integrity acquisition, full-text verified novelty analysis, training/inference runner, AIDE candidate search loop, protected independent scientific confirmation, automated research-paper generation. Do not claim these exist from upstream Skill references.
 
 Follow the current user's scope/authorization, preserve real sources/negative Runs. Do not create decorative images or tests of irrelevant modules. Details in `docs/BUILD_PLAN.md`.
+
+**v0.4 read-only utilities:** `python -m tools.data_audit --manifest ...` and `--dev-csv DEV.csv --group-col GROUP --label-col LABEL` check official-source metadata and local DEV integrity without training or sealed reading. `core.cli selection`, `journal`, `check-task` inspect versioned state/Run history. Model fitting, fair baseline optimization and actual independent effect estimation remain future integrations.

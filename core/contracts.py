@@ -39,7 +39,7 @@ def validate_state(value: Any) -> dict:
     _text(obj, "project_id", "goal", "next_action")
     _enum(obj, "phase", PHASES)
     _list(obj, "evidence_refs", "authorization_refs")
-    for key in ("active_task_id", "best_valid_run_id", "last_event_id"):
+    for key in ("active_task_id", "active_protocol_id", "active_task_path", "active_task_sha256", "active_task_fingerprint", "best_valid_run_id", "last_event_id"):
         if obj.get(key) is not None and not isinstance(obj[key], str):
             raise ContractError(f"{key} must be string or null")
     return obj
@@ -149,6 +149,21 @@ def validate_run(value: Any) -> dict:
         _text(obj, "frozen_protocol_ref", "authorization_ref")
     return obj
 
+DECISION_TYPES = {"TASK_PIVOT", "PROTOCOL_REVISED", "CONTINUE", "REPAIR", "NARROW", "HOLD"}
+
+def validate_decision(value: Any) -> dict:
+    obj = _object(value)
+    _text(obj, "decision_id", "decision_type", "from_task_id", "from_protocol_id", "reason")
+    _enum(obj, "decision_type", DECISION_TYPES)
+    _list(obj, "evidence_refs")
+    if obj["decision_type"] in {"TASK_PIVOT", "PROTOCOL_REVISED"}:
+        _text(obj, "to_task_id", "to_protocol_id", "new_task_path", "new_task_sha256", "user_approval_ref")
+        if len(obj["new_task_sha256"]) != 64:
+            raise ContractError("new_task_sha256 must be SHA-256 hex")
+        if not obj["evidence_refs"]:
+            raise ContractError("task/protocol changes need cited evidence")
+    return obj
+
 def validate_claim(value: Any) -> dict:
     obj = _object(value)
     _text(obj, "claim_id", "task_id", "statement")
@@ -163,7 +178,7 @@ def validate_claim(value: Any) -> dict:
 VALIDATORS = {"state": validate_state, "evidence": validate_evidence,
               "dataset": validate_dataset, "novelty": validate_novelty, "task": validate_task,
               "experiment": validate_experiment, "run": validate_run,
-              "claim": validate_claim}
+              "claim": validate_claim, "decision": validate_decision}
 
 def validate(kind: str, obj: Any) -> dict:
     if kind not in VALIDATORS:

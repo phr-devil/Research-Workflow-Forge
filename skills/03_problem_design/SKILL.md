@@ -20,3 +20,5 @@ description: Form a feasible, falsifiable scientific task and a defensible poten
 **v0.3 具名最近邻检查**：在已有真实 EVIDENCE.json 与 TASK.json 的基础上使用 `python -m adapters.novelty_check --task projects/ID/TASK.json --evidence projects/ID/EVIDENCE.json --mechanism "具体机制" --difference "可证伪的预期差异" --out projects/ID/NOVELTY.json`。输出是 **UNVERIFIED**，不能因为没有搜到同名论文就宣称原创。核原文时按问题定义、机制、关键科学知识和使用场景逐轴比较；先做对决策有意义的 1–2 项查证，再扩大到正式 Claim 所需范围。
 
 **外部参考按需**：`vendor/researchstudio/scoop_check/SKILL.md` 和 `vendor/researchstudio/idea_spark/references/`。其中 anti-patterns 来自特定样本的经验先验，仅提示风险，**不可变为本研究的硬否决门槛**。IdeaSpark 主执行器未导入，不可声称已经自动生成/验证新命题。若有新的研究问题，在 Forge 内独立建立可复核 TaskSpec。
+
+**v0.4**: `NOVELTY.json.closest_candidates` contains **screening** papers, not guaranteed nearest predecessors; inspect `coverage.unreviewed_record_ids` and explicitly select papers by `--candidate-id`. A missing paper in metadata is UNKNOWN, not evidence of originality. When task search explores multiple candidate tasks on the same development data, retain the actual task selection history and reassess held-out eligibility.

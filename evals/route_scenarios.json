@@ -1,0 +1,48 @@
+{
+  "version": "0.4",
+  "notes": "Deterministic routing regression fixtures, NOT evidence for research success",
+  "scenarios": [
+    {
+      "event": "NEW_DIRECTION",
+      "expected_skill": "skills/01_search/SKILL.md",
+      "expected_phase": "DISCOVERY",
+      "does_not_execute": true
+    },
+    {
+      "event": "TASK_DEFINED",
+      "expected_skill": "skills/04_feasibility/SKILL.md",
+      "expected_phase": "FEASIBILITY",
+      "does_not_execute": true
+    },
+    {
+      "event": "NO_GAIN",
+      "expected_skill": "skills/06_decision/SKILL.md",
+      "expected_phase": "DECISION",
+      "does_not_execute": true
+    },
+    {
+      "event": "RUN_INVALID",
+      "expected_skill": "skills/06_decision/SKILL.md",
+      "expected_phase": "DECISION",
+      "does_not_execute": true
+    },
+    {
+      "event": "TASK_PIVOT",
+      "expected_skill": "skills/03_problem_design/SKILL.md",
+      "expected_phase": "PROBLEM",
+      "does_not_execute": true
+    },
+    {
+      "event": "PROTOCOL_REVISED",
+      "expected_skill": "skills/04_feasibility/SKILL.md",
+      "expected_phase": "FEASIBILITY",
+      "does_not_execute": true
+    },
+    {
+      "event": "CLAIM_CANDIDATE",
+      "expected_skill": "skills/07_confirmation/SKILL.md",
+      "expected_phase": "CONFIRMATION",
+      "does_not_execute": true
+    }
+  ]
+}

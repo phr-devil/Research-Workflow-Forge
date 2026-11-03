@@ -19,6 +19,8 @@ from pathlib import Path
 from typing import Callable
 
 from adapters.literature import write_bundle
+from adapters.paper_merge import merge_papers
+from core.locking import file_lock
 from core.contracts import validate
 
 VENDOR = Path(__file__).resolve().parents[1] / "vendor" / "researchstudio" / "paper_search" / "scripts"
@@ -49,8 +51,14 @@ def run_upstream_worker(source: str, queries: list[str], start_year: int,
                    "--start-year", str(start_year), "--end-year", str(end_year),
                    "--max-results", str(limit), "--out", str(output)]
         try:
-            result = subprocess.run(command, text=True, capture_output=True,
-                                    encoding="utf-8", timeout=timeout, check=False)
+            # Portable lock ensures two Forge processes cannot burst the arXiv
+            # API on Windows (vendored fcntl lock is POSIX-only).
+            from contextlib import nullcontext
+            lock = (file_lock(Path(tempfile.gettempdir()) / "forge-arxiv-worker.lock",
+                              timeout=timeout + 5) if source == "arxiv" else nullcontext())
+            with lock:
+                result = subprocess.run(command, text=True, capture_output=True,
+                                        encoding="utf-8", timeout=timeout, check=False)
         except subprocess.TimeoutExpired as exc:
             raise RuntimeError(f"{source}: worker timed out after {timeout}s") from exc
         if result.returncode != 0:
@@ -112,7 +120,7 @@ def search_papers(queries: list[str], *, sources: tuple[str, ...] = DEFAULT_SOUR
         raise ValueError("limit must be 1..20 per query/source")
     current = datetime.now(timezone.utc).year
     end = current if end_year is None else end_year
-    start = max(1900, end - 3) if start_year is None else start_year
+    start = 1900 if start_year is None else start_year  # do not silently omit foundational papers
     if type(start) is not int or type(end) is not int or not (1900 <= start <= end <= current + 1):
         raise ValueError("invalid search year window")
 
@@ -136,9 +144,7 @@ def search_papers(queries: list[str], *, sources: tuple[str, ...] = DEFAULT_SOUR
     if not completed and not any(by_source.values()):
         raise RuntimeError("No source completed successfully; see source failures and retry explicitly")
 
-    process = _postprocess()
-    merged = process.dedup(by_source)
-    ranked, _ = process.rank(merged, queries, min_score=None)  # preserve full recall
+    ranked, conflicts = merge_papers(by_source, queries)  # preserve recall; protect distinct DOIs
     records = [r for paper in ranked if (r := _record(paper))]
     bundle = {"schema_version": "0.1", "query": " | ".join(queries),
               "queries": queries, "retrieved_at": datetime.now(timezone.utc).isoformat(),
@@ -146,7 +152,10 @@ def search_papers(queries: list[str], *, sources: tuple[str, ...] = DEFAULT_SOUR
               "upstream": "microsoft/ResearchStudio:paper_search",
               "upstream_commit": UPSTREAM_REVISION,
               "sources_attempted": list(sources), "sources_checked": completed,
-              "source_errors": errors, "records": records}
+              "source_errors": errors, "metadata_collisions": conflicts,
+              "search_window": {"start_year": start, "end_year": end},
+              "coverage": "NON_EXHAUSTIVE; verify named nearest papers and foundational work",
+              "records": records}
     if records:
         validate("evidence", bundle)  # structural source data, not scientific certification
     return bundle
@@ -169,7 +178,7 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({"state": bundle["retrieval_state"],
                           "records": len(bundle["records"]), "out": str(args.out),
                           "sources_checked": bundle["sources_checked"],
-                          "errors": bundle["source_errors"],
+                          "errors": bundle["source_errors"], "metadata_collisions": len(bundle["metadata_collisions"]),
                           "verification": "METADATA_ONLY"}, ensure_ascii=False, indent=2))
         return 0 if bundle["sources_checked"] else 2
     except (ValueError, OSError, RuntimeError) as exc:

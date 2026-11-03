@@ -45,3 +45,11 @@ The optional `adapters.literature` module retrieves raw OpenAlex/Crossref **meta
 **Execution handoff**: `adapters.experiment_plan` requires an ACTIVE Task, checks stale Task fingerprints when a novelty review is provided, fixes dev/validation only and emits PLAN_ONLY. `NOVELTY_PRECHECK_READY` and `EXPERIMENT_PLAN_READY` route to 03/05 respectively when a local structurally valid file accompanies the event; note-only events never advance the phase. Neither action trains or grants consent.
 
 **Provenance**: original vendor files and MIT license texts under `vendor/`; exactly copied file list and commits in `THIRD_PARTY_NOTICES.md`. Do not auto-load 150KB of vendor source/reference text into AI context.
+
+## v0.4 event transitions
+
+TASK_DEFINED binds a versioned ACTIVE Task. TASK_PIVOT and PROTOCOL_REVISED require a Decision with specific old/new Task/protocol IDs and an SHA-matched *new* Task file. Old Run records are never deleted, but Champion is cleared and candidate Journal reports prior runs as current_protocol=false. No review or experimental plan may be recorded against a Task file that has been silently edited.
+
+The event writer holds a portable OS file lock and performs an append-only event+atomic state save. In case of a crash between these two steps, history detects a mismatch and further writes refuse to proceed without explicit recovery. No automatic replay is asserted. Selection history is generated from EVENTS, rather than a second conflicting state log.
+
+ResearchStudio source ranking is reused while a local conservative deduplicator protects distinct DOI editions; novel-paper shortlist coverage is exposed. Real full-text assessment remains external to these metadata tools.

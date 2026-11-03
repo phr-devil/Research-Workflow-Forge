@@ -28,3 +28,10 @@ Only an actually authorized tool-backed Agent may download, fit CPU/GPU models, 
 ## v0.3 stage receipts
 
 `NOVELTY_PRECHECK_READY` uses a validated `novelty` artifact in the project, and `EXPERIMENT_PLAN_READY` requires a PLAN_ONLY `experiment` artifact linked to a current active Task. `novelty_check.prepare_review` fingerprints the actual Task and retrieved metadata; `experiment_plan.prepare_experiment` rejects an outdated Task when a review is provided. These are mechanical version checks only. The final decision about originality requires actual primary-paper content and independent experiment evidence.
+
+## v0.4 extensions (schema_version 0.1 retained)
+
+- **state** gains optional active_protocol_id, active_task_path, active_task_sha256 and active_task_fingerprint. New Task-bound events check the actual original Task file. Old states can migrate by registering the real ACTIVE Task; unverified old Champion pointers are retired.
+- **decision** has decision_id, decision_type, from_task_id, from_protocol_id, reason and evidence_refs. TASK_PIVOT / PROTOCOL_REVISED additionally require to_task_id, to_protocol_id, project-relative new_task_path, exact raw new_task_sha256 and user_approval_ref (an audit pointer, never a permission grant).
+- **novelty** metadata candidates are explicitly screening-only and include unreviewed record IDs; named prior art must be verified in original papers.
+- **run history** is reconstructible from append-only EVENTS; source artifacts are checked against captured SHA. Concurrency is controlled for event writes, but this is NOT a fully transactional DB and a crash still needs recovery.

@@ -1,10 +1,19 @@
-# Research Workflow Forge | v0.3
+# Research Workflow Forge | v0.4
 
 **科研工作流不是固定关卡，而是证据驱动的研究循环。**
 
 Forge: 01 Search → 02 Evidence/Data → 03 Problem Design ↔ 04 Feasibility → 05 Algorithm ↔ 06 Decision → 07 Independent Confirmation. An Orchestrator routes the *current* blocker; previously valid sources/runs are reused.
 
 **Current implementation:** public multi-source paper metadata retrieval (ResearchStudio vendor), source-linked **unverified** novelty precheck, bounded non-executing experiment plan (ARIS-inspired), evidence-linked event history, Run comparability rules and tests. **Not implemented:** automatic novel problem generation, full-text novelty judgment, automated CPU/GPU training, scientific confirmation, publication. Successful tests do not prove scientific quality.
+
+## v0.4 changes
+
+- **State integrity:** explicit TASK_PIVOT and PROTOCOL_REVISED decisions, input/output receipts, cross-platform event locks and selection history. Old Champions are retired on task/protocol changes, while historical Runs persist.
+- **Research search:** historical papers no longer excluded by a silent four-year default; protect distinct known DOIs, and treat top results as screening candidates rather than verified nearest work.
+- **Real read-only checks:** DEV-only CSV/data-manifest preflight, candidate Run history, executable structural route fixtures and Windows CI.
+- **Copied reference Skills:** Superpowers debugging and verification-on-completion (MIT), loaded only for relevant engineering defects.
+
+Practical migration and exact commands: [docs/UPGRADE_V04.md](docs/UPGRADE_V04.md). These changes do NOT add an autonomous trainer, an AI verified-novelty system, or a scientific success-rate guarantee.
 
 ## Install / verify (Python 3.10+)
 

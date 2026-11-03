@@ -18,3 +18,5 @@ description: Verify evaluation legality, credible baselines and a bounded inform
 **交接**：EXPERIMENT.json + 可信基线证据或 NOT_RUN，明确未验证的科学前提与所需授权。
 
 **v0.3 实验规划交接**：可按需阅读 `vendor/aris/experiment-plan/SKILL.md` 的 Claim→Evidence→Run 设计法。填写实际 ACTIVE Task 后，执行 `python -m adapters.experiment_plan --task projects/ID/TASK.json --hypothesis "可检验差异" --evaluator-ref "受保护评价器版本" --gpu-hours-max 0 --positive "正结果后行动" --negative "负结果后诊断" --out projects/ID/EXPERIMENT.json`。若引用 NOVELTY.json，必须传 `--novelty-review`，且 Task 变更后旧审查失效。计划不准更改封存集，也不自动训练。0 GPU 预算意为只有计划/只读/非训练验证空间。
+
+**v0.4**: Use `python -m tools.data_audit --manifest MANIFEST.json` for a read-only resource preflight, or `--dev-csv DEV.csv --group-col GROUP --label-col LABEL` for simple DEV group/label integrity. This cannot certify leakage-free splits or dataset licenses, and it never fits parameters. Before recording a plan, check the active Task receipt; any changed evaluator or protocol requires a new versioned Task and explicit PROTOCOL_REVISED decision.

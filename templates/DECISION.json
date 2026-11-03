@@ -1,0 +1,14 @@
+{
+  "schema_version": "0.1",
+  "decision_id": "REPLACE_DECISION_ID",
+  "decision_type": "TASK_PIVOT",
+  "from_task_id": "REPLACE_OLD",
+  "from_protocol_id": "REPLACE_OLD_PROTOCOL",
+  "to_task_id": "REPLACE_NEW",
+  "to_protocol_id": "REPLACE_NEW_PROTOCOL",
+  "new_task_path": "tasks/REPLACE_NEW.json",
+  "new_task_sha256": "REPLACE_WITH_SHA256_OF_NEW_TASK_FILE",
+  "reason": "Concrete evidence motivating scoped change",
+  "evidence_refs": [],
+  "user_approval_ref": "REPLACE_WITH_ORIGINAL_USER_APPROVAL_REFERENCE"
+}
