@@ -1,4 +1,4 @@
-# AI Research Execution Policy · v0.6
+# AI Research Execution Policy · v0.8
 
 This file is the **single shared source** for execution efficiency. Read it once per research session; each Skill adds only its specific task. Requirements are defaults unless scientific correctness, actual permissions or the user's instruction require otherwise.
 

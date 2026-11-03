@@ -1,4 +1,4 @@
-# Research Workflow Forge · v0.7
+# Research Workflow Forge · v0.8
 
 An evidence-first research workflow with **one controller, three engines, seven on-demand Skills**. Starting point: the current scientific/engineering blocker, not a mandatory 7-step sequence. Optimize for **verified research progress per actual total resource cost**, not document count, number of Agent calls, or plots.
 
@@ -39,3 +39,9 @@ CI uses only synthetic research fixtures and source selftests; passing tests nev
 VALID development metrics are now independently recomputed from original manifest-bound DEV labels and a fixed group-held-out split; raw SHA receipts alone cannot certify claimed performance. CHAMPION is exploratory only and displays optional group-bootstrap uncertainty and adaptive-selection count. `compare` now requires `--dir PROJECT` and independently verifies both Run files. Event history is SHA-chained against STATE; legacy projects need explicit `core.cli migrate-ledger` before writing events. Normal development events reject all sealed Runs. The external `adapters.agent_bridge` imports Codex/WorkBuddy/AIDE predictions **without executing arbitrary Agent code**. See [artifact contract](docs/ARTIFACT_CONTRACT.md) and [upgrade guide](docs/UPGRADE_V07.md).
 
 **SAFE-Gait success/failure lesson:** when Oracle gain does not translate into a deployable learned strategy, separate correctability from predecision identifiability and from legal calibration cost. A K=0→K=1 move changes the scientific Task and Claim; do not claim the old task succeeded. Optional evidence-grounded example: [PD-RW APACE→SAFE-Gait lesson](https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/LESSONS/SAFE_GAIT_APACE.md). No extra mandatory stage or model training is added.
+
+
+**v0.8：新增可信DEV评价格式**：固定组清单下支持回归MAE/RMSE和单发事件定位的算术复算、源数据绑定与实验可比性保护。详细协议见[ARTIFACT_CONTRACT.md](docs/ARTIFACT_CONTRACT.md)。分类v0.7继续兼容；复杂模型仍由外部Agent执行，因果在线性与源码真实性不能仅由预测工件证明。
+
+
+外部Codex/WorkBuddy的回归或事件预测可用`python -m adapters.typed_agent_bridge` 导入；程序只复核合法DEV分组、标签、样本与指标，不运行Agent源码或证明真实因果执行。用法见[工件合同](docs/ARTIFACT_CONTRACT.md)。
