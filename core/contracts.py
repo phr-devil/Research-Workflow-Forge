@@ -61,6 +61,30 @@ def validate_evidence(value: Any) -> dict:
             raise ContractError("evidence record must include provider provenance")
     return obj
 
+def validate_novelty(value: Any) -> dict:
+    obj = _object(value)
+    _text(obj, "task_id", "origin")
+    _enum(obj, "status", {"UNVERIFIED", "PARTIAL"})
+    fingerprints = obj.get("input_fingerprints")
+    if not isinstance(fingerprints, dict):
+        raise ContractError("novelty requires input_fingerprints")
+    for key in ("task", "evidence"):
+        if not isinstance(fingerprints.get(key), str) or len(fingerprints[key]) != 64:
+            raise ContractError(f"invalid novelty {key} fingerprint")
+    axes = obj.get("claimed_contribution")
+    if not isinstance(axes, dict):
+        raise ContractError("claimed_contribution must be an object")
+    for key in ("problem_framing", "core_mechanism", "key_insight", "application_and_boundary"):
+        _text(axes, key)
+    _list(obj, "closest_candidates", "scientific_questions", "what_is_not_verified")
+    for prior in obj["closest_candidates"]:
+        if not isinstance(prior, dict):
+            raise ContractError("closest candidate must be object")
+        _text(prior, "record_id", "title")
+        _enum(prior, "fulltext_review", {"NOT_DONE", "DONE"})
+        _enum(prior, "overlap_verdict", {"UNKNOWN", "POSSIBLE_OVERLAP", "VERIFIED_DISTINCT", "COVERED"})
+    return obj
+
 def validate_dataset(value: Any) -> dict:
     obj = _object(value)
     _list(obj, "datasets")
@@ -137,7 +161,7 @@ def validate_claim(value: Any) -> dict:
     return obj
 
 VALIDATORS = {"state": validate_state, "evidence": validate_evidence,
-              "dataset": validate_dataset, "task": validate_task,
+              "dataset": validate_dataset, "novelty": validate_novelty, "task": validate_task,
               "experiment": validate_experiment, "run": validate_run,
               "claim": validate_claim}
 

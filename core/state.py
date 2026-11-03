@@ -15,7 +15,9 @@ from core.router import route
 EVENT_KINDS = {
     "SEARCH_READY": "evidence",
     "DATA_READY": "dataset",
+    "NOVELTY_PRECHECK_READY": "novelty",
     "TASK_DEFINED": "task",
+    "EXPERIMENT_PLAN_READY": "experiment",
     "BASELINE_VALID": "run",
     "RUN_RESULT": "run",
     "NO_GAIN": "run",
@@ -67,6 +69,8 @@ def _checked_artifact(directory: Path, event: str, artifact: Path) -> tuple[dict
     if len(raw) > 2_000_000:
         raise ValueError("handoff artifact is unexpectedly large")
     obj = validate(kind, json.loads(raw.decode("utf-8")))
+    if event == "EXPERIMENT_PLAN_READY" and obj.get("status") != "PLAN_ONLY":
+        raise ContractError("EXPERIMENT_PLAN_READY requires a non-executed PLAN_ONLY artifact")
     if event == "TASK_DEFINED" and obj["status"] not in {"ACTIVE", "FROZEN"}:
         raise ContractError("TASK_DEFINED requires ACTIVE or FROZEN Task")
     if event == "BASELINE_VALID" and (obj["status"] != "VALID" or obj["split"] == "sealed"):
@@ -93,7 +97,7 @@ def record_event(directory: Path, event: str, note: str, artifact: Path | None =
         active_task = state.get("active_task_id")
         if candidate_task and active_task and candidate_task != active_task:
             raise ContractError("artifact task_id disagrees with active task; explicit task change required")
-        if event in {"BASELINE_VALID", "RUN_RESULT", "NO_GAIN", "RUN_INVALID",
+        if event in {"EXPERIMENT_PLAN_READY", "BASELINE_VALID", "RUN_RESULT", "NO_GAIN", "RUN_INVALID",
                      "CLAIM_CANDIDATE", "CONFIRM_REQUEST"} and not active_task:
             raise ContractError("cannot record a Run/Claim as project progress before an active Task is defined")
     at, event_id = utcnow(), uuid4().hex

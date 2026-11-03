@@ -1,9 +1,13 @@
 [project]
 name = "research-workflow-forge"
-version = "0.2.0"
-description = "Evidence-first modular research workflow with metadata search and reproducibility guards"
+version = "0.3.0"
+description = "Evidence-first modular research workflow, source-backed discovery and scientific handoff"
 requires-python = ">=3.10"
 dependencies = []
+
+[project.optional-dependencies]
+paper-search = ["requests>=2.31,<3"]
+openreview = ["requests>=2.31,<3", "openreview-py>=1.46"]
 
 [build-system]
 requires = ["setuptools>=68"]

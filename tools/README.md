@@ -1,9 +1,10 @@
-# Tools — implemented vs planned
+# Research tools — actual execution boundaries
 
-**Implemented offline:** \`python -m core.cli\` init, route, record, history, validate, compare. Handoff uses evidence-file hash; \`compare\` rejects noncomparable VALID developer runs and sealed experiments. The CLI does **not** execute models or certify scientific contribution.
+- Offline: `core.cli` init/route/record/history/validate/compare; non-executing state and experiment shape checks.
+- Explicit public network: `adapters.researchstudio_search` (vendored multi-provider ResearchStudio Worker + dedup), optional older `adapters.literature` (OpenAlex/Crossref).
+- Offline research handoff: `adapters.novelty_check` (UNVERIFIED prior-art matrix), `adapters.experiment_plan` (PLAN_ONLY, authorized resource cap only as input data).
+- Vendored unit checks: upstream ResearchStudio postprocess/runtime selftests; local Python unit tests under `tests/`.
 
-**Implemented explicit online:** \`python -m adapters.literature\` fetches public OpenAlex/Crossref metadata. CI tests use mocked responses. Need public network at runtime.
+**Not implemented:** official dataset integrity acquisition, full-text verified novelty analysis, training/inference runner, AIDE candidate search loop, protected independent scientific confirmation, automated research-paper generation. Do not claim these exist from upstream Skill references.
 
-**Planned:** official data manifests/files/hashes/split safety audits; evaluator-isolated authorized runner; group-level effect+uncertainty; candidate journal/MLflow optional; full-text named-nearest-work checker; frozen independent confirmation.
-
-Prefer narrowly adapted verified upstream code over wholesale framework installs. No unnecessary images, all original logs retained.
+Follow the current user's scope/authorization, preserve real sources/negative Runs. Do not create decorative images or tests of irrelevant modules. Details in `docs/BUILD_PLAN.md`.

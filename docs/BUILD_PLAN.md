@@ -6,9 +6,11 @@
 
 **P1a** (v0.2): opt-in public OpenAlex/Crossref metadata adapter with two-provider normalization, DOI de-duplication and partial failure disclosure; extended evidence/dataset schemas; source-hashed handoff, no note-only phase promotion; DEV Run fair-comparison tool and regression tests. HTTP mocked in CI; actual public API connectivity has **not** been tested in CI. No full-text retrieval or novelty model has been implemented.
 
+**P1b (v0.3):** pinned licensed ResearchStudio Paper Search source workers, selftests and postprocess with a Forge adapter; selected IdeaSpark references and upstream Scoop Check Skill for careful prior-art review; pinned ARIS experiment-plan Skill for evidence-backed planning. Original adapters produce UNVERIFIED novelty matrices and PLAN_ONLY bounded experiment contracts. Includes input-fingerprint mismatch detection. Integration tests are deterministic mocks; full-text novelty claims and live search coverage remain unverified.
+
 ## Next, in priority order
 
-1. **P1b:** attach authoritative official dataset catalog and Source → Observation → Claim graph; add direct nearest-paper full-text inspection and difference table; distinguish actual observations from hypothetical mechanisms. Do not treat metadata titles/DOIs as verified novelty.
+1. **P1c:** attach official dataset/license/label/group catalogs and a source→observation→claim graph; integrate optional full-text paper reading and verified nearest-work comparisons. The current novelty adapter is a precheck, not an autonomous original idea judge.
 2. **P2:** authorized execution integration with one coding Agent. Protected evaluator and sealed split, train-only preprocessing audits, smallest credible baseline, one real Challenger, group-level predictions, immutable raw logs/versions/compute cost and recovery. Avoid parallel expensive Agent trees until proven useful.
 3. **P3:** confirm that Run and Claim refs point to original real results; independent held-out eligibility by task *after* task search, frozen protocol, named nearest prior method, group-level effect/uncertainty. Add blinded before/after research decision evaluation using tasks comparable to chapter 08 and 10 at equal resource budgets.
 

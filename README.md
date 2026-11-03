@@ -1,60 +1,77 @@
-# Research Workflow Forge | v0.2
+# Research Workflow Forge | v0.3
 
-**面向 AI 的科研工作流**：信息搜索 → 证据/数据 → 科学问题 → 强基线 → 代码实验 → 诊断转向 → 独立确认。七项是**按需调用能力**，不是七个必过门槛。目标：高可行性、可反驳的科学贡献和可复现证据。
+**科研工作流不是固定关卡，而是证据驱动的研究循环。**
 
-An evidence-first modular research workflow with **real public literature-metadata search**, deterministic event routing, artifact-linked state history and safe development-run comparison. **Not yet an autonomous coding/training agent. No research success claims have been validated.**
+Forge: 01 Search → 02 Evidence/Data → 03 Problem Design ↔ 04 Feasibility → 05 Algorithm ↔ 06 Decision → 07 Independent Confirmation. An Orchestrator routes the *current* blocker; previously valid sources/runs are reused.
 
-## Quick start (Python >= 3.10; standard library runtime)
+**Current implementation:** public multi-source paper metadata retrieval (ResearchStudio vendor), source-linked **unverified** novelty precheck, bounded non-executing experiment plan (ARIS-inspired), evidence-linked event history, Run comparability rules and tests. **Not implemented:** automatic novel problem generation, full-text novelty judgment, automated CPU/GPU training, scientific confirmation, publication. Successful tests do not prove scientific quality.
 
-\`\`\`bash
+## Install / verify (Python 3.10+)
+
+```powershell
+git clone https://github.com/phr-devil/Research-Workflow-Forge.git
+cd Research-Workflow-Forge
+python -m pip install -e ".[paper-search]"
 python -m unittest discover -s tests -v
-python -m core.cli init --dir projects/demo --project-id demo --goal "Identify a sensor-generalization research opportunity"
-python -m core.cli route --dir projects/demo --event NEW_DIRECTION
+python vendor/researchstudio/paper_search/scripts/selftest_postprocess.py
+python vendor/researchstudio/paper_search/scripts/selftest_runtime.py
+```
 
-# Explicitly query OpenAlex + Crossref metadata; public network required:
-python -m adapters.literature --query "wearable inertial sensor cross-device generalization" --limit 6 --out projects/demo/EVIDENCE.json
+Optional OpenReview backend requires `python -m pip install -e ".[openreview]"` and any upstream provider credentials. Crossref, OpenAlex, arXiv, DBLP, Semantic Scholar are available through provider-specific code and subject to network/API limits.
+
+## Research opportunity → task → experiment, without fabricated results
+
+```powershell
+python -m core.cli init --dir projects/demo --project-id demo --goal "Sensor cross-device generalization"
+
+# Real public paper metadata search; execute only when public outbound retrieval is authorized.
+python -m adapters.researchstudio_search --query "wearable inertial sensor cross device generalization" --query "sensor domain shift calibration" --sources open_alex crossref arxiv --limit 6 --out projects/demo/EVIDENCE.json
 python -m core.cli validate --kind evidence --file projects/demo/EVIDENCE.json
+python -m core.cli record --dir projects/demo --event SEARCH_READY --artifact projects/demo/EVIDENCE.json --note "Public metadata only, not novelty proof"
+```
 
-# Link a real structural artifact (not a note alone) to advance the suggested stage:
-python -m core.cli record --dir projects/demo --event SEARCH_READY --artifact projects/demo/EVIDENCE.json --note "Public metadata retrieved; full-text novelty unverified"
-python -m core.cli history --dir projects/demo
-\`\`\`
+Use [03 Problem Design](skills/03_problem_design/SKILL.md) to create a *real* `projects/demo/TASK.json` grounded in specific dataset/legal inputs/metric/split. `templates/TASK.json` is a placeholder and must not be treated as actual research. A DRAFT Task may be prepared before its protocol is known. Only an ACTIVE Task is eligible for experiment planning.
 
-If network fails, no papers are invented. \`OPENALEX_API_KEY\` is optional for keyless small queries; no key or credential is logged. **Metadata != full text, proof of novelty, availability of datasets or permission for further actions.** The provider adapter has mocked HTTP unit tests; actual API connectivity depends on the running environment.
+To register an actually completed ACTIVE Task before an experiment handoff:
 
-### Compare real developer runs (not paper confirmation)
+```powershell
+python -m core.cli record --dir projects/demo --event TASK_DEFINED --artifact projects/demo/TASK.json --note "Verified real task and evaluation protocol"
+```
 
-\`\`\`bash
-python -m core.cli compare --champion projects/demo/runs/A.json --challenger projects/demo/runs/B.json --metric macro_F1
-# Add --lower-is-better for an error metric such as RMSE
-\`\`\`
+```powershell
+# Four-axis precheck (never declares the proposed novelty true)
+python -m adapters.novelty_check --task projects/demo/TASK.json --evidence projects/demo/EVIDENCE.json --mechanism "Our proposed mechanism" --difference "Its falsifiable expected scientific difference" --out projects/demo/NOVELTY.json
 
-Only VALID **development** runs with matching task/protocol/data/evaluator/group/sample/inputs can be compared. Refuses sealed runs and mismatched inputs. A positive delta is **not** independent scientific evidence.
+# After real Task data/protocol is complete and status=ACTIVE:
+python -m adapters.experiment_plan --task projects/demo/TASK.json --novelty-review projects/demo/NOVELTY.json --hypothesis "Model B should improve group-level performance under a legal split" --evaluator-ref "frozen-evaluator-v1" --gpu-hours-max 0.5 --positive "Verify effect and alternative explanation" --negative "Diagnose convergence and residual mechanism" --out projects/demo/EXPERIMENT.json
+python -m core.cli record --dir projects/demo --event EXPERIMENT_PLAN_READY --artifact projects/demo/EXPERIMENT.json --note "Planning only; no fitting authorized"
+```
 
-### Router and recovery
+The novelty review carries Task/Evidence SHA-256 fingerprints; a changed Task is rejected as stale when used for experiment planning. The generated plan contains a **PLAN_ONLY** status and grants **no** CPU/GPU fitting, data transfer or sealed confirmation authority. A shell pipeline does not automatically promote an unverified Task to ACTIVE.
 
-- \`python -m core.cli route --dir projects/demo --event NO_GAIN\`: advice only, no experimental action.
-- \`python -m core.cli record ... --event NO_GAIN --note "Observed negative pilot"\`: writes a **ROUTING_NOTE_ONLY** record; does **not** advance scientific phase.
-- \`python -m core.cli record ... --event RUN_RESULT --artifact projects/demo/RUN.json --note "Valid Run logged"\`: checks structure and file hash, then sets *suggested next phase*. This is **ARTIFACT_STRUCTURAL_ONLY**, not a verified scientific conclusion.
-- \`python -m core.cli history --dir projects/demo\`: detects a mismatch between last persisted event and state (e.g., interrupted write).
+## Evidence and control
 
-Raw Run logs and legitimate training approvals are still checked by the execution Agent. Neither the CLI nor any file automatically grants GPU/CPU fitting, download, spending, sealed-test or submission permission.
+- [AGENTS.md](AGENTS.md) is the one short entry: read only the current [Skill](skills/03_problem_design/SKILL.md).
+- `python -m core.cli route --dir projects/demo --event NO_GAIN`: no training; returns a Skill suggestion.
+- `python -m core.cli compare --champion A.json --challenger B.json --metric macro_F1`: accepts only comparable VALID **development** Runs.
+- `python -m core.cli history --dir projects/demo`: detects event log/STATE disagreement.
+- `core.cli record` with no `--artifact` saves a note **without** advancing scientific phase.
+- Untouched confirmation data, distinct user execution authorization, legitimate true labels, strong fair baselines, named nearest work and claim-specific independent evidence are never optional for formal claims.
 
-## Three engines, seven skills
+## Files and upstream sources
 
-| Engine | Skills | Purpose |
-| --- | --- | --- |
-| Opportunity | [01 Search](skills/01_search/SKILL.md), [02 Evidence/Data](skills/02_evidence_data/SKILL.md), [03 Problem](skills/03_problem_design/SKILL.md) | Find source-backed problems, reliable assets and plausible distinct contributions |
-| Development | [04 Feasibility](skills/04_feasibility/SKILL.md), [05 Algorithm](skills/05_algorithm/SKILL.md) | Legal baselines, testable implementation and experiment comparison |
-| Decision/Confirmation | [06 Decision](skills/06_decision/SKILL.md), [07 Confirmation](skills/07_confirmation/SKILL.md) | Repair without premature STOP; confirm only with independent evidence |
+| Component | Role |
+| --- | --- |
+| [skills/](skills/) | Seven short, conditionally loaded AI research capabilities |
+| [adapters/researchstudio_search.py](adapters/researchstudio_search.py) | Executes vendored upstream source workers, produces Forge evidence JSON |
+| [adapters/novelty_check.py](adapters/novelty_check.py) | Metadata-linked four-axis novelty questions; **UNVERIFIED** |
+| [adapters/experiment_plan.py](adapters/experiment_plan.py) | Converts ACTIVE Task to bounded PLAN_ONLY ExperimentSpec |
+| [vendor/](vendor/) | Pinned, unmodified upstream reference code/docs and their licenses |
+| [core/](core/) | Event router, artifact contracts, state and dev Run comparison |
+| [tests/](tests/) | Offline regression tests and vendored source tests |
+| [SOURCES.md](SOURCES.md) / [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) | Exact provenance, commit IDs, copying boundaries and licenses |
+| [docs/BUILD_PLAN.md](docs/BUILD_PLAN.md) | Remaining execution integration and scientific benchmark |
 
-Core entry: [AGENTS.md](AGENTS.md). Design: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Exact artifact shapes: [docs/CONTRACTS.md](docs/CONTRACTS.md). Roadmap: [docs/BUILD_PLAN.md](docs/BUILD_PLAN.md). Upstream/commit/license ledger: [SOURCES.md](SOURCES.md).
+All vendored sources and adapted docs remain optional and are **not loaded into the Agent context by default**. Imported Skills from ARIS/ResearchStudio include upstream-specific instructions; Forge Skills, local authorizations, task contracts and actual tooling take priority. No upstream Skill is permitted to invent a run or override a user's permission boundary.
 
-## Scientific boundaries
-
-- Exploration allows falsifiable UNKNOWNs, and one negative Pilot is not a project-wide STOP. A valid failure only affects its evidence-supported scope.
-- Software PASS != learnable task != new independent scientific contribution. Use genuinely comparable tuned baselines, legal label/group splits and an untouched eligible confirmation resource.
-- Preserve raw outputs, protocol/data/code versions and negative runs. The event file records structural pointers, not actual permission or proof.
-- The optional upstream components PaperQA2, ARIS, AIDE, R&D-Agent and ResearchStudio are **reference architectures only** until separately integrated and tested. No upstream source files were copied into this repository.
-
-The repository has not selected a distribution license; see [SOURCES.md](SOURCES.md).
+Forge itself remains unlicensed pending maintainer selection; individual MIT-licensed upstream copies remain under their preserved licenses.

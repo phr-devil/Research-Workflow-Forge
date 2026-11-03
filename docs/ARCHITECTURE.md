@@ -35,3 +35,13 @@ ResearchStudio supplies a model of **source-backed, version-aware idea design**;
 ## v0.2 real handoffs and research safeguards
 
 The optional `adapters.literature` module retrieves raw OpenAlex/Crossref **metadata** with query/timestamp/provider provenance. Only a real source file can satisfy SEARCH_READY structurally. Stage events with note alone do not advance STATE. Handoffs hash local artifacts, require active task IDs for real Run/Claim events, and record a last_event_id to detect interrupted state writes. These are shape-level checks, not a scientific or authorization oracle. `core.comparison.compare_runs` rejects incomparable and sealed development candidates.
+
+## v0.3 connected but bounded workflow
+
+**Source**: `adapters.researchstudio_search` calls a pinned vendored ResearchStudio per-source worker; upstream `postprocess.py` deduplicates/ranks without dropping low-score results. Errors and source versions stay in EVIDENCE. Fallback to the older two-provider adapter is explicit, not automatic.
+
+**Scientific hypothesis**: `adapters.novelty_check` creates an evidence-linked **UNVERIFIED** matrix over problem framing, proposed mechanism, key insight and application. It deliberately does not infer that a paper does *not* cover the mechanism from its title or abstract. Read the full originals and compare named nearest methods before judging independence.
+
+**Execution handoff**: `adapters.experiment_plan` requires an ACTIVE Task, checks stale Task fingerprints when a novelty review is provided, fixes dev/validation only and emits PLAN_ONLY. `NOVELTY_PRECHECK_READY` and `EXPERIMENT_PLAN_READY` route to 03/05 respectively when a local structurally valid file accompanies the event; note-only events never advance the phase. Neither action trains or grants consent.
+
+**Provenance**: original vendor files and MIT license texts under `vendor/`; exactly copied file list and commits in `THIRD_PARTY_NOTICES.md`. Do not auto-load 150KB of vendor source/reference text into AI context.

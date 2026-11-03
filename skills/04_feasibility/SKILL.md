@@ -16,3 +16,5 @@ description: Verify evaluation legality, credible baselines and a bounded inform
 5. 制定最小实验合同：固定 evaluator、dev split、待改模块、hypothesis、预算、正/负结果后各如何决策。封存确认集不得进入开放式实验。
 
 **交接**：EXPERIMENT.json + 可信基线证据或 NOT_RUN，明确未验证的科学前提与所需授权。
+
+**v0.3 实验规划交接**：可按需阅读 `vendor/aris/experiment-plan/SKILL.md` 的 Claim→Evidence→Run 设计法。填写实际 ACTIVE Task 后，执行 `python -m adapters.experiment_plan --task projects/ID/TASK.json --hypothesis "可检验差异" --evaluator-ref "受保护评价器版本" --gpu-hours-max 0 --positive "正结果后行动" --negative "负结果后诊断" --out projects/ID/EXPERIMENT.json`。若引用 NOVELTY.json，必须传 `--novelty-review`，且 Task 变更后旧审查失效。计划不准更改封存集，也不自动训练。0 GPU 预算意为只有计划/只读/非训练验证空间。

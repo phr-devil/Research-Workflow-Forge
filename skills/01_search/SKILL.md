@@ -17,3 +17,5 @@ description: Discover evidence-backed scientific opportunities within the user-d
 **交接**：精简机会清单，每项包含 question、primary_sources、nearest_work、available_assets、critical_unknown、next_probe。只输出实际发现，不生成没有科研价值的图表。来源和许可见 SOURCES.md。
 
 **已实现的最小检索入口**：`python -m adapters.literature --query "specific research problem" --limit 6 --out projects/ID/EVIDENCE.json`。OpenAlex/Crossref 仅返回公开元数据、DOI、标题与来源；处理 429/部分失败、去重与来源版本。**不可直接据标题声称新颖性**，对于真正进入命题的主候选仍需查原文及官方代码。没有联网时标 FAILED，不编造记录。后续用 `core.cli validate --kind evidence` 检查格式。
+
+**v0.3 实际检索入口（优先）：** `python -m adapters.researchstudio_search --query "问题表述" --query "关键机制或失效" --sources open_alex crossref arxiv --limit 6 --out projects/ID/EVIDENCE.json`。封装上游 ResearchStudio 的来源 Worker 与去重逻辑；多源失败逐项记录，若没有有效论文不可称搜索通过。旧 `adapters.literature` 仅作为兼容备选。阅读上游 `vendor/researchstudio/paper_search/SKILL.md` 只在调试检索或需要额外 API 时，不默认加载。仍需核查原论文而非仅使用标题/摘要。
