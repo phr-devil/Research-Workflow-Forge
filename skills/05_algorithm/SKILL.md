@@ -6,10 +6,11 @@ description: Build, debug and compare algorithms with reproducible Runs and boun
 
 Shared rules: [EXECUTION_POLICY](../../docs/EXECUTION_POLICY.md). Execution requires real Task, protected evaluator, eligible DEV data and actual authorization.
 
-- Work in one coherent **DRAFT → DEBUG / IMPROVE → directed test → record** batch. Diagnose the earliest engineering failure, repair locally and test affected interfaces; do not run unrelated full tests after every edit.
+- Work in one coherent **DRAFT → DEBUG / IMPROVE → directed test → record** batch.
+- **Default:** reuse or obtain a trustworthy simple matched-information baseline first; identify an observed unresolved error and the least expensive discriminating experiment. Increase architecture complexity only to test a distinct mechanism, satisfy a concrete deployment constraint, or address demonstrable capacity/temporal needs. Model size alone is not a scientific novelty claim. Diagnose the earliest engineering failure, repair locally and test affected interfaces; do not run unrelated full tests after every edit.
 - Preserve task/protocol/data/code/evaluator IDs, raw stdout/predictions, SHA receipts, candidate parent and negative Runs. No cherry-picked seed or evaluator changes disguised as improvement.
 - Current **bounded** engine: `python -m tools.experiment_runner` for opt-in grouped DEV dummy/logistic/forest; no arbitrary Agent-produced code or GPU. Then `core.cli record`, `core.cli compare` and explicit `core.cli champion`. `core.cli candidates` shows lineage, not a complete AIDE executor.
-- More runs are justified only by a different mechanism, unfair baseline, inadequate convergence, uncertainty or another decision-changing reason. A valid negative routes to 06 rather than endless hyperparameter churn.
+- More runs are justified only by a different mechanism, unfair baseline, inadequate convergence, uncertainty or another decision-changing reason. If a fair simple model matches or exceeds a complex challenger, preserve the simple reference and diagnose the challenger at mechanism scope; do not run endless cosmetic hyperparameter searches. A valid negative routes to 06 rather than endless hyperparameter churn.
 
 **Handoff:** real RunRecord / NOT_RUN, compatible Champion comparison, mechanism-level observation and next discriminating action.
 
