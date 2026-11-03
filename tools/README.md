@@ -1,14 +1,19 @@
-# Research tools — actual execution boundaries
+# Tools · current execution boundaries (v0.9)
 
-- Offline: `core.cli` init/route/record/history/validate/compare; non-executing state and experiment shape checks.
-- Explicit public network: `adapters.researchstudio_search` (vendored multi-provider ResearchStudio Worker + dedup), optional older `adapters.literature` (OpenAlex/Crossref).
-- Offline research handoff: `adapters.novelty_check` (UNVERIFIED prior-art matrix), `adapters.experiment_plan` (PLAN_ONLY, authorized resource cap only as input data).
-- Vendored unit checks: upstream ResearchStudio postprocess/runtime selftests; local Python unit tests under `tests/`.
+- `core.cli`: versioned Task/Run/Champion, immutable evidence hashes and dev-metric recomputation, history and branch recovery.
+- `tools.data_audit`: manifest-bound DEV integrity and label/group check, not training or sealed confirmation.
+- `tools.experiment_runner`: optional real grouped CPU DEV classification fit (dummy/logistic/forest), only under actual user permission. Does not run arbitrary Agent source.
+- `tools.feasibility_probe`: **no fitting**, uses independently verified DEV Run predictions to report group error/residual and optional matched-reference paired gain. Does not declare learnability/Oracle, scientific novelty or attainable headroom. Reading DEV logs data access; `--out` writes a fresh report only when requested.
+- `adapters.agent_bridge`, `adapters.typed_agent_bridge`: import external classification/regression/event predictions under trusted DEV evaluator; external training/sandbox provenance is **not attested**.
+- `adapters.researchstudio_search`: optional network paper metadata lookup, **not full-text novelty verification**; `adapters.novelty_check` is UNVERIFIED screening; `adapters.experiment_plan` is PLAN_ONLY.
+- Offline checks: `python -m unittest discover -s tests -v` plus vendored ResearchStudio selftests.
 
-**Not implemented:** official dataset integrity acquisition, full-text verified novelty analysis, training/inference runner, AIDE candidate search loop, protected independent scientific confirmation, automated research-paper generation. Do not claim these exist from upstream Skill references.
+**No** autonomous arbitrary Agent code executor, independently protected sealed evaluation service, user authorization from JSON, automatically proven novelty or publication engine. See [execution policy](../docs/EXECUTION_POLICY.md), [artifact contract](../docs/ARTIFACT_CONTRACT.md), and [PD-RW diagnostic interpretation](https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/FEASIBILITY_ENVELOPE.md).
 
-Follow the current user's scope/authorization, preserve real sources/negative Runs. Do not create decorative images or tests of irrelevant modules. Details in `docs/BUILD_PLAN.md`.
+Typical diagnostic:
 
-**v0.4 read-only utilities:** `python -m tools.data_audit --manifest ...` and `--dev-csv DEV.csv --group-col GROUP --label-col LABEL` check official-source metadata and local DEV integrity without training or sealed reading. `core.cli selection`, `journal`, `check-task` inspect versioned state/Run history. Model fitting, fair baseline optimization and actual independent effect estimation remain future integrations.
+```bash
+python -m tools.feasibility_probe --project PROJECT --candidate PROJECT/runs/C/RUN.json --reference PROJECT/runs/B/RUN.json --metric macro_F1 --out PROJECT/FEASIBILITY_ENVELOPE.json
+```
 
-**v0.5 functional update:** tools.data_audit CLI now enforces Manifest-bound local DEV access. tools.experiment_runner is an optional real grouped CPU DEV pilot (sklearn dummy/logistic/forest; fit opt-in and real user authorization required), emitting raw prediction/log digests. core.cli champion explicitly chooses among verified comparable Runs; candidates and recover are auditable offline utilities. No general agent code execution, GPU training, sealed evaluation or paper claims are implemented.
+Without a reference it reports **UNKNOWN signal**, not failure. A reference is not independently guaranteed to be an appropriate dummy/strong baseline; inspect implementation, K, legal information, tuning parity and selection history separately. No automatic scientific STOP/GO or charts.

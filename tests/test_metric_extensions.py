@@ -12,6 +12,7 @@ from core.contracts import ContractError
 from core.receipts import fingerprint_file
 from core.run_integrity import validate_run_evidence
 from core.statistics import group_bootstrap
+from tools.feasibility_probe import diagnose_feasibility
 
 
 def write_json(path, obj):
@@ -171,6 +172,28 @@ class TypedMetricTests(unittest.TestCase):
         run=self.make_run(kind="event",run_id="E")
         self.assertGreater(run["metrics"]["false_alarm_rate"],0)
         self.assertLess(run["metrics"]["event_recall"],1.01)
+
+
+    def test_regression_feasibility_descriptive_and_paired(self):
+        reference = self.make_run(run_id="FBR", shift=2.0)
+        candidate = self.make_run(run_id="FBC", shift=1.0)
+        rp = write_json(self.root/"reference-run.json", reference)
+        cp = write_json(self.root/"candidate-run.json", candidate)
+        result = diagnose_feasibility(self.root, cp, rp, metric="MAE")
+        self.assertEqual(result["remaining_error"]["measure"], "absolute_error")
+        self.assertAlmostEqual(result["remaining_error"]["group_macro_mean"],1.0)
+        self.assertEqual(result["n_independent_groups"],4)
+        self.assertEqual(result["paired_evidence"]["group_loss_change"]["improved"],4)
+        self.assertEqual(result["signal_evidence"],"DEV_IMPROVEMENT_OVER_REFERENCE_OBSERVED")
+        self.assertEqual(result["remaining_error"]["theoretical_attainable_gain"],"UNKNOWN")
+
+    def test_event_feasibility_does_not_invent_per_group_oracle(self):
+        event = self.make_run(kind="event", run_id="FE")
+        ep = write_json(self.root/"event-run.json", event)
+        result = diagnose_feasibility(self.root,ep)
+        self.assertEqual(result["remaining_error"]["measure"],"NOT_APPLICABLE_FOR_EVENT_EVALUATION")
+        self.assertIsNone(result["remaining_error"]["group_macro_mean"])
+        self.assertEqual(result["signal_evidence"],"UNKNOWN_WITHOUT_MATCHED_REFERENCE")
 
 
 if __name__=="__main__":

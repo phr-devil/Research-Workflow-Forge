@@ -26,3 +26,9 @@ Delivered: metric recomputation from frozen DEV labels/split, event chain corrup
 ## SAFE-Gait research-decision lesson (conceptual, not new runtime)
 
 The observed APACE→SAFE-Gait change suggests a particularly useful conditional probe: **Oracle correctability vs predecision information identifiability vs deployment-feasible gain**. Forge already supports evidence-preserving Task pivots; its Skills now call for this distinction only when a real symptom warrants it. The detailed historical case and optional read-only `information-check` live in the separate PD-RW repository ([case](https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/LESSONS/SAFE_GAIT_APACE.md)); they are not vendored into Forge and Forge does not claim to execute them. Future evaluation: pair an APACE-like historical decision point with failed negative controls under equal frozen evidence/budget, and measure premature STOP and invalid information pivots (not mere count of continuations).
+
+## v0.9: cheap signal/residual probe before complexity
+
+Delivered: `tools.feasibility_probe` reads only verified DEV Run receipts to describe classification/regression group error and trusted paired candidate-reference differences; event metrics receive no unsupported residual slice. Evidence is explicitly **exploratory**. There is no assumed Oracle, performance ceiling, guaranteed simple baseline, model fit, or mandatory gate.
+
+**Next actual experiment**, not further documentation: blind decision replay on APACE/CRIA/high-F1 baseline cases, with negative controls and frozen information/budget, then prospective comparison of invalid GO/STOP, time-to-valid-evidence and resource cost. Any improvement in scientific success rate remains **UNMEASURED**.

@@ -33,3 +33,4 @@ jobs:
           python -m adapters.researchstudio_search --help
           python -m tools.data_audit --help
           python -m tools.experiment_runner --help
+          python -m tools.feasibility_probe --help

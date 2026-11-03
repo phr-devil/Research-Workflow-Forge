@@ -17,3 +17,5 @@ Shared rules: [EXECUTION_POLICY](../../docs/EXECUTION_POLICY.md). Read original 
 
 
 **v0.8失败归因**：CRIA式真值邻域择优属于评价失效，优先隔离INVALID；RISC-Sense式subject-mean与pooled差异属于评价合同不同；APACE式K改变属于新任务与合法信息条件。保留真实简单基线而不自动宣称论文价值。
+
+**Failure triage with the v0.9 feasibility summary:** invalid labels/evaluator → repair affected evidence; undertraining/fairness deficit → bounded equal-budget anchor; candidate not better than matched simple reference → inspect residual structure, legal new information or genuinely different failure premise; heterogeneous positive DEV results → narrow only with new validation. Negative Pilot or UNKNOWN does **not** auto-STOP the project. Do not keep searching the same falsified lever without information gain.

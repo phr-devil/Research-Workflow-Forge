@@ -15,6 +15,7 @@ from core.receipts import fingerprint_file
 from core.run_integrity import load_verified_run, validate_run_evidence
 from core.state import initial_state, load_state, record_event, save_state, history_status
 from tools.experiment_runner import fit_development
+from tools.feasibility_probe import diagnose_feasibility
 
 def write_json(path,obj):
     path.parent.mkdir(parents=True,exist_ok=True)
@@ -174,6 +175,43 @@ class AdversarialScienceTests(unittest.TestCase):
                       {"INSUFFICIENT_INDEPENDENT_GROUPS","EXPLORATORY_INTERVAL"})
         self.assertEqual(report["promotion_scope"],"PROVISIONAL_DEVELOPMENT_ONLY")
         self.assertFalse(report["scientific_claim_confirmed"])
+
+    def test_feasibility_one_run_has_no_invented_signal_or_ceiling(self):
+        path = self.fitted()
+        result = diagnose_feasibility(self.p, path)
+        self.assertEqual(result["signal_evidence"], "UNKNOWN_WITHOUT_MATCHED_REFERENCE")
+        self.assertEqual(result["remaining_error"]["theoretical_attainable_gain"], "UNKNOWN")
+        self.assertEqual(result["n_independent_groups"], 2)
+        self.assertEqual(result["data_access"], "DEV_AUDIT_APPEND_ONLY_NO_FIT")
+        self.assertEqual(result["simple_baseline"], "NOT_VERIFIED_AS_SIMPLE_OR_WELL_TUNED")
+        self.assertLessEqual(len(result["worst_groups_exploratory"]), 3)
+
+    def test_feasibility_paired_group_effects_are_dev_only(self):
+        baseline = self.fitted("R1", "dummy")
+        candidate = self.fitted("R2", "logistic")
+        result = diagnose_feasibility(self.p, candidate, baseline, metric="macro_F1")
+        self.assertEqual(result["reference"], "R1")
+        self.assertEqual(result["paired_evidence"]["metric"], "macro_F1")
+        self.assertFalse(result["paired_evidence"]["scientific_claim_confirmed"])
+        self.assertEqual(result["paired_evidence"]["group_loss_change"]["n_groups"], 2)
+        self.assertEqual(result["remaining_error"]["theoretical_attainable_gain"], "UNKNOWN")
+
+    def test_feasibility_rejects_unmatched_or_ambiguous_metrics(self):
+        baseline = self.fitted("R1", "dummy")
+        candidate = self.fitted("R2", "logistic")
+        with self.assertRaisesRegex(ContractError,"Multiple verified metrics"):
+            diagnose_feasibility(self.p, candidate, baseline)
+        with self.assertRaisesRegex(ContractError,"Requested metric missing"):
+            diagnose_feasibility(self.p, candidate, baseline, metric="nonexistent")
+
+    def test_feasibility_does_not_accept_forged_score(self):
+        path = self.fitted()
+        run = json.loads(path.read_text(encoding="utf-8"))
+        run["metrics"]["macro_F1"] = 0.99
+        write_json(path,run)
+        with self.assertRaisesRegex(ContractError,"RECOMPUTED_METRIC_MISMATCH"):
+            diagnose_feasibility(self.p, path)
+
 
 if __name__=="__main__":
     unittest.main()

@@ -17,3 +17,5 @@ Shared rules: [EXECUTION_POLICY](../../docs/EXECUTION_POLICY.md). Start from an 
 
 
 **v0.8按任务取正确评价器**：分类、回归和事件主张不能混用口径。多受试者回归应指定group_mean或pooled；一次事件触发必须锁定完整episode、事件定义及真实触发容差，避免真值邻域取argmax。无可验证未来输入边界时只把外部工件当算术复算，不能声称在线因果部署通过。
+
+**v0.9 reuse, no extra gate:** Prefer `python -m tools.feasibility_probe --project PROJECT --candidate C [--reference B --metric FROZEN_METRIC]` to retraining when trusted DEV Run predictions already exist. Inspect group residuals and fair matched-reference gain; without reference output UNKNOWN. Candidate residual ≠ achievable headroom; no-info control must be trained only from training groups, not test labels. Classification/regression slices are descriptive; do not invent Oracle/event slices. No compulsory figure.

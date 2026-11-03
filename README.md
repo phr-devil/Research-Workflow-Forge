@@ -1,4 +1,4 @@
-# Research Workflow Forge · v0.8
+# Research Workflow Forge · v0.9
 
 An evidence-first research workflow with **one controller, three engines, seven on-demand Skills**. Starting point: the current scientific/engineering blocker, not a mandatory 7-step sequence. Optimize for **verified research progress per actual total resource cost**, not document count, number of Agent calls, or plots.
 
@@ -45,3 +45,13 @@ VALID development metrics are now independently recomputed from original manifes
 
 
 外部Codex/WorkBuddy的回归或事件预测可用`python -m adapters.typed_agent_bridge` 导入；程序只复核合法DEV分组、标签、样本与指标，不运行Agent源码或证明真实因果执行。用法见[工件合同](docs/ARTIFACT_CONTRACT.md)。
+
+## v0.9 · 真实信号与剩余空间画像
+
+新增按需、无训练的 `tools.feasibility_probe`：仅分析已通过 Forge 独立指标重算的开发集预测；按独立组报告错误结构，使用**同任务、同协议、同合法信息**的可信参考 Run 计算配对增量。**不会**把残差比例当理论可达上限，也不会因负增益决定项目 STOP 或因正增益宣布论文成功。分类错误率和回归绝对误差提供描述性切片；事件任务暂不生成伪造的切片诊断。现有 Task/Run 已知时可直接复用。
+
+```bash
+python -m tools.feasibility_probe --project PROJECT --candidate PROJECT/runs/C/RUN.json --reference PROJECT/runs/B/RUN.json --metric macro_F1 --out PROJECT/FEASIBILITY_ENVELOPE.json
+```
+
+`--reference` 和 `--out` 可省略；含多项指标的 Run 比较需指定任务的 `--metric`。可将输出交给 [PD-RW 的可行性判读](https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/FEASIBILITY_ENVELOPE.md)。不新建默认审批、训练或绘图步骤。
