@@ -1,10 +1,10 @@
-# Current architecture · v0.11
+# Current architecture · v0.12
 
 ## One controller, three engines, seven callable Skills
 
 - **Controller** `core/router.py`, `core/state.py`, `core/receipts.py`: evidence-linked versioned events, task/protocol transitions, no external action on routing. `core.cli brief` reports only current pointers and recent event deltas.
 - **Discovery**: 01 sourced paper/data opportunities → 02 official labels/group/role verification → 03 falsifiable Task and viable fallback. ResearchStudio search is **metadata-only**; IdeaSpark/Scoop Check are reference rubrics, not autonomous novelty confirmation.
-- **Development**: 04 immutable evaluation and credible baseline → 05 Draft/Debug/Improve with actual Run receipt, evaluator/data versions and explicit Champion. Current CPU executor is allowlisted, not general Agent code; typed regression and single-emission event DEV evaluations accept independently verified prediction receipts (not arbitrary code execution).
+- **Development**: 04 immutable evaluation and credible, preferably simple, reference → 05 smallest decision-changing Draft/Debug/Improve, then justified complexity escalation, with actual Run receipt, evaluator/data versions and explicit Champion. Current CPU executor is allowlisted, not general Agent code; typed regression and single-emission event DEV evaluations accept independently verified prediction receipts (not arbitrary code execution).
 - **Decision/confirmation**: 06 diagnose at Run/mechanism/Task/Claim scope; repair/pivot preserving evidence. 07 checks independent paper contribution and untouched confirmation, **not automated yet**.
 
 The route follows the current blocker: `NO_GAIN` → 06 → back to 05 if a different mechanism remains; `TASK_PIVOT` → 03; `CLAIM_CANDIDATE` → 07. **No mandatory linear seven-stage gate.**
