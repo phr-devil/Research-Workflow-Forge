@@ -43,7 +43,7 @@ class TaskLifecycle(unittest.TestCase):
         self.tmp.cleanup()
 
     def file(self,rel,obj):
-        if isinstance(obj,dict) and obj.get("run_id") and obj.get("status") in {"VALID","INCONCLUSIVE"}:
+        if isinstance(obj,dict) and obj.get("run_id") and obj.get("status") in {"VALID","INCONCLUSIVE","INVALID"}:
             obj=dict(obj)
             hashes={}
             for ref in obj["artifact_refs"]:
