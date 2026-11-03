@@ -1,4 +1,4 @@
-# AI Research Execution Policy · v0.12
+# AI Research Execution Policy · v0.13
 
 This file is the **single shared source** for execution efficiency. Read it once per research session; each Skill adds only its specific task. Requirements are defaults unless scientific correctness, actual permissions or the user's instruction require otherwise.
 
@@ -12,6 +12,11 @@ This file is the **single shared source** for execution efficiency. Read it once
 - Keep three outcomes separate: `LEGAL_SIGNAL`, `MINIMUM_RELIABLE_RESULT`, `MINIMUM_INDEPENDENT_CLAIM`. Simple improvement is not novelty, Oracle headroom is not identifiable deployable gain, negative challenger does not invalidate a preserved reference or Task.
 - For experimental cost choose A (read-only existing predictions/statistics), B (authorized lightweight fit), C (authorized complex training). Use the least costly experiment that can change the current decision; these are cost descriptions, not universal GPU/time thresholds or new authorization.
 - Preserve the simplest credible matched-information reference, its raw predictions and receipts when testing challengers. Mark incompatible Task/K/evaluator comparisons NOT_COMPARABLE; never silently overwrite old results. On matched simple-baseline domination without a distinct lever, stop *that mechanism* and return the scientific question/novelty gap to PD-RW if used.
+
+## Claim-proportional publication evidence (not a new gate)
+- A single real incremental contribution can justify a paper candidate: task-relevant improvement, efficiency/calibration cost for an acceptable accuracy tradeoff, reliable failure/robustness law, or meaningful combination/protocol improvement. Global SOTA, all metrics positive, novel backbone and mandatory multi-dataset superiority are **not** prerequisites.
+- Compare with the **strongest relevant matched** simple alternative and named nearest predecessors, not every model ever published. Report adverse metrics and compute/label costs, independent groups, selection history, uncertainty, and a confirmation scope matching the Claim. A single dataset may suffice for a properly limited Claim with genuinely independent confirmation groups; cross-dataset claims require corresponding evidence.
+- Separate `ENGINEERING_ASSET_ONLY`, `PAPER_PATH_CANDIDATE`, and `CONFIRMED_CLAIM` as **scientific interpretations already used by PD-RW**, not new Forge CLI enum values. Small DEV gains are exploratory until verified; negative results require a reproducible, not-yet-known insight rather than merely losing a leaderboard.
 
 ## Autonomous work and cost
 - Choose the **largest coherent authorized batch**: inspect → implement → directed test → repair → save evidence → decide. Do not stop after every small step or repeatedly ask for already supplied details.
