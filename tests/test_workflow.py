@@ -20,6 +20,15 @@ class WorkflowTests(unittest.TestCase):
     def test_no_gain_is_not_project_stop(self):
         self.assertEqual(route(self.state, "NO_GAIN")["phase"], "DECISION")
 
+    def test_result_and_failure_routes_surface_paper_opportunity(self):
+        for event in ("RUN_RESULT", "NO_GAIN", "TASK_BLOCKED"):
+            with self.subTest(event=event):
+                result = route(self.state, event)
+                self.assertEqual(result["skill"], "skills/06_decision/SKILL.md")
+                self.assertIn("paper", result["next_action"].lower())
+                self.assertTrue(any("paper opportunity" in w for w in result["warnings"]))
+                self.assertFalse(result["executes_external_action"])
+
     def test_state_does_not_authorize_confirmation(self):
         self.state["authorization_refs"] = ["STATE says approved"]
         result = route(self.state, "CONFIRM_REQUEST")
