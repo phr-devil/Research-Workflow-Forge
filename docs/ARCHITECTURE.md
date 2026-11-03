@@ -1,4 +1,4 @@
-# Current architecture · v0.12
+# Current architecture · v0.13
 
 ## One controller, three engines, seven callable Skills
 
@@ -6,6 +6,8 @@
 - **Discovery**: 01 sourced paper/data opportunities → 02 official labels/group/role verification → 03 falsifiable Task and viable fallback. ResearchStudio search is **metadata-only**; IdeaSpark/Scoop Check are reference rubrics, not autonomous novelty confirmation.
 - **Development**: 04 immutable evaluation and credible, preferably simple, reference → 05 smallest decision-changing Draft/Debug/Improve, then justified complexity escalation, with actual Run receipt, evaluator/data versions and explicit Champion. Current CPU executor is allowlisted, not general Agent code; typed regression and single-emission event DEV evaluations accept independently verified prediction receipts (not arbitrary code execution).
 - **Decision/confirmation**: 06 diagnose at Run/mechanism/Task/Claim scope; repair/pivot preserving evidence. 07 checks independent paper contribution and untouched confirmation, **not automated yet**.
+
+A narrow, reproducible incremental capability, cost/accuracy tradeoff, or new failure boundary may proceed toward a paper candidate without global SOTA or a new backbone. The existing Claim/confirmation contracts remain unchanged; this is a decision rule rather than a new machine state.
 
 The route follows the current blocker: `NO_GAIN` → 06 → back to 05 if a different mechanism remains; `TASK_PIVOT` → 03; `CLAIM_CANDIDATE` → 07. **No mandatory linear seven-stage gate.**
 
