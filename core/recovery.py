@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from core.locking import file_lock
 from core.receipts import fingerprint
+from core.event_chain import scan, match_state
 from core.state import (_bind_task, _checked_artifact, _next_task,
                         history_status, load_state, save_state)
 
@@ -17,6 +18,12 @@ def _plan(project: Path) -> tuple[dict, dict | None]:
     state = load_state(project / "STATE.json")
     path = project / "EVENTS.jsonl"
     events = [json.loads(x) for x in path.read_text(encoding="utf-8").splitlines() if x.strip()] if path.exists() else []
+    ledger = scan(project)
+    check = match_state(state, ledger, allow_one_pending=True)
+    if check["reason"] == "CHAIN_AND_STATE_MATCH":
+        return {"status": "CLEAN", "pending": 0}, None
+    if check["reason"] != "ONE_PENDING_EVENT":
+        raise ValueError("Ledger history is not a safe single pending event: " + check["reason"])
     ids = [item.get("event_id") for item in events]
     if len(ids) != len(set(ids)):
         raise ValueError("Duplicate event IDs: manual recovery required")
@@ -45,7 +52,7 @@ def _plan(project: Path) -> tuple[dict, dict | None]:
         linked = _checked_artifact(project, event["event"], target)
         if linked[2] != event.get("artifact_sha256"):
             raise ValueError("Pending event artifact hash changed")
-    if event.get("record_level") == "ARTIFACT_STRUCTURAL_ONLY" and linked is None:
+    if event.get("record_level") in {"ARTIFACT_STRUCTURAL_ONLY","DEV_METRICS_RECOMPUTED"} and linked is None:
         raise ValueError("Missing structural event artifact")
     if event.get("record_level") == "ROUTING_NOTE_ONLY" and linked is not None:
         raise ValueError("Note-only event unexpectedly has an artifact")
@@ -56,6 +63,9 @@ def _plan(project: Path) -> tuple[dict, dict | None]:
     changed = dict(state)
     if linked is not None:
         obj, rel, sha = linked
+        if event.get("record_level") == "DEV_METRICS_RECOMPUTED":
+            from core.run_integrity import validate_run_evidence
+            validate_run_evidence(project, obj)
         changed["phase"] = suggestion["phase"]
         changed["next_action"] = suggestion["next_action"]
         changed["evidence_refs"] = list(state["evidence_refs"]) + [f"{rel}@sha256:{sha}"]
@@ -76,6 +86,8 @@ def _plan(project: Path) -> tuple[dict, dict | None]:
             if obj.get("task_fingerprint") != fingerprint(task):
                 raise ValueError("Pending experimental plan is stale")
     changed["updated_at"], changed["last_event_id"] = event["at"], event["event_id"]
+    changed["ledger_length"] = ledger["chain_length"]
+    changed["ledger_head_digest"] = ledger["head_digest"]
     return {"status": "REPLAYABLE_ONE_EVENT", "pending": 1,
             "event_id": event["event_id"], "event": event["event"]}, changed
 

@@ -13,6 +13,7 @@ from core.contracts import SCHEMA_VERSION, ContractError, validate, validate_sta
 from core.locking import file_lock
 from core.receipts import check_receipt, check_state_task, fingerprint, resolve_project_file
 from core.router import route
+from core.event_chain import GENESIS, append, match_state, scan
 
 EVENT_KINDS = {
     "SEARCH_READY": "evidence",
@@ -43,6 +44,7 @@ def initial_state(project_id: str, goal: str) -> dict:
             "active_task_path": None, "active_task_sha256": None,
             "active_task_fingerprint": None, "best_valid_run_id": None,
             "evidence_refs": [], "authorization_refs": [], "last_event_id": None,
+            "ledger_length": 0, "ledger_head_digest": GENESIS,
             "next_action": "Define research scope and gather verifiable evidence",
             "updated_at": utcnow()}
 
@@ -127,17 +129,12 @@ def _bind_task(state: dict, task: dict, path: str, sha: str) -> None:
 
 def history_status(directory: Path) -> dict:
     state = load_state(directory / "STATE.json")
-    log = directory / "EVENTS.jsonl"
-    last_id = None
-    if log.exists():
-        with log.open(encoding="utf-8") as f:
-            for row in f:
-                if row.strip():
-                    last_id = json.loads(row)["event_id"]
-    valid = state.get("last_event_id") == last_id
-    return {"consistent": valid, "state_last_event_id": state.get("last_event_id"),
-            "log_last_event_id": last_id,
-            "note": "Mismatch needs recovery before new events; do not silently overwrite history"}
+    ledger = scan(directory)
+    result = match_state(state, ledger)
+    return {**result, "state_last_event_id": state.get("last_event_id"),
+            "log_last_event_id": ledger["last_event_id"],
+            "chain_length": ledger["chain_length"],
+            "chain_head_digest": ledger["head_digest"]}
 
 def record_event(directory: Path, event: str, note: str, artifact: Path | None = None) -> dict:
     if not note.strip() or len(note) > 1200:
@@ -155,6 +152,8 @@ def record_event(directory: Path, event: str, note: str, artifact: Path | None =
         if linked:
             obj, rel, sha = linked
             if event in {"BASELINE_VALID", "RUN_RESULT", "NO_GAIN", "RUN_INVALID"}:
+                if obj["split"] == "sealed":
+                    raise ContractError("SEALED_RUN_REQUIRES_INDEPENDENT_CONFIRMATION: never register sealed through a development event")
                 from core.run_integrity import validate_run_evidence
                 validate_run_evidence(directory, obj)
             proposed = obj.get("task_id")
@@ -196,16 +195,15 @@ def record_event(directory: Path, event: str, note: str, artifact: Path | None =
         after = ({"task_id": next_task[0]["task_id"], "protocol_id": next_task[0]["protocol_id"]}
                  if next_task else ({"task_id": linked[0]["task_id"], "protocol_id": linked[0]["protocol_id"]}
                                      if linked and event == "TASK_DEFINED" else current))
+        level = ("DEV_METRICS_RECOMPUTED" if linked and event in {"BASELINE_VALID", "RUN_RESULT", "NO_GAIN"} and linked[0].get("status") == "VALID"
+                 else "ARTIFACT_STRUCTURAL_ONLY" if linked else "ROUTING_NOTE_ONLY")
         record = {"event_id": event_id, "at": at, "event": event, "note": note,
-                  "record_level": "ARTIFACT_STRUCTURAL_ONLY" if linked else "ROUTING_NOTE_ONLY",
+                  "record_level": level,
                   "artifact_path": linked[1] if linked else None,
                   "artifact_sha256": linked[2] if linked else None,
                   "from_task": current, "to_task": after, "suggestion": suggestion}
         directory.mkdir(parents=True, exist_ok=True)
-        with (directory / "EVENTS.jsonl").open("a", encoding="utf-8") as f:
-            f.write(json.dumps(record, ensure_ascii=False) + "\n")
-            f.flush()
-            os.fsync(f.fileno())
+        append(directory, state, record)
         if linked:
             state["phase"] = suggestion["phase"]
             state["next_action"] = suggestion["next_action"]

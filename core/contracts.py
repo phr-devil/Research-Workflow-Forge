@@ -39,9 +39,11 @@ def validate_state(value: Any) -> dict:
     _text(obj, "project_id", "goal", "next_action")
     _enum(obj, "phase", PHASES)
     _list(obj, "evidence_refs", "authorization_refs")
-    for key in ("active_task_id", "active_protocol_id", "active_task_path", "active_task_sha256", "active_task_fingerprint", "best_valid_run_id", "best_valid_run_path", "best_valid_run_sha256", "last_event_id"):
+    for key in ("active_task_id", "active_protocol_id", "active_task_path", "active_task_sha256", "active_task_fingerprint", "best_valid_run_id", "best_valid_run_path", "best_valid_run_sha256", "last_event_id", "ledger_head_digest"):
         if obj.get(key) is not None and not isinstance(obj[key], str):
             raise ContractError(f"{key} must be string or null")
+    if obj.get("ledger_length") is not None and (type(obj["ledger_length"]) is not int or obj["ledger_length"] < 0):
+        raise ContractError("ledger_length must be a nonnegative integer")
     return obj
 
 def validate_evidence(value: Any) -> dict:

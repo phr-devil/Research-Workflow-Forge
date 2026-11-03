@@ -9,6 +9,8 @@ import os
 from uuid import uuid4
 from datetime import datetime, timezone
 from core.comparison import compare_runs
+from core.event_chain import append, scan
+from core.statistics import group_bootstrap
 from core.contracts import ContractError, validate
 from core.receipts import check_state_task, resolve_project_file
 from core.run_integrity import load_verified_run
@@ -37,6 +39,7 @@ def preview_champion(project: Path, candidate_path: Path) -> dict:
     if not current_ref:
         decision = "FIRST_VERIFIED_CHAMPION"
         comparison = None
+        uncertainty = {"status":"FIRST_CHAMPION_NO_PAIR"}
     else:
         existing_path = resolve_project_file(project, current_ref)
         existing, oldsha = load_verified_run(project, existing_path)
@@ -44,12 +47,19 @@ def preview_champion(project: Path, candidate_path: Path) -> dict:
             raise ContractError("Current Champion receipt changed")
         comparison = compare_runs(existing, candidate, metric,
                                   lower_is_better=(direction == "minimize"))
+        uncertainty = group_bootstrap(project,existing,candidate,metric,
+                                       lower_is_better=(direction=="minimize"))
         decision = "PROMOTE" if comparison["improvement_direction_delta"] > 0 else "KEEP_CURRENT"
+    ledger=scan(project)
+    prior_challenges=sum(1 for event in ledger["entries"] if event.get("event") in {"RUN_RESULT","NO_GAIN"})
     return {"decision": decision, "candidate": candidate["run_id"],
+            "uncertainty": uncertainty, "prior_challenger_events": prior_challenges,
+            "adaptive_selection_warning": "DEV Champion is provisional; repeated selection can overfit DEV",
             "candidate_relpath": candidate_path.resolve().relative_to(project.resolve()).as_posix(),
             "candidate_sha256": candidate_sha, "comparison": comparison,
             "metric": metric, "direction": direction,
-            "scientific_claim_confirmed": False}
+            "scientific_claim_confirmed": False,
+        "promotion_scope":"PROVISIONAL_DEVELOPMENT_ONLY"}
 
 def promote_champion(project: Path, candidate_path: Path) -> dict:
     project = project.resolve()
@@ -74,10 +84,7 @@ def promote_champion(project: Path, candidate_path: Path) -> dict:
                                "next_action": state["next_action"]},
                 "selection": result,
             }
-            with (project / "EVENTS.jsonl").open("a", encoding="utf-8") as log:
-                log.write(json.dumps(event, ensure_ascii=False) + "\n")
-                log.flush()
-                os.fsync(log.fileno())
+            append(project, state, event)
             state["best_valid_run_id"] = result["candidate"]
             state["best_valid_run_path"] = result["candidate_relpath"]
             state["best_valid_run_sha256"] = result["candidate_sha256"]

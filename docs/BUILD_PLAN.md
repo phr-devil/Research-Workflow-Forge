@@ -18,3 +18,7 @@
 Compare compact `brief` and on-demand Skill context against prior load-all/document-after-every-step workflow, using **measured** prompt bytes/tokens and actual wall-clock when available. Do not pretend a reduction in Markdown size is an empirically proven Token saving. For development, run targeted tests for changed interfaces; final integration uses complete CI and upstream selftests.
 
 **Boundary:** Neither this scaffold nor passing CI establishes novel scientific contribution, permission to fit a model or a publication success rate. Do not add plugins, images, dashboards or extra Agent roles without demonstrated research benefit. Old implementation notes remain available in Git history and existing upgrade files.
+
+## v0.7 delivered / next
+
+Delivered: metric recomputation from frozen DEV labels/split, event chain corruption detection and legacy migration, fail-closed sealed development ingestion, optional exploratory grouped Bootstrap and external-agent prediction ingestion. Remaining: trusted OS/container isolated arbitrary-code execution with user authorization and resource budgets; independent sealed confirmation evaluator; general task-specific metrics and fulltext novelty. Do not treat local SHA as a signature or a winning DEV model as a confirmed result.

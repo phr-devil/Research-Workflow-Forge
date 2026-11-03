@@ -14,6 +14,8 @@ from core.champion import preview_champion, promote_champion
 from core.recovery import recover
 from core.receipts import check_state_task
 from core.brief import project_brief
+from core.run_integrity import load_verified_run
+from core.event_chain import migrate_legacy
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="research-forge")
@@ -34,6 +36,7 @@ def main(argv: list[str] | None = None) -> int:
     check.add_argument("--kind", required=True, choices=sorted(VALIDATORS))
     check.add_argument("--file", required=True, type=Path)
     cmp = sub.add_parser("compare")
+    cmp.add_argument("--dir", required=True, type=Path, help="Project root for trusted DEV metric verification")
     cmp.add_argument("--champion", required=True, type=Path)
     cmp.add_argument("--challenger", required=True, type=Path)
     cmp.add_argument("--metric", required=True)
@@ -59,6 +62,9 @@ def main(argv: list[str] | None = None) -> int:
     brief = sub.add_parser("brief", help="Compact state/event pointers; no raw logs or invented costs")
     brief.add_argument("--dir", required=True, type=Path)
     brief.add_argument("--recent", type=int, default=2, help="0..5 recent event pointers (default 2)")
+    migrate = sub.add_parser("migrate-ledger", help="Explicitly anchor a verified legacy event log; default dry-run")
+    migrate.add_argument("--dir", required=True, type=Path)
+    migrate.add_argument("--apply", action="store_true")
     args = parser.parse_args(argv)
     try:
         if args.command == "init":
@@ -76,12 +82,13 @@ def main(argv: list[str] | None = None) -> int:
                 validate(args.kind, json.load(f))
             result = {"file": str(args.file), "kind": args.kind, "status": "STRUCTURE_VALID_ONLY"}
         elif args.command == "compare":
-            with args.champion.open(encoding="utf-8") as f:
-                champion = json.load(f)
-            with args.challenger.open(encoding="utf-8") as f:
-                challenger = json.load(f)
+            champion, _ = load_verified_run(args.dir, args.champion)
+            challenger, _ = load_verified_run(args.dir, args.challenger)
             result = compare_runs(champion, challenger, args.metric,
                                   lower_is_better=args.lower_is_better)
+            result["evidence_level"] = "INDEPENDENTLY_RECOMPUTED_DEV_METRICS"
+        elif args.command == "migrate-ledger":
+            result = migrate_legacy(args.dir, apply=args.apply)
         elif args.command == "selection":
             result = selection_history(args.dir)
         elif args.command == "brief":

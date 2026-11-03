@@ -1,6 +1,6 @@
 [project]
 name = "research-workflow-forge"
-version = "0.6.0"
+version = "0.7.0"
 description = "Evidence-first modular research workflow, optional grouped CPU development pilots"
 requires-python = ">=3.10"
 dependencies = []

@@ -17,6 +17,7 @@ from pathlib import Path
 from core.contracts import ContractError, validate
 from core.data_access import bind_dev_dataset
 from core.receipts import check_state_task, fingerprint_file
+from core.metric_verify import FORMAT, sample_hash
 from core.run_integrity import validate_run_evidence
 from core.state import load_state
 
@@ -130,18 +131,36 @@ def fit_development(project: Path, manifest_file: Path, dataset_id: str,
     predictions = [{"row_index": i, "group": groups[i], "truth": truth[j],
                     "prediction": pred[j]} for j, i in enumerate(test_idx)]
     metrics = {"macro_F1": macro, "balanced_accuracy": bal}
-    sample_fingerprint = hashlib.sha256(json.dumps(sorted(test_idx)).encode("utf-8")).hexdigest()
+    sample_col = ds.get("sample_id_column")
+    if sample_col:
+        with dataset_path.open(encoding="utf-8-sig", newline="") as source:
+            identifiers = [row.get(sample_col,"").strip() for row in csv.DictReader(source)]
+        if len(identifiers) != len(rows) or not all(identifiers) or len(set(identifiers)) != len(identifiers):
+            raise ContractError("DEV sample IDs missing/duplicated")
+        samples = [identifiers[i] for i in test_idx]
+        for row, idx in zip(predictions, test_idx):
+            row["sample_id"] = identifiers[idx]
+    else:
+        samples = test_idx
+    sample_fingerprint = sample_hash(samples)
     runner_sha = fingerprint_file(Path(__file__))
     # No arbitrary or LLM-supplied commands may be executed by this runner.
+    try:
+        manifest_ref = manifest_file.relative_to(project).as_posix()
+    except ValueError as exc:
+        raise ContractError("Manifest must be under project root for verifiable run receipts") from exc
     record = {
         "schema_version": "0.1", "run_id": run_id,
         "task_id": task["task_id"], "protocol_id": task["protocol_id"],
         "dataset_version": ds["sha256"], "code_commit": "source-sha256:" + runner_sha,
-        "evaluator_version": VERSION + ":" + runner_sha[:16], "split": "dev",
+        "evaluator_version": "forge-metric-verify-v1:" + fingerprint_file(Path(__file__).resolve().parents[1]/"core"/"metric_verify.py")[:12], "split": "dev",
         "status": "VALID", "metrics": metrics,
         "group_split": f"group-shuffle:{group_col}:seed=42:test=0.25",
         "sample_ids_hash": sample_fingerprint, "legal_inputs": features,
         "artifact_refs": [], "artifact_hashes": {},
+        "metric_spec": {"format": FORMAT, "predictions_ref": f"runs/{run_id}/predictions.json",
+                        "manifest_ref": manifest_ref, "manifest_sha256": fingerprint_file(manifest_file),
+                        "dataset_id": dataset_id},
         "branch_kind": "IMPROVE" if parent_run_id else "DRAFT",
         "parent_run_id": parent_run_id, "model_family": model,
         "authorization": "CLI_FLAG_ONLY_NOT_USER_PERMISSION",

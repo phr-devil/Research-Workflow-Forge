@@ -5,6 +5,7 @@ import json
 from collections import deque
 from pathlib import Path
 from core.state import load_state
+from core.event_chain import scan, match_state
 
 def project_brief(directory: Path, recent: int = 2) -> dict:
     if type(recent) is not int or not 0 <= recent <= 5:
@@ -29,6 +30,7 @@ def project_brief(directory: Path, recent: int = 2) -> dict:
                             "record_level": entry.get("record_level"),
                             "note": str(entry.get("note") or "")[:160],
                         })
+    integrity = match_state(state, scan(directory))
     return {
         "project_id": state["project_id"],
         "phase": state["phase"],
@@ -36,7 +38,9 @@ def project_brief(directory: Path, recent: int = 2) -> dict:
         "active_protocol_id": state.get("active_protocol_id"),
         "champion_run_id": state.get("best_valid_run_id"),
         "next_action": state["next_action"][:240],
-        "event_history_consistent": last_event_id == state.get("last_event_id"),
+        "event_history_consistent": integrity["consistent"],
+        "ledger_status": integrity["reason"],
+        "chain_length": state.get("ledger_length"),
         "recent_events": list(recent_events) if recent else [],
         "evidence_level": "STATE_AND_EVENT_POINTERS_ONLY",
         "token_gpu_cost": "NOT_MEASURED",

@@ -12,3 +12,5 @@ Shared rules: [EXECUTION_POLICY](../../docs/EXECUTION_POLICY.md). Execution requ
 - More runs are justified only by a different mechanism, unfair baseline, inadequate convergence, uncertainty or another decision-changing reason. A valid negative routes to 06 rather than endless hyperparameter churn.
 
 **Handoff:** real RunRecord / NOT_RUN, compatible Champion comparison, mechanism-level observation and next discriminating action.
+
+**v0.7:** Reject self-reported metric improvements: standard predictions must be independently re-evaluated against a SHA-pinned DEV source/frozen group split. External Codex/WorkBuddy scripts may produce predictions in separately controlled workspaces, then `adapters.agent_bridge` imports them without execution. `core.cli compare` now requires `--dir`; Champion preview includes provisional group-bootstrap uncertainty. Details only if needed: `docs/ARTIFACT_CONTRACT.md`.

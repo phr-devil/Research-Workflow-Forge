@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 from core.contracts import ContractError, validate
 from core.receipts import resolve_project_file
+from core.metric_verify import verify_metrics
 
 MAX_ARTIFACTS = 32
 MAX_ARTIFACT_BYTES = 250_000_000
@@ -45,8 +46,9 @@ def validate_run_evidence(project: Path, run: dict) -> dict:
         if observed.lower() != expected.lower():
             raise ContractError(f"Run artifact hash mismatch: {ref}")
         artifacts.append({"path": ref, "sha256": observed})
-    return {"integrity": "RAW_ARTIFACT_HASHES_VERIFIED", "run_id": run["run_id"],
-            "artifacts": artifacts,
+    metric_receipt = verify_metrics(project, run) if run["status"] == "VALID" else None
+    return {"integrity": "METRICS_RECOMPUTED" if metric_receipt else "RAW_ARTIFACT_HASHES_ONLY",
+            "run_id": run["run_id"], "metric_receipt": metric_receipt, "artifacts": artifacts,
             "limitations": "Hashes do not prove model correctness, dataset legitimacy, or independent confirmation"}
 
 def load_verified_run(project: Path, run_path: Path) -> tuple[dict, str]:

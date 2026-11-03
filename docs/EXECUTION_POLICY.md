@@ -24,3 +24,5 @@ This file is the **single shared source** for execution efficiency. Read it once
 - Downloading, installation, CPU/GPU fitting, spending, external transfer, sealed confirmation, submissions and substantive scope changes require actual user authorization. Neither a stored reference, tool parameter nor upstream Skill grants permission.
 
 **Success test:** valid evidence and reproducible progress per total real resource cost, not report length, number of Agent calls, figures or procedural checkmarks.
+
+**v0.7 non-negotiable:** independent DEV metric recomputation and event-chain verification are required before claiming a model score or selecting Champion. Never attempt to use a normal development event as sealed confirmation; use a separately authorized evaluator when available. Statistics support uncertainty analysis but must not impose a universal p-value gate on exploratory research.

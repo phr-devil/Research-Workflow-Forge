@@ -93,11 +93,11 @@ class TaskLifecycle(unittest.TestCase):
 
     def test_pivot_retains_history_and_retires_champion(self):
         self.record_task()
-        run_path=self.file("runs/R1.json",run())
-        record_event(self.p,"BASELINE_VALID","Verified raw Run receipt",run_path)
+        run_path=self.file("runs/R1.json",{**run(),"status":"INVALID"})
+        record_event(self.p,"RUN_INVALID","Legacy raw log preserved without fabricated metrics",run_path)
         self.assertIsNone(load_state(self.p/"STATE.json")["best_valid_run_id"])
-        promote_champion(self.p,run_path)
-        self.assertEqual(load_state(self.p/"STATE.json")["best_valid_run_id"],"R1")
+        with self.assertRaises(ContractError):
+            promote_champion(self.p,run_path)
         self.transition("TASK_PIVOT",task("T2","P2"))
         s=load_state(self.p/"STATE.json")
         self.assertEqual(s["active_task_id"],"T2")
@@ -117,7 +117,7 @@ class TaskLifecycle(unittest.TestCase):
         self.assertEqual(s["active_task_id"],"T1")
         self.assertEqual(s["active_protocol_id"],"P2")
         with self.assertRaisesRegex(ContractError,"protocol_id mismatches"):
-            record_event(self.p,"BASELINE_VALID","Old Run",self.file("RUN.json",run()))
+            record_event(self.p,"RUN_INVALID","Old Run",self.file("RUN.json",{**run(),"status":"INVALID"}))
 
     def test_transition_requires_distinct_id_or_version(self):
         self.record_task()

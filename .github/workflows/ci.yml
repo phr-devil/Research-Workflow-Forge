@@ -28,6 +28,7 @@ jobs:
         run: |
           python -m core.cli --help
           python -m core.cli brief --help
+          python -m adapters.agent_bridge --help
           python -m core.cli validate --kind task --file templates/TASK.json
           python -m adapters.researchstudio_search --help
           python -m tools.data_audit --help

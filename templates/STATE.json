@@ -7,5 +7,14 @@
   "best_valid_run_id": null,
   "evidence_refs": [],
   "authorization_refs": [],
-  "next_action": "Verify scope and gather sources"
+  "next_action": "Verify scope and gather sources",
+  "active_protocol_id": null,
+  "active_task_path": null,
+  "active_task_sha256": null,
+  "active_task_fingerprint": null,
+  "best_valid_run_path": null,
+  "best_valid_run_sha256": null,
+  "last_event_id": null,
+  "ledger_length": 0,
+  "ledger_head_digest": "0000000000000000000000000000000000000000000000000000000000000000"
 }

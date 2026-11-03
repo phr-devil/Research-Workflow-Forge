@@ -171,12 +171,12 @@ class HandoffTests(unittest.TestCase):
         other=valid_run("R-other")
         other["task_id"]="T2"
         with self.assertRaisesRegex(ContractError,"task_id disagrees"):
-            record_event(self.p,"RUN_RESULT","Wrong task",self.file("RUN.json",other))
+            record_event(self.p,"RUN_INVALID","Wrong task",self.file("RUN.json",{**other,"status":"INVALID"}))
 
     def test_run_handoff_needs_active_task(self):
         with self.assertRaisesRegex(ContractError,"active Task"):
-            record_event(self.p,"BASELINE_VALID","No actual Task",
-                         self.file("RUN.json",valid_run()))
+            record_event(self.p,"RUN_INVALID","No actual Task",
+                         self.file("RUN.json",{**valid_run(),"status":"INVALID"}))
 
     def test_valid_task_run_handoff(self):
         task={"schema_version":"0.1","task_id":"T1","question":"Generalize across subjects",
@@ -185,8 +185,8 @@ class HandoffTests(unittest.TestCase):
               "baseline":"Ridge","legal_inputs":["IMU"],"data_refs":["D1"],"nearest_work":[]}
         record_event(self.p,"TASK_DEFINED","Task protocol defined",self.file("TASK.json",task))
         self.assertEqual(load_state(self.p/"STATE.json")["active_task_id"],"T1")
-        record_event(self.p,"BASELINE_VALID","Recorded real baseline provenance",
-                     self.file("RUN.json",valid_run()))
+        record_event(self.p,"RUN_INVALID","Legacy fixture retained as a negative run",
+                     self.file("RUN.json",{**valid_run(),"status":"INVALID"}))
         self.assertIsNone(load_state(self.p/"STATE.json")["best_valid_run_id"])  # selection is separate
 
     def test_event_log_state_mismatch_detectable(self):

@@ -12,3 +12,5 @@ Shared rules: [EXECUTION_POLICY](../../docs/EXECUTION_POLICY.md). Enter only on 
 - Separate **DEV effect**, independent confirmation and genuine paper-level novelty. Structural passes, synthetic fixtures, Oracle, and model reviews do not prove scientific Claims.
 
 **Handoff:** ClaimRecord pointing to actual source/Run receipts and limits, or INSUFFICIENT / CONFIRMATION_UNAVAILABLE. Publication figures only after results justify them.
+
+**v0.7:** SEALED Run ingestion through BASELINE_VALID/RUN_RESULT/NO_GAIN/RUN_INVALID is refused. This is fail-closed development bookkeeping, NOT a completed independent-confirmation service. No JSON authorization_ref alone can grant permission to inspect a sealed dataset. The full execution boundary must be separate from the Agent's DEV workspace.
