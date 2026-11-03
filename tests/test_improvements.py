@@ -7,7 +7,8 @@ from pathlib import Path
 from core.comparison import compare_runs
 from core.contracts import ContractError, validate
 from core.state import initial_state, load_state, record_event, save_state
-from core.receipts import fingerprint_file, history_status
+from core.receipts import fingerprint_file
+from core.state import history_status
 
 def valid_run(name="A", value=0.8):
     return {"schema_version":"0.1","run_id":name,"task_id":"T1","protocol_id":"P1",
