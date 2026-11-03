@@ -33,7 +33,7 @@ class EfficiencyPolicyTests(unittest.TestCase):
             self.assertIn(essential.lower(), policy.lower())
         entry = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
         self.assertIn("docs/EXECUTION_POLICY.md", entry)
-        self.assertIn("one", entry.lower())
+        self.assertIn("only the skill", entry.lower())
         paths = sorted((ROOT / "skills").glob("*/SKILL.md"))
         self.assertEqual(len(paths), 7)
         for path in paths:
