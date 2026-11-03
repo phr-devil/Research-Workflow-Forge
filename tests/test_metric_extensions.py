@@ -43,13 +43,13 @@ class TypedMetricTests(unittest.TestCase):
         self.ssha=fingerprint_file(self.split)
         self.dev=[i for i,x in enumerate(self.rows) if x[1] in {f"G{g}" for g in range(4,8)}]
 
-    def run(self,kind="regression",run_id="R1",shift=0.0):
+    def make_run(self,kind="regression",run_id="R1",shift=0.0):
         event=kind=="event"
         preds=[]
         for i in self.dev:
             row=self.rows[i]
             if event:
-                preds.append({"row_index":i,"trigger_time_s":float(row[3])+shift})
+                preds.append({"row_index":i,"trigger_time_s":(float(row[3])+shift) if row[3] != "NONE" else 0.5})
             else:
                 preds.append({"row_index":i,"prediction":float(row[2])+shift})
         predfile=write_json(self.root/f"{run_id}.json",preds)
@@ -76,7 +76,7 @@ class TypedMetricTests(unittest.TestCase):
         return run
 
     def test_regression_rescores_group_mae_rmse(self):
-        run=self.run(shift=1.25)
+        run=self.make_run(shift=1.25)
         rec=validate_run_evidence(self.root,run)
         self.assertEqual(rec["metric_receipt"]["n_groups"],4)
         self.assertAlmostEqual(run["metrics"]["MAE"],1.25)
@@ -86,8 +86,8 @@ class TypedMetricTests(unittest.TestCase):
             validate_run_evidence(self.root,run)
 
     def test_regression_paired_difference_and_uncertainty(self):
-        a=self.run(run_id="A",shift=2)
-        b=self.run(run_id="B",shift=1)
+        a=self.make_run(run_id="A",shift=2)
+        b=self.make_run(run_id="B",shift=1)
         result=compare_runs(a,b,"MAE",lower_is_better=True)
         self.assertAlmostEqual(result["improvement_direction_delta"],1)
         interval=group_bootstrap(self.root,a,b,"MAE",lower_is_better=True,iterations=100)
@@ -95,14 +95,14 @@ class TypedMetricTests(unittest.TestCase):
         self.assertAlmostEqual(interval["directional_delta_ci95"][0],1)
 
     def test_group_versus_pooled_not_comparable(self):
-        a=self.run(run_id="A",shift=0)
-        b=self.run(run_id="B",shift=1)
+        a=self.make_run(run_id="A",shift=0)
+        b=self.make_run(run_id="B",shift=1)
         b["metric_spec"]["aggregation"]="pooled"
         with self.assertRaisesRegex(ContractError,"NOT_COMPARABLE"):
             compare_runs(a,b,"MAE")
 
     def test_event_arithmetic_and_no_truth_window(self):
-        run=self.run(kind="event",shift=0.2)
+        run=self.make_run(kind="event",shift=0.2)
         self.assertAlmostEqual(run["metrics"]["event_recall"],1.0)
         validate_run_evidence(self.root,run)
         p=self.root/run["metric_spec"]["predictions_ref"]
@@ -114,7 +114,7 @@ class TypedMetricTests(unittest.TestCase):
             validate_run_evidence(self.root,run)
 
     def test_frozen_group_overlap_and_missing_predictions(self):
-        run=self.run(run_id="C",shift=0.0)
+        run=self.make_run(run_id="C",shift=0.0)
         write_json(self.split,{"train_groups":["G1","G4"],"dev_groups":["G4","G5","G6","G7"]})
         run["metric_spec"]["split_sha256"]=fingerprint_file(self.split)
         run["group_split"]="pinned-groups:"+run["metric_spec"]["split_sha256"]
@@ -122,7 +122,7 @@ class TypedMetricTests(unittest.TestCase):
             verify_metrics(self.root,run)
         write_json(self.split,{"train_groups":[f"G{i}" for i in range(4)],
                                "dev_groups":[f"G{i}" for i in range(4,8)]})
-        run=self.run(run_id="D",shift=0.0)
+        run=self.make_run(run_id="D",shift=0.0)
         path=self.root/run["metric_spec"]["predictions_ref"]
         raw=json.loads(path.read_text())[:-1]
         write_json(path,raw)
@@ -139,7 +139,7 @@ class TypedMetricTests(unittest.TestCase):
         manifest["datasets"][0]["sha256"]=fingerprint_file(self.root/"data.csv")
         write_json(self.manifest,manifest)
         self.msha=fingerprint_file(self.manifest)
-        run=self.run(kind="event",run_id="E")
+        run=self.make_run(kind="event",run_id="E")
         self.assertGreater(run["metrics"]["false_alarm_rate"],0)
         self.assertLess(run["metrics"]["event_recall"],1.01)
 
