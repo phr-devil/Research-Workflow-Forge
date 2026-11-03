@@ -1,4 +1,4 @@
-# Research Workflow Forge · AI entry (v0.12)
+# Research Workflow Forge · AI entry (v0.13)
 
 **Read once:** [Execution Policy](docs/EXECUTION_POLICY.md), current project `STATE.json` (or `python -m core.cli brief --dir PROJECT`), and **only the Skill needed for the current blocker**. Do not preload all Skills, previous version notes, vendor code, papers or historical logs. Existing verified evidence takes precedence over repeating work.
 
@@ -12,6 +12,8 @@
 | Independent scientific Claim | `07_confirmation` |
 
 **Default sequence:** inspect current valid Run and Task → reuse or establish a legal, reasonably tuned simple reference → identify a reproducible error/signal and its cheapest falsifying test → escalate architecture only if a distinct lever/prediction or actual deployment constraint requires it. A simple success is not novelty; a complex failure is not Task failure. No second state ledger or compulsory skill chain.
+
+**Incremental-claim route:** when a credible result exists, assess a single concrete paper contribution under the actual task constraints rather than demanding a new architecture or global SOTA. Quantify any cost/accuracy tradeoff, inspect the nearest named paper(s), and pass a narrow Claim plus missing evidence to `07_confirmation` when appropriate. A draftable candidate is not independently confirmed; these are narrative rules, not new CLI statuses.
 
 **Shared efficiency, output, plotting, tests, autonomy, permissions and scientific boundaries:** [docs/EXECUTION_POLICY.md](docs/EXECUTION_POLICY.md). Do not repeat these rules inside Skills. The seven Skills are **capabilities, not seven compulsory approvals**.
 
