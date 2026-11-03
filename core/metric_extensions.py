@@ -98,7 +98,7 @@ def _setup(project: Path, run: dict):
     preds_path = resolve_project_file(project, spec["predictions_ref"])
     preds = json.loads(preds_path.read_text(encoding="utf-8"))
     if not isinstance(preds, list) or len(preds) != len(items):
-        raise ContractError("predict every independent DEV query once, no selection")
+        raise ContractError("predictions do not match complete frozen DEV query set")
     by_index = {}
     for p in preds:
         if not isinstance(p, dict) or type(p.get("row_index")) is not int or p["row_index"] < 0:

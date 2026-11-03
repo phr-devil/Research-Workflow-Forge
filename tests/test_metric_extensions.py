@@ -45,6 +45,11 @@ class TypedMetricTests(unittest.TestCase):
 
     def make_run(self,kind="regression",run_id="R1",shift=0.0):
         event=kind=="event"
+        if event:
+            manifest=json.loads(self.manifest.read_text(encoding="utf-8"))
+            manifest["datasets"][0]["label_column"]="event"
+            write_json(self.manifest,manifest)
+            self.msha=fingerprint_file(self.manifest)
         preds=[]
         for i in self.dev:
             row=self.rows[i]
