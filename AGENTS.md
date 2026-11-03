@@ -1,4 +1,4 @@
-# Research Workflow Forge · AI entry (v0.10)
+# Research Workflow Forge · AI entry (v0.11)
 
 **Read once:** [Execution Policy](docs/EXECUTION_POLICY.md), current project `STATE.json` (or `python -m core.cli brief --dir PROJECT`), and **only the Skill needed for the current blocker**. Do not preload all Skills, previous version notes, vendor code, papers or historical logs. Existing verified evidence takes precedence over repeating work.
 
@@ -22,3 +22,5 @@
 **按需低成本机制诊断（v0.9）**：当已有可信 DEV Run、拟开发复杂机制时，可调用 `tools.feasibility_probe` 读取既有预测，检查独立组误差和同协议配对差值；残差≠可达增益，无匹配参照≠无信号。此工具不是模型训练、科研确认或必须执行的前置审批。按需读 `tools/README.md`，不要重复预加载全部文档。
 
 **v0.10 discovery (only when Task is unknown or research hypothesis changes):** inspect existing DEV observation via `adapters.hypothesis_bank seed` (no fit), then let the current Agent draft at most 1–3 distinct, falsifiable hypotheses anchored to those seeds and/or existing paper metadata. `hypothesis_bank build` checks receipt/source IDs; `adapters.opportunity_review` proposes one cheap evidence action. After an actual verified DEV Run, `hypothesis_bank feedback` creates a new version. Start with [discovery playbook](docs/DISCOVERY_PLAYBOOK.md) only when needed; no extra mandatory Skill, second controller or multi-agent debate.
+
+**v0.11 optional PD-RW handoff:** for a key external DEV Run, use `adapters.pd_rw_bridge` only when the original PD-RW and Forge prediction bytes and task/legal metadata can be matched; it calls the existing independent Forge verifier and returns a DEV arithmetic receipt. Never reformat merely to copy model scores, claim attested training provenance, or load PD-RW's `core` in-process. See [artifact contract](docs/ARTIFACT_CONTRACT.md) on demand.

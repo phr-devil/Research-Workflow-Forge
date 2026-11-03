@@ -1,4 +1,4 @@
-# Current architecture · v0.10
+# Current architecture · v0.11
 
 ## One controller, three engines, seven callable Skills
 
@@ -19,3 +19,5 @@ A compact status is **not** a verified result. Paper novelty requires original f
 
 
 **v0.10 optional discovery adapter (no additional controller):** `adapters.hypothesis_bank` extracts descriptive seeds from verified DEV receipts and binds 1–3 Agent-authored hypotheses to hashed data-note / literature metadata / seed pointers. `adapters.opportunity_review` selects a transparent next evidence action; new DEV Run feedback creates an immutable bank revision. The seven Skills, STATE/Event contracts and external-Agent execution boundaries remain unchanged.
+
+**v0.11 evidence interoperability:** optional `adapters.pd_rw_bridge` reuses the existing Forge verified DEV Run loader and compares original prediction bytes to PD-RW artifacts. It is a read-only subprocess boundary rather than a second controller or merged state schema. Ordinal opportunity review also distinguishes baseline-dominated mechanisms from high-cost but distinct hypotheses.
