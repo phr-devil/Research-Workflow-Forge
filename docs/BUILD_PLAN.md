@@ -22,3 +22,7 @@ Compare compact `brief` and on-demand Skill context against prior load-all/docum
 ## v0.7 delivered / next
 
 Delivered: metric recomputation from frozen DEV labels/split, event chain corruption detection and legacy migration, fail-closed sealed development ingestion, optional exploratory grouped Bootstrap and external-agent prediction ingestion. Remaining: trusted OS/container isolated arbitrary-code execution with user authorization and resource budgets; independent sealed confirmation evaluator; general task-specific metrics and fulltext novelty. Do not treat local SHA as a signature or a winning DEV model as a confirmed result.
+
+## SAFE-Gait research-decision lesson (conceptual, not new runtime)
+
+The observed APACE→SAFE-Gait change suggests a particularly useful conditional probe: **Oracle correctability vs predecision information identifiability vs deployment-feasible gain**. Forge already supports evidence-preserving Task pivots; its Skills now call for this distinction only when a real symptom warrants it. The detailed historical case and optional read-only `information-check` live in the separate PD-RW repository ([case](https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/LESSONS/SAFE_GAIT_APACE.md)); they are not vendored into Forge and Forge does not claim to execute them. Future evaluation: pair an APACE-like historical decision point with failed negative controls under equal frozen evidence/budget, and measure premature STOP and invalid information pivots (not mere count of continuations).

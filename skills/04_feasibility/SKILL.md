@@ -12,3 +12,5 @@ Shared rules: [EXECUTION_POLICY](../../docs/EXECUTION_POLICY.md). Start from an 
 - `adapters.experiment_plan` creates `PLAN_ONLY` ExperimentSpec with evaluator, DEV split, falsifiable hypothesis, permitted budget and positive/negative decision. It **does not train**. The optional `tools.experiment_runner` fits only allowlisted CPU classifiers on manifest-bound DEV with actual user approval.
 
 **Handoff:** verified evaluator/baseline or NOT_RUN, experiment contract and one discriminating next experiment. No unnecessary figures.
+
+**Optional three-part diagnostic:** distinguish (1) ideal correctability/Oracle room, (2) predecision identifiability under legal observable inputs, and (3) practical gain after label/calibration cost against matched-information simple strategies. Only invoke on mechanisms such as dynamic gating/active calibration that show an Oracle-to-policy gap; **unknown** input identifiability is not automatic STOP or proof of unlearnability. No fitting without actual authorization.

@@ -12,3 +12,5 @@ Shared rules: [EXECUTION_POLICY](../../docs/EXECUTION_POLICY.md). Read original 
 - Task and protocol transitions require versioned `TASK_PIVOT` / `PROTOCOL_REVISED` decisions; old Champion is retired, negative history preserved. `core.cli recover` previews/repairs only a safe one-event interruption.
 
 **Handoff:** failure_scope, cited new evidence, decision, smallest next probe, possible outcomes and any genuine permission blocker.
+
+**APACE→SAFE-Gait failure lesson:** when a policy has theoretical Oracle room but consistently fails fixed/random controls, diagnose hidden-information/indistinguishable-action premises before changing network complexity. If a *realistically available* K-shot calibration observation changes the information condition, propose a distinct versioned Task, retain original negative evidence, recheck same-K baselines and independent confirmation eligibility. If no genuinely different information or mechanism exists, do not relabel a superficial pivot as progress. Case (optional): https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/LESSONS/SAFE_GAIT_APACE.md.

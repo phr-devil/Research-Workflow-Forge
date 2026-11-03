@@ -13,3 +13,5 @@ Shared rules: [EXECUTION_POLICY](../../docs/EXECUTION_POLICY.md). Invoke when no
 - DRAFT Tasks allow uncertainty. ACTIVE needs actual protocol, group split, metric, legal_inputs, baseline and holdout policy.
 
 **Handoff:** TaskSpec, minimal first falsification probe, reason for proposed mechanism and alternate route if its premise fails. Do not generate a manuscript plan before credible evidence.
+
+**Information feasibility (trigger only when relevant):** An Oracle or perfect-action gain is **correctability**, not proof a policy can identify that action from information available before prediction. Check the legal label budget K (unit, acquisition time), support/query separation and same-K strong simple baseline. A K=0→K=1 shift is a new versioned Task/protocol/Claim, never success of the old K=0 goal. Cross-project case: https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/LESSONS/SAFE_GAIT_APACE.md (read only on symptom).

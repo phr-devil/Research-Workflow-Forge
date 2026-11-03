@@ -14,3 +14,5 @@ Shared rules: [EXECUTION_POLICY](../../docs/EXECUTION_POLICY.md). Enter only on 
 **Handoff:** ClaimRecord pointing to actual source/Run receipts and limits, or INSUFFICIENT / CONFIRMATION_UNAVAILABLE. Publication figures only after results justify them.
 
 **v0.7:** SEALED Run ingestion through BASELINE_VALID/RUN_RESULT/NO_GAIN/RUN_INVALID is refused. This is fail-closed development bookkeeping, NOT a completed independent-confirmation service. No JSON authorization_ref alone can grant permission to inspect a sealed dataset. The full execution boundary must be separate from the Agent's DEV workspace.
+
+**Narrow Claims:** multi-target/direction/dataset outcomes may support a restricted effect or credible boundary but cannot be repackaged as universal gain through post-hoc cherry-picking. Preserve entire search/selection history, negative targets and direction reversals; require eligible independent confirmation and named nearest-work comparison. Individually trained dataset-specific models are not evidence that weights transferred across platforms.

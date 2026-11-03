@@ -46,6 +46,18 @@ class EfficiencyPolicyTests(unittest.TestCase):
                 self.assertNotIn("v0.4", content)
                 self.assertNotIn("v0.5", content)
 
+    def test_information_feasibility_is_optional_and_not_auto_stop(self):
+        root = ROOT / "skills"
+        problem = (root / "03_problem_design" / "SKILL.md").read_text(encoding="utf-8")
+        feasibility = (root / "04_feasibility" / "SKILL.md").read_text(encoding="utf-8")
+        decision = (root / "06_decision" / "SKILL.md").read_text(encoding="utf-8")
+        confirmation = (root / "07_confirmation" / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("predecision", problem.lower())
+        self.assertIn("not automatic STOP", feasibility)
+        self.assertIn("versioned Task", decision)
+        self.assertIn("negative targets", confirmation)
+        self.assertIn("only when relevant", problem)
+
     def test_policy_avoids_hard_report_and_agent_gate(self):
         policy = (ROOT / "docs/EXECUTION_POLICY.md").read_text(encoding="utf-8")
         self.assertIn("not mandate multi-Agent voting", policy)
