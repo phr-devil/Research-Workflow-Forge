@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from adapters.hypothesis_bank import validate_bank, _load_json, _write_new
+from adapters.hypothesis_bank import validate_bank, verify_bank_sources, _load_json, _write_new
 from core.receipts import check_receipt, resolve_project_file
 
 ORDER = {"BOUNDED_TEST_CANDIDATE": 0,
@@ -18,8 +18,7 @@ ORDER = {"BOUNDED_TEST_CANDIDATE": 0,
 def review_opportunities(project: Path, bank: dict) -> dict:
     project = project.resolve()
     validate_bank(bank)
-    for v in bank["sources"].values():
-        check_receipt(resolve_project_file(project, v["ref"]), v["sha256"])
+    verify_bank_sources(project, bank)
     rows = []
     for idea in bank["hypotheses"]:
         has_verified_data = bool(idea["source_seed_ids"])

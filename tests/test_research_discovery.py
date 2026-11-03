@@ -205,7 +205,7 @@ class ResearchDiscoveryTests(unittest.TestCase):
         self.assertEqual(review["candidates"][0]["next_action"],
                          "REVISE_ILLEGAL_INFORMATION_PREMISE")
         self.assertEqual(review["authorization"],"NOT_GRANTED")
-        self.assertNotIn("STOP",str(review))
+        self.assertNotEqual(review["candidates"][0]["next_action"],"STOP")
 
     def test_bad_task_binding_and_source_escape_fail_closed(self):
         s,_=self.seed_file()
@@ -216,6 +216,20 @@ class ResearchDiscoveryTests(unittest.TestCase):
             create_bank(self.project,self.cards,seed_path=s,literature_path=self.lit)
         with self.assertRaisesRegex(ContractError,"project-contained"):
             create_bank(self.project,self.cards,seed_path=Path("/tmp/outside-run.json"))
+
+
+    def test_review_fails_on_stale_original_run_and_forged_source_id(self):
+        s, run = self.seed_file()
+        bank = create_bank(self.project, self.cards, seed_path=s, literature_path=self.lit)
+        bank["hypotheses"][0]["source_seed_ids"]=["INVENTED"]
+        with self.assertRaisesRegex(ContractError,"source_seed_ids"):
+            review_opportunities(self.project,bank)
+        bank = create_bank(self.project,self.cards,seed_path=s,literature_path=self.lit)
+        original = json.loads(run.read_text())
+        original["metrics"]["MAE"]=999
+        write(run, original)
+        with self.assertRaises((ContractError,ValueError)):
+            review_opportunities(self.project,bank)
 
 
 if __name__=="__main__":

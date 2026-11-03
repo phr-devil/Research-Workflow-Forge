@@ -113,6 +113,9 @@ def validate_bank(bank: dict) -> dict:
     if not isinstance(bank.get("sources"), dict):
         raise ContractError("missing evidence source receipts")
     ids = set()
+    seed_ids = {x["seed_id"] for x in bank.get("observation_seeds", [])
+                if isinstance(x, dict) and isinstance(x.get("seed_id"), str)}
+    sources = bank["sources"]
     for c in cards:
         if not isinstance(c, dict):
             raise ContractError("candidate must be an object")
@@ -136,6 +139,13 @@ def validate_bank(bank: dict) -> dict:
             raise ContractError("bank cannot self-confirm hypotheses")
         if not isinstance(c.get("source_seed_ids"), list) or not isinstance(c.get("paper_record_ids"), list):
             raise ContractError("missing source IDs")
+        if c["source_seed_ids"] and ("seeds" not in sources or
+                                      not set(c["source_seed_ids"]).issubset(seed_ids)):
+            raise ContractError("source_seed_ids lack existing verified seed references")
+        if c["paper_record_ids"] and "literature" not in sources:
+            raise ContractError("paper_record_ids lack literature evidence")
+        if c.get("uses_data_note") and "data_note" not in sources:
+            raise ContractError("data note source is missing")
         if not isinstance(c.get("uses_data_note"), bool):
             raise ContractError("uses_data_note must be boolean")
         if not isinstance(c.get("run_feedback"), list):
@@ -260,6 +270,37 @@ def create_bank(project: Path, cards_path: Path, *,
     return validate_bank(bank)
 
 
+
+def verify_bank_sources(project: Path, bank: dict) -> None:
+    """Reject stale original Run data, modified seed snapshots and missing paper IDs."""
+    validate_bank(bank)
+    project = project.resolve()
+    for src in bank["sources"].values():
+        check_receipt(resolve_project_file(project, src["ref"]), src["sha256"])
+    if "seeds" in bank["sources"]:
+        seed = _load_json(project, resolve_project_file(project, bank["sources"]["seeds"]["ref"]))
+        c = seed.get("candidate_run")
+        r = seed.get("reference_run")
+        if not isinstance(c, dict):
+            raise ContractError("seed missing original DEV Run receipt")
+        candidate = resolve_project_file(project, c["ref"])
+        check_receipt(candidate, c["sha256"])
+        reference = None
+        if r is not None:
+            reference = resolve_project_file(project, r["ref"])
+            check_receipt(reference, r["sha256"])
+        if seed != make_observation_seeds(project, candidate, reference, metric=seed.get("metric")):
+            raise ContractError("source DEV observation has changed; new hypothesis bank needed")
+        if seed["seeds"] != bank["observation_seeds"]:
+            raise ContractError("bank seed IDs/results differ from original observations")
+    if "literature" in bank["sources"]:
+        papers = _load_json(project, resolve_project_file(project, bank["sources"]["literature"]["ref"]))
+        validate("evidence", papers)
+        allowed = {row["record_id"] for row in papers["records"]}
+        for idea in bank["hypotheses"]:
+            if not set(idea["paper_record_ids"]).issubset(allowed):
+                raise ContractError("bank references unknown literature IDs")
+
 def record_run_feedback(project: Path, bank_path: Path, hypothesis_id: str,
                         run_path: Path, assessment: str) -> dict:
     """Append verified DEV Run evidence in a NEW bank version; never auto-confirm."""
@@ -268,10 +309,8 @@ def record_run_feedback(project: Path, bank_path: Path, hypothesis_id: str,
     if assessment not in ASSESSMENTS:
         raise ContractError("unknown, self-declared assessment")
     bank = validate_bank(_load_json(project, bank_path))
-    # Source receipts remain stable; stale input summaries cannot silently advance.
-    for v in bank["sources"].values():
-        path = resolve_project_file(project, v["ref"])
-        check_receipt(path, v["sha256"])
+    # Source receipts remain stable; stale Run/metadata cannot silently advance.
+    verify_bank_sources(project, bank)
     target = next((x for x in bank["hypotheses"] if x["hypothesis_id"] == hypothesis_id), None)
     if target is None:
         raise ContractError("hypothesis ID not in bank")
