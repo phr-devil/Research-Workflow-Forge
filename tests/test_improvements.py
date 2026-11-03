@@ -6,7 +6,8 @@ import unittest
 from pathlib import Path
 from core.comparison import compare_runs
 from core.contracts import ContractError, validate
-from core.state import initial_state, load_state, record_event, save_state, history_status
+from core.state import initial_state, load_state, record_event, save_state
+from core.receipts import fingerprint_file, history_status
 
 def valid_run(name="A", value=0.8):
     return {"schema_version":"0.1","run_id":name,"task_id":"T1","protocol_id":"P1",
@@ -111,6 +112,15 @@ class HandoffTests(unittest.TestCase):
         self.t.cleanup()
 
     def file(self,name,obj):
+        if isinstance(obj,dict) and obj.get("run_id") and obj.get("status") in {"VALID","INCONCLUSIVE"}:
+            obj=dict(obj)
+            hashes={}
+            for ref in obj["artifact_refs"]:
+                logfile=self.p/ref
+                logfile.parent.mkdir(parents=True,exist_ok=True)
+                logfile.write_text("fixture raw log",encoding="utf-8")
+                hashes[ref]=fingerprint_file(logfile)
+            obj["artifact_hashes"]=hashes
         p=self.p/name
         p.parent.mkdir(parents=True,exist_ok=True)
         p.write_text(json.dumps(obj),encoding="utf-8")
@@ -176,7 +186,7 @@ class HandoffTests(unittest.TestCase):
         self.assertEqual(load_state(self.p/"STATE.json")["active_task_id"],"T1")
         record_event(self.p,"BASELINE_VALID","Recorded real baseline provenance",
                      self.file("RUN.json",valid_run()))
-        self.assertEqual(load_state(self.p/"STATE.json")["best_valid_run_id"],"A")
+        self.assertIsNone(load_state(self.p/"STATE.json")["best_valid_run_id"])  # selection is separate
 
     def test_event_log_state_mismatch_detectable(self):
         record_event(self.p,"NO_GAIN","Only a note, no empirical proof")

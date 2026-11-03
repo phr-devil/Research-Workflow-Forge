@@ -39,7 +39,7 @@ def validate_state(value: Any) -> dict:
     _text(obj, "project_id", "goal", "next_action")
     _enum(obj, "phase", PHASES)
     _list(obj, "evidence_refs", "authorization_refs")
-    for key in ("active_task_id", "active_protocol_id", "active_task_path", "active_task_sha256", "active_task_fingerprint", "best_valid_run_id", "last_event_id"):
+    for key in ("active_task_id", "active_protocol_id", "active_task_path", "active_task_sha256", "active_task_fingerprint", "best_valid_run_id", "best_valid_run_path", "best_valid_run_sha256", "last_event_id"):
         if obj.get(key) is not None and not isinstance(obj[key], str):
             raise ContractError(f"{key} must be string or null")
     return obj
@@ -103,6 +103,8 @@ def validate_task(value: Any) -> dict:
     _text(obj, "task_id", "question")
     _enum(obj, "status", TASK_STATUSES)
     if obj["status"] in {"ACTIVE", "FROZEN"}:
+        if obj.get("metric_direction") is not None and obj["metric_direction"] not in {"maximize", "minimize"}:
+            raise ContractError("metric_direction must be maximize or minimize")
         _text(obj, "protocol_id", "metric", "group_split", "holdout_policy", "baseline")
         _list(obj, "legal_inputs", "data_refs", "nearest_work")
         if not obj["legal_inputs"]:

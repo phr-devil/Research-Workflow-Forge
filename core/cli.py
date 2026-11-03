@@ -9,6 +9,9 @@ from core.router import ROUTES, route
 from core.state import history_status, initial_state, load_state, record_event, save_state
 from core.selection import selection_history
 from core.journal import candidate_journal
+from core.candidate_tree import candidate_tree
+from core.champion import preview_champion, promote_champion
+from core.recovery import recover
 from core.receipts import check_state_task
 
 def main(argv: list[str] | None = None) -> int:
@@ -42,6 +45,16 @@ def main(argv: list[str] | None = None) -> int:
     receipt.add_argument("--dir", required=True, type=Path)
     journal = sub.add_parser("journal", help="Reconstruct candidate history from versioned Run receipts")
     journal.add_argument("--dir", required=True, type=Path)
+
+    choose = sub.add_parser("champion", help="Verify and select only a comparable, evidence-backed development Champion")
+    choose.add_argument("--dir", required=True, type=Path)
+    choose.add_argument("--candidate", required=True, type=Path)
+    choose.add_argument("--apply", action="store_true", help="Explicitly write selected Champion to journal/STATE")
+    recov = sub.add_parser("recover", help="Inspect or repair one interrupted event")
+    recov.add_argument("--dir", required=True, type=Path)
+    recov.add_argument("--apply", action="store_true")
+    candidates = sub.add_parser("candidates", help="Inspect AIDE-style parent/child lineage")
+    candidates.add_argument("--dir", required=True, type=Path)
     args = parser.parse_args(argv)
     try:
         if args.command == "init":
@@ -69,6 +82,12 @@ def main(argv: list[str] | None = None) -> int:
             result = selection_history(args.dir)
         elif args.command == "journal":
             result = candidate_journal(args.dir)
+        elif args.command == "candidates":
+            result = candidate_tree(args.dir)
+        elif args.command == "recover":
+            result = recover(args.dir, apply=args.apply)
+        elif args.command == "champion":
+            result = promote_champion(args.dir, args.candidate) if args.apply else preview_champion(args.dir, args.candidate)
         elif args.command == "check-task":
             task = check_state_task(args.dir, load_state(args.dir / "STATE.json"))
             result = {"receipt_valid": True, "task_id": task["task_id"] if task else None}

@@ -18,3 +18,5 @@ description: Audit literature claims, dataset compatibility and independent-eval
 **交接**：EVIDENCE 及 DATA_MANIFEST，记角色、来源、许可、标签/group、可用性、确认资格与阻碍；不把文件完整性当科学任务有效性。
 
 **元数据边界**：`EVIDENCE.json` 中的 `METADATA_ONLY` 仅证明某提供者返回了检索条目；不等于已阅读论文全文或核实创新。输入 `DATA_MANIFEST.json` 时明确官方 URL、group_unit、label_status 与 DEV/SEALED_CONFIRM 等角色；检索时使用过的切片不得在确认时重新宣称从未接触。
+
+**v0.5 mandatory DEV interface**: when a local file will be read or fitted, manifest must include dataset_id, role, local_path, SHA-256 and independent group unit. Bind reads with core.data_access; a registered SEALED_CONFIRM alias is refused. Record access attempts. Do not claim that path+hash alone proves true labels or scientific compatibility.

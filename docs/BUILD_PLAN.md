@@ -35,3 +35,9 @@ Measure earliest valid-result cost, correct task/agent routing, token/GPU/time c
 - **P3:** read-only candidate Journal implemented, but an authorized executable AIDE/R&D-Agent backend is NOT yet integrated.
 
 Remaining high-value tasks are a genuine official dataset catalog + full-text nearest-work verification; a narrowly scoped, user-authorized coding/experiment runner with raw logs and split isolation; and blinded prospective scientific workflow evaluations at equal budgets. Do NOT pretend P2/P3/P4 are proven research-success improvements because CI passes.
+
+## v0.5 delivered and remaining
+
+P0 shipped: DEV Manifest binding, raw Run artifact SHA receipts, explicit metric-directed Champion selection and event-journal recovery with one-event safe replay. Candidate-tree history checks do not imply scientific validity. P1 initial vertical slice shipped: opt-in, allowlisted, group-disjoint CPU classifier development runner with train-only preprocessing. CI uses ONLY synthetic data and makes no scientific performance claim.
+
+Still missing: guarded arbitrary coding-agent integration with isolated file scope and hard execution limits, real dataset leakage/semantic audit, full-text paper evidence and independent confirmatory task evaluation. Do not expand the seven-stage Skill count or add heavy MLflow/Agent packages without demonstrated need.

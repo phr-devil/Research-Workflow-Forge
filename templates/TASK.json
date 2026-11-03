@@ -13,5 +13,6 @@
   "holdout_policy": null,
   "unknowns": [
     "Which group and label are valid?"
-  ]
+  ],
+  "metric_direction": null
 }

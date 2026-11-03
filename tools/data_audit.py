@@ -12,6 +12,7 @@ from collections import Counter
 from pathlib import Path
 
 from core.contracts import validate
+from core.data_access import bind_dev_dataset
 
 MAX_BYTES = 150_000_000
 MAX_ROWS = 1_000_000
@@ -88,23 +89,32 @@ def audit_development_csv(path: Path, *, group_col: str, label_col: str,
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Read-only manifest/DEV CSV preflight; no fitting")
     parser.add_argument("--manifest", type=Path)
-    parser.add_argument("--dev-csv", type=Path)
+    parser.add_argument("--dev-csv", type=Path, help="Optional exact path cross-check against registered DEV manifest")
+    parser.add_argument("--dataset-id", help="Required for CSV audit; must name a DEV dataset in manifest")
+    parser.add_argument("--project", type=Path, help="Project folder (defaults to manifest parent)")
     parser.add_argument("--group-col")
     parser.add_argument("--label-col")
     parser.add_argument("--id-col")
     parser.add_argument("--out", type=Path)
     args = parser.parse_args(argv)
-    if not args.manifest and not args.dev_csv:
+    if not args.manifest and not args.dataset_id:
         parser.error("Specify --manifest and/or --dev-csv")
-    if args.dev_csv and (not args.group_col or not args.label_col):
-        parser.error("--dev-csv requires --group-col and --label-col")
+    if (args.dev_csv or args.dataset_id) and (
+        not args.manifest or not args.dataset_id or not args.group_col or not args.label_col):
+        parser.error("CSV audit needs --manifest, --dataset-id, --group-col and --label-col")
     try:
         result = {"analysis_type": "READ_ONLY_PREFLIGHT"}
         if args.manifest:
             result["manifest"] = audit_manifest(json.loads(args.manifest.read_text(encoding="utf-8")))
-        if args.dev_csv:
-            result["development"] = audit_development_csv(args.dev_csv, group_col=args.group_col,
+        if args.dataset_id:
+            root = args.project or args.manifest.resolve().parent
+            verified, record = bind_dev_dataset(root, args.manifest, args.dataset_id, purpose="AUDIT_DEV")
+            if args.dev_csv is not None and args.dev_csv.resolve() != verified.resolve():
+                raise ValueError("--dev-csv disagrees with manifest-bound DEV path")
+            result["development"] = audit_development_csv(verified, group_col=args.group_col,
                                       label_col=args.label_col, id_col=args.id_col)
+            result["development"]["dataset_id"] = args.dataset_id
+            result["development"]["manifest_bound"] = True
         if args.out:
             if args.out.exists():
                 parser.error("refusing to overwrite an existing audit")

@@ -35,3 +35,11 @@ Only an actually authorized tool-backed Agent may download, fit CPU/GPU models, 
 - **decision** has decision_id, decision_type, from_task_id, from_protocol_id, reason and evidence_refs. TASK_PIVOT / PROTOCOL_REVISED additionally require to_task_id, to_protocol_id, project-relative new_task_path, exact raw new_task_sha256 and user_approval_ref (an audit pointer, never a permission grant).
 - **novelty** metadata candidates are explicitly screening-only and include unreviewed record IDs; named prior art must be verified in original papers.
 - **run history** is reconstructible from append-only EVENTS; source artifacts are checked against captured SHA. Concurrency is controlled for event writes, but this is NOT a fully transactional DB and a crash still needs recovery.
+
+## v0.5 evidence contracts
+
+Dataset DEV entries for local read/fit require local_path, raw sha256, role=DEV, label_status=VERIFIED for fitting, group_column, label_column, numeric feature_columns. DataAccess rejects identical declared SEALED_CONFIRM paths or hashes and records attempted DEV access; this is NOT an OS sandbox.
+
+Run status VALID now needs artifact_refs plus exact artifact_hashes for every original local log/prediction. Raw hashes must be verified at event registration; old structural-only runs are not acceptable as fresh BASELINE_VALID. ACTIVE Tasks optionally declare metric_direction, required for explicit Champion selection. State also records best_valid_run_path and best_valid_run_sha256, cleared on Task/Protocol change. CHAMPION_SELECTED is an append-only selection event, not a paper claim. Group/sample/evaluator/legal input compatibility remains required.
+
+One-event recovery requires matched original evidence; multiple lost state events and interrupted Champion updates are explicitly excluded from automatic replay.

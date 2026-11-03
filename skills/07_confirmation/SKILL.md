@@ -20,3 +20,5 @@ description: Independently test frozen scientific claims without contaminating h
 **查新与证据限制**：`vendor/researchstudio/scoop_check/SKILL.md` 可以辅助组织具名近邻，但其 Shell 全文工具与上游模型命令并未接入 Forge；不能自动宣称“已经完成全文核查”。`NOVELTY.json.status=UNVERIFIED` 仅提供待核论文和研究差额问题。确认阶段要独立记录合法实际全文来源、最近邻机制异同、预定统计单位和未污染 Holdout；没有这些则维持 INSUFFICIENT。
 
 **v0.4**: Read `core.cli selection` before considering a dataset sealed/untouched. Multiple prior task/protocol choices using the same source may invalidate its confirmation role. Pivots do not reset holdout access history. A DEV CSV preflight is only structural evidence, not independent confirmation.
+
+**v0.5 guardrail:** DEVELOPMENT grouped runner and raw Run SHA receipts are necessary for reproducibility but are not an untouched external confirmatory study. Check DATA_ACCESS.jsonl and selection_history before asserting confirmation eligibility; a stable DEV F1 score does not establish generalization beyond its chosen groups or novelty over named predecessors.

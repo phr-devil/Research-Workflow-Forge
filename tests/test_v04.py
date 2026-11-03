@@ -11,6 +11,7 @@ from adapters.paper_merge import merge_papers
 from adapters.researchstudio_search import run_upstream_worker, search_papers
 from adapters.novelty_check import prepare_review
 from core.receipts import fingerprint, fingerprint_file
+from core.champion import promote_champion
 from core.selection import selection_history
 from core.journal import candidate_journal
 from core.state import initial_state, load_state, save_state, record_event, history_status
@@ -20,7 +21,7 @@ from tools.data_audit import audit_manifest, audit_development_csv
 def task(tid="T1", protocol="P1"):
     return {"schema_version":"0.1","task_id":tid,"protocol_id":protocol,
             "question":"Can we generalize across sensor devices?",
-            "status":"ACTIVE","metric":"macro_F1", "group_split":"device-independent",
+            "status":"ACTIVE","metric":"macro_F1","metric_direction":"maximize", "group_split":"device-independent",
             "baseline":"Ridge", "holdout_policy":"sealed devices",
             "legal_inputs":["measured signals"], "data_refs":["D1"],"nearest_work":[]}
 
@@ -42,6 +43,15 @@ class TaskLifecycle(unittest.TestCase):
         self.tmp.cleanup()
 
     def file(self,rel,obj):
+        if isinstance(obj,dict) and obj.get("run_id") and obj.get("status") in {"VALID","INCONCLUSIVE"}:
+            obj=dict(obj)
+            hashes={}
+            for ref in obj["artifact_refs"]:
+                logfile=self.p/ref
+                logfile.parent.mkdir(parents=True,exist_ok=True)
+                logfile.write_text("fixture raw log",encoding="utf-8")
+                hashes[ref]=fingerprint_file(logfile)
+            obj["artifact_hashes"]=hashes
         path=self.p/rel
         path.parent.mkdir(parents=True,exist_ok=True)
         path.write_text(json.dumps(obj),encoding="utf-8")
@@ -83,7 +93,10 @@ class TaskLifecycle(unittest.TestCase):
 
     def test_pivot_retains_history_and_retires_champion(self):
         self.record_task()
-        record_event(self.p,"BASELINE_VALID","Real Run structurally logged",self.file("runs/R1.json",run()))
+        run_path=self.file("runs/R1.json",run())
+        record_event(self.p,"BASELINE_VALID","Verified raw Run receipt",run_path)
+        self.assertIsNone(load_state(self.p/"STATE.json")["best_valid_run_id"])
+        promote_champion(self.p,run_path)
         self.assertEqual(load_state(self.p/"STATE.json")["best_valid_run_id"],"R1")
         self.transition("TASK_PIVOT",task("T2","P2"))
         s=load_state(self.p/"STATE.json")

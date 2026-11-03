@@ -10,3 +10,5 @@
 Follow the current user's scope/authorization, preserve real sources/negative Runs. Do not create decorative images or tests of irrelevant modules. Details in `docs/BUILD_PLAN.md`.
 
 **v0.4 read-only utilities:** `python -m tools.data_audit --manifest ...` and `--dev-csv DEV.csv --group-col GROUP --label-col LABEL` check official-source metadata and local DEV integrity without training or sealed reading. `core.cli selection`, `journal`, `check-task` inspect versioned state/Run history. Model fitting, fair baseline optimization and actual independent effect estimation remain future integrations.
+
+**v0.5 functional update:** tools.data_audit CLI now enforces Manifest-bound local DEV access. tools.experiment_runner is an optional real grouped CPU DEV pilot (sklearn dummy/logistic/forest; fit opt-in and real user authorization required), emitting raw prediction/log digests. core.cli champion explicitly chooses among verified comparable Runs; candidates and recover are auditable offline utilities. No general agent code execution, GPU training, sealed evaluation or paper claims are implemented.

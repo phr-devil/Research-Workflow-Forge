@@ -15,20 +15,19 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
-      - name: Install optional paper-search adapter dependency
-        run: python -m pip install -e ".[paper-search]"
-      - name: All Forge unit tests (mocked online sources)
+      - name: Install research and optional bounded DEV runner
+        run: python -m pip install -e ".[paper-search,runner]"
+      - name: All Forge unit tests (synthetic CPU data only)
         run: python -m unittest discover -s tests -v
       - name: Vendored ResearchStudio postprocessing selftest
         run: python vendor/researchstudio/paper_search/scripts/selftest_postprocess.py
-      - name: Vendored ResearchStudio runtime selftest (Linux local HTTP fixture)
+      - name: Vendored ResearchStudio runtime selftest
         if: runner.os == 'Linux'
         run: python vendor/researchstudio/paper_search/scripts/selftest_runtime.py
-      - name: New CLI and read-only audit entrypoints
+      - name: CLI smoke with no real research data
         run: |
           python -m core.cli --help
           python -m core.cli validate --kind task --file templates/TASK.json
           python -m adapters.researchstudio_search --help
-          python -m adapters.novelty_check --help
-          python -m adapters.experiment_plan --help
           python -m tools.data_audit --help
+          python -m tools.experiment_runner --help

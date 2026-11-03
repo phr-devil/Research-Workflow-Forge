@@ -122,6 +122,8 @@ def _bind_task(state: dict, task: dict, path: str, sha: str) -> None:
     state["active_task_fingerprint"] = fingerprint(task)
     # History remains in EVENTS, but a changed protocol must not carry a Champion.
     state["best_valid_run_id"] = None
+    state["best_valid_run_path"] = None
+    state["best_valid_run_sha256"] = None
 
 def history_status(directory: Path) -> dict:
     state = load_state(directory / "STATE.json")
@@ -152,6 +154,9 @@ def record_event(directory: Path, event: str, note: str, artifact: Path | None =
                    "protocol_id": state.get("active_protocol_id")}
         if linked:
             obj, rel, sha = linked
+            if event in {"BASELINE_VALID", "RUN_RESULT", "NO_GAIN", "RUN_INVALID"}:
+                from core.run_integrity import validate_run_evidence
+                validate_run_evidence(directory, obj)
             proposed = obj.get("task_id")
             if proposed and state.get("active_task_id") and proposed != state["active_task_id"]:
                 raise ContractError("artifact task_id disagrees with active task; explicit task change required")
@@ -210,8 +215,6 @@ def record_event(directory: Path, event: str, note: str, artifact: Path | None =
             elif next_task:
                 _bind_task(state, *next_task)
                 state["evidence_refs"].append(f"{next_task[1]}@sha256:{next_task[2]}")
-            elif event == "BASELINE_VALID":
-                state["best_valid_run_id"] = linked[0]["run_id"]
         state["updated_at"], state["last_event_id"] = at, event_id
         save_state(state_path, state)
         return {**suggestion, "record_level": record["record_level"],

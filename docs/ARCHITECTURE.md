@@ -53,3 +53,7 @@ TASK_DEFINED binds a versioned ACTIVE Task. TASK_PIVOT and PROTOCOL_REVISED requ
 The event writer holds a portable OS file lock and performs an append-only event+atomic state save. In case of a crash between these two steps, history detects a mismatch and further writes refuse to proceed without explicit recovery. No automatic replay is asserted. Selection history is generated from EVENTS, rather than a second conflicting state log.
 
 ResearchStudio source ranking is reused while a local conservative deduplicator protects distinct DOI editions; novel-paper shortlist coverage is exposed. Real full-text assessment remains external to these metadata tools.
+
+## v0.5 development vertical slice
+
+The three engines and seven Skills are unchanged. DEV access now passes through core/data_access; raw run logs are verified by core/run_integrity; core/champion updates best pointers only on user-invoked selection, with metric direction and compatibility; core/recovery handles only safe, auditable one-event journal inconsistency. The optional tools/experiment_runner runs constrained sklearn models on explicit group-disjoint DEV files and records real predictions and hashes. It is neither an arbitrary-coding Agent nor an independent scientific evaluation. core/candidate_tree checks AIDE-inspired parent links from the existing Journal without a second source of truth.

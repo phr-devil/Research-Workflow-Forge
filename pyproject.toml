@@ -1,13 +1,14 @@
 [project]
 name = "research-workflow-forge"
-version = "0.4.0"
-description = "Evidence-first modular research workflow, source-backed discovery and scientific handoff"
+version = "0.5.0"
+description = "Evidence-first modular research workflow, optional grouped CPU development pilots"
 requires-python = ">=3.10"
 dependencies = []
 
 [project.optional-dependencies]
 paper-search = ["requests>=2.31,<3"]
 openreview = ["requests>=2.31,<3", "openreview-py>=1.46"]
+runner = ["scikit-learn>=1.4,<2"]
 
 [build-system]
 requires = ["setuptools>=68"]

@@ -1,2 +1,2 @@
-"""Research Workflow Forge deterministic core."""
-__version__ = "0.4.0"
+"""Research Workflow Forge deterministic core, optional DEV pilot."""
+__version__ = "0.5.0"
