@@ -1,4 +1,6 @@
-# Research Workflow Forge · AI entry (v0.14)
+# Research Workflow Forge · AI entry (v0.15)
+
+**Default goal:** finish the smallest evidence-backed manuscript suitable for a real specialist journal; new model complexity is optional. At a credible Run/negative Pilot or before costly model escalation/HOLD/PIVOT, use `06_decision` to ask whether an existing narrow Claim only needs a decisive fair comparison or independent evidence. If yes, prioritize paper-critical experiments and hand off `ONE_CLAIM | CORE_RUN | GAP_1-3 | NEXT_REQUIRED_TEST | VENUE_ANALOGS_IF_KNOWN` to PD-RW, without asserting acceptance or scientific confirmation. When task design requires it, inspect 1–3 recent published analogous studies cheaply; formal journal matching belongs to PD-RW.
 
 **Read once:** [Execution Policy](docs/EXECUTION_POLICY.md), current project `STATE.json` (or `python -m core.cli brief --dir PROJECT`), and **only the Skill needed for the current blocker**. Do not preload all Skills, previous version notes, vendor code, papers or historical logs. Existing verified evidence takes precedence over repeating work.
 
