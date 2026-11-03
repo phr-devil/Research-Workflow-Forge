@@ -1,4 +1,4 @@
-# AI Research Execution Policy · v0.8
+# AI Research Execution Policy · v0.12
 
 This file is the **single shared source** for execution efficiency. Read it once per research session; each Skill adds only its specific task. Requirements are defaults unless scientific correctness, actual permissions or the user's instruction require otherwise.
 
@@ -6,6 +6,12 @@ This file is the **single shared source** for execution efficiency. Read it once
 - Start from the current **blocker**, not stage 01. Read `AGENTS.md`, the actual project `STATE.json`, relevant source/Run receipts, and **one** Skill. Load other files only to resolve a named dependency.
 - Prefer `python -m core.cli brief --dir PROJECT` for a compact project snapshot. It reports pointers, **not** scientific verification. Reuse prior valid experiments, data audits, downloads, code and paper evidence; invalidate stale versions rather than recomputing everything.
 - State uncertainties as UNKNOWN, not automatic STOP. An exploration Pilot may be negative without falsifying the Task. Distinguish code error, invalid evaluation, weak mechanism, infeasible Task and unsupported Claim.
+
+## Evidence-first experiment priority (not an extra gate)
+- Starting from the current Task/Run, prefer this **skippable** order: legal truth/group/time/inputs → validated simple reference (existing if possible) → observed signal and recoverable error → smallest discriminator or correction → more complex architecture only when it addresses a named unresolved limit, distinct falsifiable mechanism or real deployment need. Some physical/temporal tasks can require complex models from the outset; justify this with a cheap probe where possible.
+- Keep three outcomes separate: `LEGAL_SIGNAL`, `MINIMUM_RELIABLE_RESULT`, `MINIMUM_INDEPENDENT_CLAIM`. Simple improvement is not novelty, Oracle headroom is not identifiable deployable gain, negative challenger does not invalidate a preserved reference or Task.
+- For experimental cost choose A (read-only existing predictions/statistics), B (authorized lightweight fit), C (authorized complex training). Use the least costly experiment that can change the current decision; these are cost descriptions, not universal GPU/time thresholds or new authorization.
+- Preserve the simplest credible matched-information reference, its raw predictions and receipts when testing challengers. Mark incompatible Task/K/evaluator comparisons NOT_COMPARABLE; never silently overwrite old results. On matched simple-baseline domination without a distinct lever, stop *that mechanism* and return the scientific question/novelty gap to PD-RW if used.
 
 ## Autonomous work and cost
 - Choose the **largest coherent authorized batch**: inspect → implement → directed test → repair → save evidence → decide. Do not stop after every small step or repeatedly ask for already supplied details.
