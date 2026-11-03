@@ -1,24 +1,14 @@
 ---
 name: research-feasibility
-description: Verify evaluation legality, credible baselines and a bounded informative pilot.
+description: Establish legal evaluation, credible baseline and minimum informative pilot.
 ---
-# 04 | 可行性验证与实验协议
+# 04 | Feasibility and evaluation contract
 
-**入口**：已有科学 Task，需要确定是否能在真实数据和合法评价下开展算法实验。
+Shared rules: [EXECUTION_POLICY](../../docs/EXECUTION_POLICY.md). Start from an existing Task/Run where possible.
 
-**借鉴**：AutoResearchClaw 的实验设计与交接，AutoResearch 的可修改模型与固定评价器**设计思想**；AutoResearch 仓库未声明许可，禁止直接复制其代码或原文。
+- Freeze the real evaluation rule: label, independence unit, group/time split, legal observation, train-only preprocessing, metric and evaluator version. Protect sealed confirmation.
+- Reuse legitimate existing baseline Runs; compare fairly tuned strong alternatives when performance is claimed. Check for label ambiguity, leakage, group heterogeneity, undertraining and feasible performance headroom with the cheapest valid probes.
+- Separate ENABLEMENT / BASELINE / MECHANISM experiments. Oracle and synthetic checks are diagnostics, not deployed gains. A first negative Pilot triggers bounded diagnosis, not automatic abandonment.
+- `adapters.experiment_plan` creates `PLAN_ONLY` ExperimentSpec with evaluator, DEV split, falsifiable hypothesis, permitted budget and positive/negative decision. It **does not train**. The optional `tools.experiment_runner` fits only allowlisted CPU classifiers on manifest-bound DEV with actual user approval.
 
-**执行**：
-1. 核实际真值/证明义务、任务指标、分组/时间因果、推理时合法信息和 train-only 预处理；确认开发和独立确认数据的边界。
-2. 优先复用可靠简单基线。需要性能比较时对强基线公平调参；已有效的旧 Run 不重算。资源或授权不足时只设计，不拟合 CPU/GPU 参数。
-3. 观察合法开发池中的残差、组间异质性、容量/欠训练及可能的性能空间。Oracle/合成正控仅支持诊断，不能冒充部署收益。
-4. 区分 ENABLEMENT（恢复数据与训练能力）、BASELINE/IMPROVE（公平表现）和 MECHANISM_TEST（真正需要不同预测的解释）。首次 Pilot 没增益不自动停整个 Task。
-5. 制定最小实验合同：固定 evaluator、dev split、待改模块、hypothesis、预算、正/负结果后各如何决策。封存确认集不得进入开放式实验。
-
-**交接**：EXPERIMENT.json + 可信基线证据或 NOT_RUN，明确未验证的科学前提与所需授权。
-
-**v0.3 实验规划交接**：可按需阅读 `vendor/aris/experiment-plan/SKILL.md` 的 Claim→Evidence→Run 设计法。填写实际 ACTIVE Task 后，执行 `python -m adapters.experiment_plan --task projects/ID/TASK.json --hypothesis "可检验差异" --evaluator-ref "受保护评价器版本" --gpu-hours-max 0 --positive "正结果后行动" --negative "负结果后诊断" --out projects/ID/EXPERIMENT.json`。若引用 NOVELTY.json，必须传 `--novelty-review`，且 Task 变更后旧审查失效。计划不准更改封存集，也不自动训练。0 GPU 预算意为只有计划/只读/非训练验证空间。
-
-**v0.4**: Use `python -m tools.data_audit --manifest MANIFEST.json` for a read-only resource preflight, or `--dev-csv DEV.csv --group-col GROUP --label-col LABEL` for simple DEV group/label integrity. This cannot certify leakage-free splits or dataset licenses, and it never fits parameters. Before recording a plan, check the active Task receipt; any changed evaluator or protocol requires a new versioned Task and explicit PROTOCOL_REVISED decision.
-
-**v0.5 read-only check:** data_audit CLI requires --manifest --dataset-id --group-col --label-col for local DEV CSV. The optional grouped runner is a concrete small CPU pilot only after explicit real user permission; default is denial, not an automatic training authorization. A correct split requires independent groups and train-only preprocessing, not a broad model accuracy alone.
+**Handoff:** verified evaluator/baseline or NOT_RUN, experiment contract and one discriminating next experiment. No unnecessary figures.

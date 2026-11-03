@@ -1,29 +1,35 @@
-# Research Workflow Forge v0.5
+# Research Workflow Forge · v0.6
 
-Modular evidence-first research workflow: opportunity → data/evidence → falsifiable Task → baseline → algorithm iteration ↔ scoped decision → independent scientific confirmation. Skills are non-linear capabilities.
+An evidence-first research workflow with **one controller, three engines, seven on-demand Skills**. Starting point: the current scientific/engineering blocker, not a mandatory 7-step sequence. Optimize for **verified research progress per actual total resource cost**, not document count, number of Agent calls, or plots.
 
-**Implemented:** vendored ResearchStudio multi-provider metadata search; UNVERIFIED novelty precheck; PLAN_ONLY experiment planning; versioned Task/Run states and pivots; manifest-bound DEV access; SHA-verified raw Run artifacts; explicit evidence-backed Champion selection; one-event crash recovery; AIDE-style candidate lineage; optional CPU-only grouped dummy/logistic/forest development runner.
+## Quick use
 
-**Not implemented:** an autonomous Codex/WorkBuddy coding backend, unrestricted algorithm research, GPU execution, full-paper novelty assessment, external independent confirmation, proven paper success-rate improvement.
+```powershell
+git clone https://github.com/phr-devil/Research-Workflow-Forge.git
+cd Research-Workflow-Forge
+python -m pip install -e ".[paper-search,runner]"
+python -m unittest discover -s tests -v
+python -m core.cli init --dir projects/demo --project-id demo --goal "Evaluate a valid research task"
+python -m core.cli brief --dir projects/demo
+python -m core.cli route --dir projects/demo --event NEW_DIRECTION
+```
 
-## Install and test
+To resume an existing project, run `python -m core.cli brief --dir PROJECT --recent 2`, read only the cited active Task/Run and current relevant Skill, then execute a **coherent, authorized batch** of work. A brief is state pointers, not scientific verification.
 
-    git clone https://github.com/phr-devil/Research-Workflow-Forge.git
-    cd Research-Workflow-Forge
-    python -m pip install -e ".[paper-search,runner]"
-    python -m unittest discover -s tests -v
+## Engines and actual implementation
 
-## Real project flow (requires real data and authorization)
+| Engine | Skills | Current tool boundary |
+| --- | --- | --- |
+| Discovery | 01 Search · 02 Evidence/Data · 03 Problem | Multi-provider literature **metadata**, verified DEV roles, **UNVERIFIED** novelty precheck |
+| Development | 04 Feasibility · 05 Algorithm | `PLAN_ONLY` experiment contracts; manifest-bound DEV audit; optional grouped CPU dummy/logistic/forest pilot; raw SHA receipts; explicit Champion |
+| Decision/Confirmation | 06 Decision · 07 Confirmation | Failure scope, pivot, selection history, safe recovery; independent scientific confirmation **not automated** |
 
-1. Use core.cli init to create project STATE; run adapters.researchstudio_search for actual paper metadata; complete Task and DATA_MANIFEST from official datasets and real legal inputs.
-2. Register ACTIVE Task with core.cli record --event TASK_DEFINED --artifact PROJECT/TASK.json.
-3. Read-only audit must use --manifest and --dataset-id. DEV manifest requires local_path, SHA256, source_url, role=DEV, group_unit, group_column, label_column, label_status=VERIFIED for fitting and numeric feature_columns.
-4. Only with actual user approval, run tools.experiment_runner --project PROJECT --manifest PROJECT/DATA_MANIFEST.json --dataset-id D --model dummy --run-id R1 --allow-cpu-fit; this performs a REAL bounded local CPU fit on registered DEV data. It cannot run an arbitrary Agent-produced program.
-5. Register the output runs/R1/RUN.json with core.cli record --event BASELINE_VALID; this validates raw SHA receipts but does not automatically mark the model best.
-6. Preview best-model selection with core.cli champion --dir PROJECT --candidate PROJECT/runs/R1/RUN.json. Add --apply to commit selection. The active Task must explicitly specify metric_direction=maximize or minimize.
-7. Run a Challenger (logistic or forest), optionally with --parent-run-id R1 after registering the baseline, and compare same DEV protocol with core.cli compare. Inspect core.cli journal and candidates for parentage and failures.
-8. For an interrupted event use core.cli recover --dir PROJECT (preview), then --apply only if one safe verified event can be replayed. Independent paper confirmation is a separate scientific task.
+A real CPU fit requires separately verified user permission and `--allow-cpu-fit` on the allowlisted runner; the flag is **not** itself authorization. The tools are cooperative guards, not an arbitrary-code sandbox. No autonomous Codex/WorkBuddy integration, GPU engine, full-text novelty verification, or established improvement in paper success rate.
 
-DataAccess logs DEV access before reading; the tools are cooperative protections, not an OS security sandbox. Synthetic CI fits are engineering tests, not scientific results. Raw outputs, negative candidates and source provenance are retained.
+## Efficient execution defaults
 
-Docs: AGENTS.md, docs/CONTRACTS.md, docs/ARCHITECTURE.md, docs/UPGRADE_V05.md, SOURCES.md, THIRD_PARTY_NOTICES.md.
+**Load only one Skill** and relevant evidence; reuse verified runs, searches and data. Batch inspect→edit→focused test→repair→record. During exploration skip decorative images and publication figures; make a small diagnostic chart only when needed to decide. Use concise *delta-only* updates instead of repeated reports. Full CI at integration/release, not after every minor edit. A negative Pilot prompts diagnosis, not automatic project STOP. **Never weaken legal splits, permissions, reproducibility or independent confirmation to save tokens.**
+
+The [shared execution policy](docs/EXECUTION_POLICY.md) is authoritative for these defaults. [AGENTS.md](AGENTS.md) is the shortest AI entry; [architecture](docs/ARCHITECTURE.md), [contracts](docs/CONTRACTS.md), and [build plan](docs/BUILD_PLAN.md) describe current behavior, not appended version histories. Prior changes remain under [UPGRADE_V04](docs/UPGRADE_V04.md) and [UPGRADE_V05](docs/UPGRADE_V05.md); upstream copyrights in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+CI uses only synthetic research fixtures and source selftests; passing tests never proves a scientific paper claim.

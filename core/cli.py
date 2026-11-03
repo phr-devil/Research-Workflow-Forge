@@ -13,6 +13,7 @@ from core.candidate_tree import candidate_tree
 from core.champion import preview_champion, promote_champion
 from core.recovery import recover
 from core.receipts import check_state_task
+from core.brief import project_brief
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="research-forge")
@@ -55,6 +56,9 @@ def main(argv: list[str] | None = None) -> int:
     recov.add_argument("--apply", action="store_true")
     candidates = sub.add_parser("candidates", help="Inspect AIDE-style parent/child lineage")
     candidates.add_argument("--dir", required=True, type=Path)
+    brief = sub.add_parser("brief", help="Compact state/event pointers; no raw logs or invented costs")
+    brief.add_argument("--dir", required=True, type=Path)
+    brief.add_argument("--recent", type=int, default=2, help="0..5 recent event pointers (default 2)")
     args = parser.parse_args(argv)
     try:
         if args.command == "init":
@@ -80,6 +84,8 @@ def main(argv: list[str] | None = None) -> int:
                                   lower_is_better=args.lower_is_better)
         elif args.command == "selection":
             result = selection_history(args.dir)
+        elif args.command == "brief":
+            result = project_brief(args.dir, recent=args.recent)
         elif args.command == "journal":
             result = candidate_journal(args.dir)
         elif args.command == "candidates":

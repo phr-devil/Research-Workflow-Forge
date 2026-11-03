@@ -1,59 +1,18 @@
-# Architecture: one controller, three engines, seven capabilities
+# Current architecture · v0.6
 
-## Design, not a rigid seven-step pipeline
+## One controller, three engines, seven callable Skills
 
-- **Controller (core/router.py + State):** maps a real event to one skill; preserves project continuity and constraints. It is deterministic and **does not** call LLMs, GitHub, web, GPUs or other external tools.
-- **A | Opportunity Engine:** 01 search, 02 primary evidence/data resources, 03 falsifiable scientific problem. Free exploration with explicit UNKNOWNs; narrow to one actual primary Task without prematurely requiring a positive model result.
-- **B | Development Engine:** 04 evaluator/data validity/credible baseline, 05 code + experiment. Protected protocol/split and writable model scopes; Champion/Challenger with real execution traces.
-- **C | Decision & Confirmation:** 06 scoped repair/continue/pivot, 07 frozen independent claim assessment. A mechanism failure may return to 05; a task-level blocker may return to 03/01 while reusing legitimate data/assets.
+- **Controller** `core/router.py`, `core/state.py`, `core/receipts.py`: evidence-linked versioned events, task/protocol transitions, no external action on routing. `core.cli brief` reports only current pointers and recent event deltas.
+- **Discovery**: 01 sourced paper/data opportunities → 02 official labels/group/role verification → 03 falsifiable Task and viable fallback. ResearchStudio search is **metadata-only**; IdeaSpark/Scoop Check are reference rubrics, not autonomous novelty confirmation.
+- **Development**: 04 immutable evaluation and credible baseline → 05 Draft/Debug/Improve with actual Run receipt, evaluator/data versions and explicit Champion. Current CPU executor is allowlisted, not general Agent code.
+- **Decision/confirmation**: 06 diagnose at Run/mechanism/Task/Claim scope; repair/pivot preserving evidence. 07 checks independent paper contribution and untouched confirmation, **not automated yet**.
 
-## Event graph
+The route follows the current blocker: `NO_GAIN` → 06 → back to 05 if a different mechanism remains; `TASK_PIVOT` → 03; `CLAIM_CANDIDATE` → 07. **No mandatory linear seven-stage gate.**
 
-NEW_DIRECTION → 01 → SEARCH_READY → 02 → DATA_READY → 03 → TASK_DEFINED → 04 → BASELINE_VALID → 05
+## Persistent artifacts and boundaries
 
-05 → RUN_RESULT / NO_GAIN / CODE_FAILURE / RUN_INVALID → 06 → 05 (repair/next mechanism), or → 03 (new actual Task)
+`STATE.json` holds current pointers; `EVENTS.jsonl` contains append-only evidence-linked transitions; Task/Experiment/Run/Claim contracts live in `core/contracts.py`. `DATA_MANIFEST.json` and `DATA_ACCESS.jsonl` protect eligible DEV use; raw Run logs/predictions retain SHA digests. Version changes retire incompatible Champions without erasing negative results. Sealed confirmation and user authorization are independent protected gates.
 
-06 / 05 → CLAIM_CANDIDATE → 07 (plan only) → real approval + eligible sealed evidence → independent confirmation
+A compact status is **not** a verified result. Paper novelty requires original full text and named predecessors; strong independent confirmation is outside the current runtime.
 
-Any event can occur first if the corresponding genuine state already exists. The CLI route command never claims the implied inputs were produced; scientific Agent must inspect actual records.
-
-## Shared evidence, not repeated reports
-
-- ResearchState: latest project pointers and suggested action; authorization_refs are **pointers only**.
-- EvidenceRecord / DataManifest (future structured adapters): original URLs, DOI, version, exact supported claim and dataset role/eligibility.
-- TaskSpec: task_id, legal observation, outcome, independent unit, group split, metric, baseline, named nearest work and optional task levels.
-- ExperimentSpec: immutable evaluator reference, dev split, hypothesis, max cost and expected distinguishing outcomes.
-- RunRecord: code/data/evaluator/protocol versions, real stdout/metrics/predictions, status and exact compute cost.
-- ClaimRecord: original scientific contribution and nearest-work difference, actual supporting runs, independent verification and limitations.
-
-See [CONTRACTS.md](CONTRACTS.md). A version change can invalidate comparability/novelty/evidence, but must not erase real historical failures. Sealed data cannot be used for selecting tasks/algorithms.
-
-## Why these modules
-
-ResearchStudio supplies a model of **source-backed, version-aware idea design**; ARIS and AutoResearchClaw show handoff contracts; AIDE gives **auditable candidate branches**, R&D-Agent gives **feedback-driven new hypotheses**, AutoResearch suggests **evaluator isolation**; PaperQA2 is an optional citation source. This composition is a proposed architecture, **not experimentally proven superior**. Compare with chapters 08/10 under equal budgets.
-
-## v0.2 real handoffs and research safeguards
-
-The optional `adapters.literature` module retrieves raw OpenAlex/Crossref **metadata** with query/timestamp/provider provenance. Only a real source file can satisfy SEARCH_READY structurally. Stage events with note alone do not advance STATE. Handoffs hash local artifacts, require active task IDs for real Run/Claim events, and record a last_event_id to detect interrupted state writes. These are shape-level checks, not a scientific or authorization oracle. `core.comparison.compare_runs` rejects incomparable and sealed development candidates.
-
-## v0.3 connected but bounded workflow
-
-**Source**: `adapters.researchstudio_search` calls a pinned vendored ResearchStudio per-source worker; upstream `postprocess.py` deduplicates/ranks without dropping low-score results. Errors and source versions stay in EVIDENCE. Fallback to the older two-provider adapter is explicit, not automatic.
-
-**Scientific hypothesis**: `adapters.novelty_check` creates an evidence-linked **UNVERIFIED** matrix over problem framing, proposed mechanism, key insight and application. It deliberately does not infer that a paper does *not* cover the mechanism from its title or abstract. Read the full originals and compare named nearest methods before judging independence.
-
-**Execution handoff**: `adapters.experiment_plan` requires an ACTIVE Task, checks stale Task fingerprints when a novelty review is provided, fixes dev/validation only and emits PLAN_ONLY. `NOVELTY_PRECHECK_READY` and `EXPERIMENT_PLAN_READY` route to 03/05 respectively when a local structurally valid file accompanies the event; note-only events never advance the phase. Neither action trains or grants consent.
-
-**Provenance**: original vendor files and MIT license texts under `vendor/`; exactly copied file list and commits in `THIRD_PARTY_NOTICES.md`. Do not auto-load 150KB of vendor source/reference text into AI context.
-
-## v0.4 event transitions
-
-TASK_DEFINED binds a versioned ACTIVE Task. TASK_PIVOT and PROTOCOL_REVISED require a Decision with specific old/new Task/protocol IDs and an SHA-matched *new* Task file. Old Run records are never deleted, but Champion is cleared and candidate Journal reports prior runs as current_protocol=false. No review or experimental plan may be recorded against a Task file that has been silently edited.
-
-The event writer holds a portable OS file lock and performs an append-only event+atomic state save. In case of a crash between these two steps, history detects a mismatch and further writes refuse to proceed without explicit recovery. No automatic replay is asserted. Selection history is generated from EVENTS, rather than a second conflicting state log.
-
-ResearchStudio source ranking is reused while a local conservative deduplicator protects distinct DOI editions; novel-paper shortlist coverage is exposed. Real full-text assessment remains external to these metadata tools.
-
-## v0.5 development vertical slice
-
-The three engines and seven Skills are unchanged. DEV access now passes through core/data_access; raw run logs are verified by core/run_integrity; core/champion updates best pointers only on user-invoked selection, with metric direction and compatibility; core/recovery handles only safe, auditable one-event journal inconsistency. The optional tools/experiment_runner runs constrained sklearn models on explicit group-disjoint DEV files and records real predictions and hashes. It is neither an arbitrary-coding Agent nor an independent scientific evaluation. core/candidate_tree checks AIDE-inspired parent links from the existing Journal without a second source of truth.
+**How agents work efficiently:** [EXECUTION_POLICY.md](EXECUTION_POLICY.md). This file documents only system structure. Source attribution: [SOURCES.md](../SOURCES.md). Historical migrations: [UPGRADE_V04.md](UPGRADE_V04.md), [UPGRADE_V05.md](UPGRADE_V05.md).

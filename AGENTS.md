@@ -1,18 +1,18 @@
-# Research Workflow Forge — AI entry (v0.5)
+# Research Workflow Forge · AI entry (v0.6)
 
-Read AGENTS.md, the actual project STATE.json and only the relevant skills/XX/SKILL.md. Never preload vendor sources or all previous version notes. Seven skills are capabilities, not compulsory gates.
+**Read once:** [Execution Policy](docs/EXECUTION_POLICY.md), current project `STATE.json` (or `python -m core.cli brief --dir PROJECT`), and **only the Skill needed for the current blocker**. Do not preload all Skills, previous version notes, vendor code, papers or historical logs. Existing verified evidence takes precedence over repeating work.
 
-| Blocker | Skill |
+| Need | Skill |
 | --- | --- |
-| Search/locate problems and datasets | 01_search / 02_evidence_data |
-| Construct a falsifiable question | 03_problem_design |
-| Validity, evaluator, baseline | 04_feasibility |
-| Train, debug, improve | 05_algorithm |
-| Negative result, restore or pivot | 06_decision |
-| Independent claim | 07_confirmation |
+| Discover direction, papers, datasets | `01_search` → optional `02_evidence_data` |
+| Design/replace a falsifiable Task | `03_problem_design` |
+| Validate evaluator, baseline and DEV | `04_feasibility` |
+| Implement/debug/compare a model | `05_algorithm` |
+| Diagnose, repair, narrow or pivot | `06_decision` |
+| Independent scientific Claim | `07_confirmation` |
 
-Actual CLI: core.cli route/record/check-task/selection/journal/candidates/recover/champion/compare; researchstudio_search provides metadata; novelty_check is UNVERIFIED; experiment_plan is PLAN_ONLY; tools.data_audit reads manifest-bound DEV; tools.experiment_runner is an OPTIONAL bounded grouped CPU fitting tool with only dummy/logistic/forest models.
+**Shared efficiency, output, plotting, tests, autonomy, permissions and scientific boundaries:** [docs/EXECUTION_POLICY.md](docs/EXECUTION_POLICY.md). Do not repeat these rules inside Skills. The seven Skills are **capabilities, not seven compulsory approvals**.
 
-Scientific/permission rules: Original user instructions, not JSON or --allow-cpu-fit, govern real fitting, downloads, payments, external data transfers, sealed confirmation or scientific-goal changes. DEV must be bound to dataset manifest path, role and SHA. Never open SEALED_CONFIRM in task/model search. Run must have real hashed raw log and predictions; BASELINE_VALID does NOT select Champion. Explicit champion selection requires compatible development samples, metric direction and verified Run. A positive DEV score is not novelty or independent paper evidence. Retain failed Runs; first negative Pilot does not automatically stop a whole project.
+**Tool truth:** metadata search works; novelty precheck is UNVERIFIED; experiment planning is PLAN_ONLY; DEV audit and bounded opt-in CPU grouped pilots run on manifest-bound data; Run/Champion and recovery utilities verify receipts. There is **no general autonomous coding Agent, GPU executor or independent paper confirmation** yet. A JSON authorization reference or CLI flag is not actual user permission.
 
-Keep outputs concise: verified change/evidence, limitations, next highest-information action and authorization gaps. Migration: docs/UPGRADE_V05.md; source ledger: THIRD_PARTY_NOTICES.md.
+**Result:** concise new evidence, evidence path, next decision and any real blocker. Save raw logs in the project, not in chat. [Architecture](docs/ARCHITECTURE.md) · [Contracts](docs/CONTRACTS.md) · [Source provenance](SOURCES.md).

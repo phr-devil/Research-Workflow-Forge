@@ -27,6 +27,7 @@ jobs:
       - name: CLI smoke with no real research data
         run: |
           python -m core.cli --help
+          python -m core.cli brief --help
           python -m core.cli validate --kind task --file templates/TASK.json
           python -m adapters.researchstudio_search --help
           python -m tools.data_audit --help
