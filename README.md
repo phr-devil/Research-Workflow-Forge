@@ -1,10 +1,12 @@
-# Research Workflow Forge · v0.13
+# Research Workflow Forge · v0.14
 
 An evidence-first research workflow with **one controller, three engines, seven on-demand Skills**. Starting point: the current scientific/engineering blocker, not a mandatory 7-step sequence. Optimize for **verified research progress per actual total resource cost**, not document count, number of Agent calls, or plots.
 
 **v0.12 evidence-first default**: first verify legal data/evaluator and existing baseline; favor the smallest falsifiable observation or simple correction, preserve a trustworthy simple reference, and escalate model complexity only for a distinct unresolved mechanism or deployment requirement. Separate viable signal, reliable performance and independent scientific novelty. This is a routing preference, not another gate; a complex model can be justified from physical/temporal needs. RWF executes/diagnoses evidence, while PD-RW remains the optional scientific decision lead.
 
 **v0.13 incremental-paper rule:** one evidence-backed, falsifiable improvement relative to the most relevant named prior work can justify a paper candidate: targeted accuracy, speed/memory/energy or label-cost tradeoff, a reproducible boundary/failure pattern, or a meaningful combination of existing ideas. Do not require global SOTA, a novel backbone, multiple independent contributions, or blanket multi-dataset wins. Keep fair comparators, uncertainty, honest negative outcomes and claim-matched independent confirmation; paper acceptance remains unproven.
+
+**v0.14 small-discovery exit:** a valid negative challenger, narrowly positive result or efficiency/label-cost tradeoff must be screened for one evidence-backed incremental Claim *before* abandoning the research branch. RWF reports the evidence/gaps; when PD-RW is used, it owns the optional S/A/B/C manuscript-potential and stretch/target/fallback journal matching ([venue strategy](https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/VENUE_STRATEGY.md)). Neither a journal tier nor an IF estimate is an automatic STOP/GO rule; do not invent acceptance probabilities or new CLI states.
 
 ## Quick use
 

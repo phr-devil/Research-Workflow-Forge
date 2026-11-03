@@ -1,4 +1,4 @@
-# AI Research Execution Policy · v0.13
+# AI Research Execution Policy · v0.14
 
 This file is the **single shared source** for execution efficiency. Read it once per research session; each Skill adds only its specific task. Requirements are defaults unless scientific correctness, actual permissions or the user's instruction require otherwise.
 
@@ -17,6 +17,11 @@ This file is the **single shared source** for execution efficiency. Read it once
 - A single real incremental contribution can justify a paper candidate: task-relevant improvement, efficiency/calibration cost for an acceptable accuracy tradeoff, reliable failure/robustness law, or meaningful combination/protocol improvement. Global SOTA, all metrics positive, novel backbone and mandatory multi-dataset superiority are **not** prerequisites.
 - Compare with the **strongest relevant matched** simple alternative and named nearest predecessors, not every model ever published. Report adverse metrics and compute/label costs, independent groups, selection history, uncertainty, and a confirmation scope matching the Claim. A single dataset may suffice for a properly limited Claim with genuinely independent confirmation groups; cross-dataset claims require corresponding evidence.
 - Separate `ENGINEERING_ASSET_ONLY`, `PAPER_PATH_CANDIDATE`, and `CONFIRMED_CLAIM` as **scientific interpretations already used by PD-RW**, not new Forge CLI enum values. Small DEV gains are exploratory until verified; negative results require a reproducible, not-yet-known insight rather than merely losing a leaderboard.
+
+## Small-discovery rescue and venue handoff (optional)
+- At a **real negative or narrow positive** DEV result, distinguish failed algorithm mechanism from viable scientific contribution. Before project-level abandonment, check *once at the affected decision boundary* for a testable new calibration-cost curve, resource–accuracy tradeoff, controlled failure/heterogeneity law, or claim-limited improvement not already resolved by named neighbors. A weak finding is `UNKNOWN/CLAIM_WITH_GAPS` until evidenced, not instantly `NO_INDEPENDENT_CLAIM` or `CONFIRMED`. Do not endlessly retell the same negative score as a novel discovery.
+- Pass `CLAIM_SENTENCE | EVIDENCE_RUN | NEAREST_NEIGHBOR_GAP | ONE_DECISIVE_MISSING_TEST | LIMITS` to the research controller when publication assessment is relevant; do not spawn venue search automatically on every Run. The optional S/A/B/C manuscript-potential and STRETCH/TARGET/FALLBACK venue suggestions are **separate, nonbinding advisory axes**, owned by PD-RW if used, not new Forge enum/state gates; C is **not** an automatic failure and S/A is not a validation badge.
+- Real venue recommendations require current evidence on scope, article type, recent precedents, indexing/JCR category-year, fees and publisher; do not infer acceptance chances, equate journal quartiles to manuscript potential, or require multi-dataset supremacy. See [PD-RW venue strategy](https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/VENUE_STRATEGY.md) only when requested.
 
 ## Autonomous work and cost
 - Choose the **largest coherent authorized batch**: inspect → implement → directed test → repair → save evidence → decide. Do not stop after every small step or repeatedly ask for already supplied details.
