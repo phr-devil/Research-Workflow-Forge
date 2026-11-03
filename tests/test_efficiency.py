@@ -28,7 +28,7 @@ class EfficiencyPolicyTests(unittest.TestCase):
             "focused tests",
             "First negative Pilot",
             "authorization",
-            "actual resource cost",
+            "total real resource cost",
         ):
             self.assertIn(essential.lower(), policy.lower())
         entry = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
