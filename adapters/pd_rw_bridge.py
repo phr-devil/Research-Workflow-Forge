@@ -51,7 +51,9 @@ def verify_pd_rw_handoff(
     pd = json.loads(pd_path.read_text(encoding="utf-8"))
     if not isinstance(pd, dict):
         raise ContractError("PD-RW Run must be an object")
-    forge, forge_sha = load_verified_run(forge_project, forge_run_path)
+    forge_path = (forge_run_path if forge_run_path.is_absolute()
+                  else forge_project / forge_run_path)
+    forge, forge_sha = load_verified_run(forge_project, forge_path)
     if any(r.get("status") != "VALID" or r.get("split") not in {"dev", "validation"}
            for r in (pd, forge)):
         raise ContractError("Only VALID development Runs can be verified")

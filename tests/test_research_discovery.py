@@ -120,6 +120,26 @@ class ResearchDiscoveryTests(unittest.TestCase):
                          "DEV_IMPROVEMENT_OVER_REFERENCE_OBSERVED")
         self.assertEqual(seeds["diagnostic"]["remaining_error"]["theoretical_attainable_gain"],"UNKNOWN")
 
+    def test_baseline_dominated_requires_distinct_lever_not_more_of_same(self):
+        seeds, _ = self.seed_file()
+        bank = create_bank(self.project, self.cards, seed_path=seeds, literature_path=self.lit)
+        bank["hypotheses"][0]["legal_information_status"] = "PLAUSIBLE"
+        bank["hypotheses"][0]["baseline_status"] = "BASELINE_DOMINATED"
+        outcome = review_opportunities(self.project, bank)
+        self.assertEqual(outcome["candidates"][0]["next_action"],
+                         "DISTINCT_LEVER_OR_PIVOT_REVIEW")
+        self.assertEqual(outcome["research_success_rate"], "NOT_MEASURED")
+
+    def test_costly_bounded_hypothesis_requires_cheaper_probe(self):
+        seeds, _ = self.seed_file()
+        bank = create_bank(self.project, self.cards, seed_path=seeds, literature_path=self.lit)
+        bank["hypotheses"][0]["legal_information_status"] = "PLAUSIBLE"
+        bank["hypotheses"][0]["baseline_status"] = "MATCHED_BASELINE_PRESENT"
+        bank["hypotheses"][0]["test_cost"] = "HIGH"
+        outcome = review_opportunities(self.project, bank)
+        self.assertEqual(outcome["candidates"][0]["next_action"],
+                         "REDUCE_COST_OR_FIND_CHEAPER_DISCRIMINATOR")
+
     def test_seed_and_literature_combine_into_unverified_hypothesis(self):
         s, _ = self.seed_file()
         bank=create_bank(self.project,self.cards,seed_path=s,literature_path=self.lit)

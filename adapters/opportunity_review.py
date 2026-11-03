@@ -8,11 +8,13 @@ from adapters.hypothesis_bank import validate_bank, verify_bank_sources, _load_j
 from core.receipts import check_receipt, resolve_project_file
 
 ORDER = {"BOUNDED_TEST_CANDIDATE": 0,
-         "MATCHED_BASELINE_FIRST": 1,
-         "LEGAL_INFORMATION_PROBE": 2,
-         "CHECK_ORIGINAL_DATA_SIGNAL": 3,
-         "VERIFY_DATA_SIGNAL": 4,
-         "REVISE_ILLEGAL_INFORMATION_PREMISE": 5}
+         "REDUCE_COST_OR_FIND_CHEAPER_DISCRIMINATOR": 1,
+         "MATCHED_BASELINE_FIRST": 2,
+         "LEGAL_INFORMATION_PROBE": 3,
+         "DISTINCT_LEVER_OR_PIVOT_REVIEW": 4,
+         "CHECK_ORIGINAL_DATA_SIGNAL": 5,
+         "VERIFY_DATA_SIGNAL": 6,
+         "REVISE_ILLEGAL_INFORMATION_PREMISE": 7}
 
 
 def review_opportunities(project: Path, bank: dict) -> dict:
@@ -34,10 +36,12 @@ def review_opportunities(project: Path, bank: dict) -> dict:
             route = "LEGAL_INFORMATION_PROBE"
         elif baseline == "UNKNOWN":
             route = "MATCHED_BASELINE_FIRST"
+        elif baseline == "BASELINE_DOMINATED":
+            route = "DISTINCT_LEVER_OR_PIVOT_REVIEW"
+        elif idea["test_cost"] == "HIGH":
+            route = "REDUCE_COST_OR_FIND_CHEAPER_DISCRIMINATOR"
         else:
             route = "BOUNDED_TEST_CANDIDATE"
-        if idea["test_cost"] == "HIGH" and route == "BOUNDED_TEST_CANDIDATE":
-            route = "MATCHED_BASELINE_FIRST"
         rows.append({
             "hypothesis_id": idea["hypothesis_id"],
             "next_action": route,

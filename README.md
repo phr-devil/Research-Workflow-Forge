@@ -67,7 +67,9 @@ python -m tools.feasibility_probe --project PROJECT --candidate PROJECT/runs/C/R
 当 PD-RW 某个关键 DEV Run 需要独立指标复算时，在 RWF 仓库环境运行：
 
 ```bash
-python -m adapters.pd_rw_bridge --project FORGE_PROJECT --forge-run FORGE_PROJECT/runs/R/RUN.json --pd-root PD_PROJECT --pd-run PD_PROJECT/runs/R.json --metric macro_F1
+python -m adapters.pd_rw_bridge --project FORGE_PROJECT --forge-run runs/R/RUN.json --pd-root PD_PROJECT --pd-run runs/R.json --metric macro_F1
 ```
 
 只处理已由 RWF 重新计算原始 DEV 标签和逐样本预测的 Run。PD-RW Run 与 Forge Run 必须匹配任务/协议/样本/合法输入，且 **原始预测文件的字节 SHA 相同**；不同格式需先在合法开发池生成一致版本，不能仅拷贝成绩。返回 `METRIC_VERIFIED_DEV_ONLY`，不证明训练源码一致、时间因果、强基线公平性或科学独立确认。旧 Run 不强制迁移。更多限制见 `docs/ARTIFACT_CONTRACT.md`。
+
+**v0.11 科研路由补充**：如果同K强简单基线已覆盖候选方法的收益，先寻找不同的可证伪杠杆或科研问题；对昂贵但可检验的机制优先设计低成本判别实验，而非错误地要求重复已完成的基线。

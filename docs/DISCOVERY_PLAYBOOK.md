@@ -60,3 +60,5 @@
 ## Decision quality over hypothesis-card count
 
 Before an expensive new mechanism, use the strongest valid simple reference and the actual legal predecision inputs to ask what distinct residual behavior the mechanism predicts. Prefer one falsifiable low-cost probe with a specified response to positive, negative and invalid observations; keep at most one active challenger sharing the same failure premise. A negative DEV Pilot updates the mechanism, not the entire scientific area. The hypothesis bank is optional: existing clear Task/Run evidence must not be rewrapped into cards. Do not infer an objective success probability from ordinal opportunity routes.
+
+**v0.11 research routing fix:** when a matched simple baseline already dominates the idea, route to `DISTINCT_LEVER_OR_PIVOT_REVIEW` rather than repeatedly requesting the same baseline. A high-cost otherwise testable idea routes to `REDUCE_COST_OR_FIND_CHEAPER_DISCRIMINATOR`; neither route automatically rejects the Task or fabricates a success probability.
