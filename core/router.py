@@ -20,11 +20,11 @@ ROUTES: dict[str, Route] = {
     "PROTOCOL_REVISED": Route("FEASIBILITY", "skills/04_feasibility/SKILL.md", "Revalidate revised protocol; previous Champion retired", "EXPERIMENT_PLAN"),
     "EXPERIMENT_PLAN_READY": Route("ALGORITHM", "skills/05_algorithm/SKILL.md", "Review experiment and real authorization; do not assume fitting is approved", "EXPERIMENT_PLAN"),
     "BASELINE_VALID": Route("ALGORITHM", "skills/05_algorithm/SKILL.md", "Develop traceable Champion and Challenger", "RUN"),
-    "RUN_RESULT": Route("DECISION", "skills/06_decision/SKILL.md", "Interpret result and choose next evidence-producing action", "DECISION"),
-    "NO_GAIN": Route("DECISION", "skills/06_decision/SKILL.md", "Diagnose fairness, capacity, mechanism and alternatives", "DECISION"),
+    "RUN_RESULT": Route("DECISION", "skills/06_decision/SKILL.md", "Assess minimum complete-paper opportunity before further algorithm search", "DECISION"),
+    "NO_GAIN": Route("DECISION", "skills/06_decision/SKILL.md", "Diagnose failed mechanism and assess narrow publishable result or boundary", "DECISION"),
     "RUN_INVALID": Route("DECISION", "skills/06_decision/SKILL.md", "Isolate invalid evidence and repair", "DECISION"),
     "CODE_FAILURE": Route("DECISION", "skills/06_decision/SKILL.md", "Reproduce earliest error, repair and verify", "DECISION"),
-    "TASK_BLOCKED": Route("DECISION", "skills/06_decision/SKILL.md", "Reframe or seek genuinely different task", "DECISION"),
+    "TASK_BLOCKED": Route("DECISION", "skills/06_decision/SKILL.md", "Review residual paper opportunity before holding or pivoting Task", "DECISION"),
     "CLAIM_CANDIDATE": Route("CONFIRMATION", "skills/07_confirmation/SKILL.md", "Freeze claim/protocol and plan independent verification", "CLAIM_EVIDENCE"),
     "CONFIRM_REQUEST": Route("CONFIRMATION", "skills/07_confirmation/SKILL.md", "Check real approval and untouched confirmation resources", "CLAIM_EVIDENCE"),
 }
@@ -39,6 +39,8 @@ def route(state: dict, event: str) -> dict:
         warnings.append("No active_task_id: verify real TaskSpec/protocol")
     if event in {"CLAIM_CANDIDATE", "CONFIRM_REQUEST"}:
         warnings.append("Planning only: verify frozen protocol, eligible untouched holdout and separate real authorization")
+    if event in {"RUN_RESULT", "NO_GAIN", "TASK_BLOCKED"}:
+        warnings.append("Advisory: inspect existing Run for one narrow paper opportunity and decisive evidence gaps before expensive model escalation or project-level STOP; no scientific or submission certification")
     warnings.append("STATE authorization_refs are pointers, NOT permission; check the original user instruction")
     return {"event": event, "phase": dest.phase, "skill": dest.skill,
             "next_action": dest.next_action, "handoff": dest.handoff,
