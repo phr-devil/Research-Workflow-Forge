@@ -17,6 +17,8 @@ Shared rules: [EXECUTION_POLICY](../../docs/EXECUTION_POLICY.md). Execution requ
 
 **Post-algorithm micro-upgrade:** once the stable Champion exists and there is a meaningful potential new Claim, invoke [post-algorithm audit](../../docs/POST_ALGORITHM_SCIENCE_AUDIT.md) only on demand. Prefer existing verified group residuals and one distinguishing test over adding another network; if evidence is negative, preserve existing algorithm and summarize. No writing authorization follows from this audit.
 
+**Next-step instruction rule:** when the next technical action is already authorized, directly provide one concise executable instruction using current Run/Task receipts and minimal verification. When more CPU/GPU/data/sealed access is needed, recommend and offer user choices but no execution prompt. See [NEXT_ACTION_POLICY](../../docs/NEXT_ACTION_POLICY.md).
+
 **Handoff:** real RunRecord / NOT_RUN, compatible Champion comparison, mechanism-level observation and next discriminating action.
 
 **v0.7:** Reject self-reported metric improvements: standard predictions must be independently re-evaluated against a SHA-pinned DEV source/frozen group split. External Codex/WorkBuddy scripts may produce predictions in separately controlled workspaces, then `adapters.agent_bridge` imports them without execution. `core.cli compare` now requires `--dir`; Champion preview includes provisional group-bootstrap uncertainty. Details only if needed: `docs/ARTIFACT_CONTRACT.md`.
