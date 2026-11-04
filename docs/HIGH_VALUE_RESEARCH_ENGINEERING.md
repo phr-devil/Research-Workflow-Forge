@@ -44,6 +44,8 @@ If data cannot identify the proposed cause, first reframe claim or collect legit
 - Distinguish a **high-upside scientific result** from a lucky best seed, a tuned metric, or SHAP-style attribution. Mechanistic claims require appropriate distinguishable evidence; all causal claims still need justified identification assumptions.
 - Maintain independent confirmations and scoped Q2 claims. A valid small claim is an asset but **not project success** absent verified, important Q2+ contribution. Q1 is preferred if marginal research cost and additional value warrant it.
 
+**Late-discovered science / contribution extraction:** reuse Run and experiment feedback through [SCIENCE_RESULT_HARVEST.md](SCIENCE_RESULT_HARVEST.md) at high-information decision points. Before accepting the first narrow Claim, compare up to 3 different, source-linked scientific candidates and record adverse effects; deciding the scientific Claim belongs to PD-RW/user. Separate research-summary articulation improvement from a real evidence gap; avoid a new expensive model when verified evidence is simply underexplained.
+
 ## 06: scientific value feedback, not paper-first premature STOP
 
 When `RUN_RESULT / NO_GAIN / TASK_BLOCKED` occurs, evaluate **what knowledge the Run adds, whether a distinct lever remains and what is the cheapest decisive Q2-relevant action**. A first invalid or negative Pilot is not project failure. `Q2_POTENTIAL_SUPPORTED` requires PD-RW/source-backed scientific review; `opportunity_review` and Run status never certify it. Allow an informative second bounded pilot under **existing real authorization** if it changes the Claim, not simply to hunt for significance.

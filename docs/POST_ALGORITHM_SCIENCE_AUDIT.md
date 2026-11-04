@@ -6,6 +6,8 @@
 
 **High-value route comparison:** follow [HIGH_VALUE_RESEARCH_ENGINEERING](HIGH_VALUE_RESEARCH_ENGINEERING.md) to compare distinct mechanisms vs boundary/measurement/cost research, including which scientific explanation legal data can actually distinguish. Choose the next probe by expected change in the Claim and its evidence, not ease of model tuning. Avoid falsely attributing confounded DEV patterns to mechanisms.
 
+**Step zero — harvest existing scientific information, not just the first Claim.** Apply [SCIENCE_RESULT_HARVEST.md](SCIENCE_RESULT_HARVEST.md) on materially new verified Runs/negatives/conditions; first check overlooked opposite-condition outcomes, group heterogeneity, real cost curves and refuted mechanisms. Compare up to 3 distinct evidence-linked science Claim candidates; PD-RW/user chooses their scientific value. Then separate `ARTICULATION_GAP` (already supported: improve *research* evidence summary only), `EVIDENCE_GAP` (critical confirmation/control absent), `BOTH` and `NONE`. No random slice fishing, causal certification from attribution, extra model run just to improve prose or manuscript drafting.
+
 ## Read-only evidence first (no fit, sealed access or new dependencies)
 
 - Reuse a verified `Task`, evaluator/split, selected DEV `Run`, matched-information simple reference, source predictions and current failure history. Check prediction-level receipts (not only a reported score); `core.cli brief`, `core.cli compare` and `tools.feasibility_probe` are *optional existing aids* subject to their actual input contracts.
