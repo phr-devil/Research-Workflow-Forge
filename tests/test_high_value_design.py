@@ -18,7 +18,7 @@ class HighValueDesignTests(unittest.TestCase):
 
     def test_value_discriminability_and_authority(self):
         doc = (ROOT / "docs/HIGH_VALUE_RESEARCH_ENGINEERING.md").read_text(encoding="utf-8")
-        for needle in ("COMPETING", "DISTINCT_PREDICTION", "CONFOUNDED",
+        for needle in ("ALTERNATIVE", "DISTINCT_PREDICTION", "CONFOUNDED",
                        "Q2", "WRITING_LOCKED", "NEXT_ACTION_POLICY",
                        "Optuna", "RD-Agent"):
             with self.subTest(needle=needle):
