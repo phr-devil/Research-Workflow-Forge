@@ -4,6 +4,8 @@
 
 **Non-negotiable manuscript writing lock:** `WRITING_LOCKED` by default. Before writing a manuscript outline, title, abstract, sections or first draft, require (1) a completed research-results summary explicitly reviewed by the user and (2) a separate, verifiable user instruction to start writing this project's manuscript. Credible Run, DRAFTABLE, confirmation, submission-readiness advice or a handoff never grants writing permission. Without both, continue authorized research/verification and send only evidence summaries. See [Execution Policy](docs/EXECUTION_POLICY.md) § Manuscript writing lock.
 
+**Completed-algorithm science upgrade (on demand):** if a credible Champion/Run is stable and another architecture or project closure is proposed, use [post-algorithm science audit](docs/POST_ALGORITHM_SCIENCE_AUDIT.md) through existing Skills 05–07: reuse existing predictions, identify a distinct falsifiable Claim vs nearest work, choose one authorized low-cost test or keep the original. This does not unlock manuscript writing.
+
 **Read once:** [Execution Policy](docs/EXECUTION_POLICY.md), current project `STATE.json` (or `python -m core.cli brief --dir PROJECT`), and **only the Skill needed for the current blocker**. Do not preload all Skills, previous version notes, vendor code, papers or historical logs. Existing verified evidence takes precedence over repeating work.
 
 | Need | Skill |
