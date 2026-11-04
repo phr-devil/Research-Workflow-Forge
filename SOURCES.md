@@ -22,6 +22,16 @@ Last checked: **2026-11-03**, default branches on public GitHub. Exact pinned co
 
 Other inspiration: [GPT Researcher](https://github.com/assafelovic/gpt-researcher) for question-based retrieval. It is **not a runtime dependency**.
 
+## Post-algorithm science upgrade references (2026-11-04, conceptual only)
+
+- [WILDS](https://github.com/p-lambda/wilds) / [DomainBed](https://github.com/facebookresearch/DomainBed): independent groups and fair model-selection rules (DomainBed was archived in 2026); not installed or copied.
+- [Cleanlab](https://github.com/cleanlab/cleanlab) / [Evidently](https://github.com/evidentlyai/evidently): candidate label/data anomalies and drift checks; do not certify errors from model suspicions.
+- [SHAP](https://github.com/shap/shap) / [Captum](https://github.com/meta-pytorch/captum): attribution insights for falsifiable controlled tests, not causal proof.
+- [DoWhy](https://github.com/py-why/dowhy): explicit causal assumptions, alternative explanations and refutation; not a default causal identification guarantee.
+- [RobustBench](https://github.com/RobustBench/robustbench) / [DVC](https://github.com/treeverse/dvc): fixed robustness evaluation conditions and reproducible lineage, not universal deployment guarantees.
+
+The corresponding [science audit](docs/POST_ALGORITHM_SCIENCE_AUDIT.md) is a research-decision guide; no upstream code is vendored or dependencies added. Stars and tooling popularity do not certify novelty or acceptance.
+
 ## Direct import rules
 
 Before copying or linking any upstream file: verify its **exact** commit, file-level and repository license, LICENSE/NOTICE, transitive dependencies, data/security policy and what is actually needed. Record upstream path, local destination, modification and necessary attributions. A GitHub Star count is not evidence of correctness. Dataset, paper and model licensing are distinct from code licensing.
