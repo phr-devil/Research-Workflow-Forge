@@ -46,11 +46,16 @@ def review_science_handoff(project: Path, packet: dict) -> dict:
         if not isinstance(digest, str) or len(digest) != 64 or any(
                 c not in "0123456789abcdefABCDEF" for c in digest):
             raise ContractError("source needs a SHA256 receipt")
-        file = resolve_project_file(root, ref)
+        try:
+            file = resolve_project_file(root, ref)
+            if not file.is_file() or file.stat().st_size > 8 * 1024 * 1024:
+                raise ContractError("science reference must be an existing bounded DEV/public metadata file")
+            check_receipt(file, digest.lower())
+        except (ValueError, OSError) as exc:
+            raise ContractError("invalid or changed source receipt: " + ref) from exc
         if file in seen:
             raise ContractError("duplicate science source receipt")
         seen.add(file)
-        check_receipt(file, digest)
         verified.append({"role": item["role"],
                          "path": file.relative_to(root).as_posix(),
                          "sha256": digest.lower()})
@@ -78,7 +83,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--packet", type=Path, required=True)
     args = parser.parse_args(argv)
     project = args.project.resolve()
-    src = resolve_project_file(project, args.packet)
+    src = args.packet.resolve()
+    if not src.is_relative_to(project) or not src.is_file():
+        parser.error("packet must be an existing file under --project")
     result = review_science_handoff(project, json.loads(src.read_text(encoding="utf-8")))
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
