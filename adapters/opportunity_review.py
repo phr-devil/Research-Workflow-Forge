@@ -53,6 +53,10 @@ def review_opportunities(project: Path, bank: dict) -> dict:
             "declared_test_cost": idea["test_cost"],
             "novelty": "UNVERIFIED",
             "scientific_status": idea["status"],
+            "scientific_importance": "NEEDS_ORIGINAL_WORK_AND_DOMAIN_REVIEW",
+            "data_discriminability": "NEEDS_INDEPENDENT_FACTOR_AND_CONFOUNDING_REVIEW",
+            "q2_competitiveness": "NOT_ASSESSED",
+            "selection_warning": "Cheap evidence actions are not a scientific-value ranking",
             "next_probe": idea["minimum_test"],
             "if_positive": idea["if_positive"], "if_negative": idea["if_negative"],
             "warnings": ["Independent validation and named nearest full-text review required before formal Claim"],
@@ -62,6 +66,8 @@ def review_opportunities(project: Path, bank: dict) -> dict:
                              r["hypothesis_id"]))
     return {
         "status": "ORDINAL_REVIEW_ONLY",
+        "scientific_impact_ranking": "NOT_COMPUTED",
+        "recommended_meaning": "Cheapest feasible NEXT EVIDENCE ACTION, not best scientific claim",
         "recommended": rows[0]["hypothesis_id"],
         "candidates": rows,
         "interpretation": "Next evidence action, NOT rank of novelty/paper probability. Unknown is not automatic STOP.",
