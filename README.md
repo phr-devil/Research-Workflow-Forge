@@ -10,6 +10,8 @@ An evidence-first research workflow with **one controller, three engines, seven 
 
 **v0.15 submit-ready priority:** after a verified DEV result or decisive negative Pilot, check whether one modest genuine contribution plus a small set of claim-matched experiments can form a complete paper. If yes, prefer the decisive baseline/confirmation/cost measurement over building another network. While defining a topic, inexpensive lookup of 1–3 *actually published* analogous papers can calibrate article scope; do not grade journals or impose SOTA in initial discovery. This is Agent guidance, not a new CLI state or permission.
 
+**Research success criterion:** an evidence-backed scientific Claim with credible **JCR Q2-or-higher journal publication potential** counts as success; **Q1 is preferable**, and actual acceptance/publication is not required. Ordinary specialist-journal feasibility and `DRAFTABLE` are only candidates, not success. Scope, category-year, nearest papers and validation matter more than impact-factor thresholds; see [shared policy](docs/EXECUTION_POLICY.md) and [PD-RW goal](https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/Q2_PUBLICATION_GOAL.md).
+
 **Mandatory manuscript writing lock:** scientific results/confirmation and `DRAFTABLE` do not authorize manuscript production. Produce a research-results summary, obtain the user's explicit review of it and then a separate explicit writing instruction before creating an outline, abstract, sections or draft. Research experiments and evidence-gap closure continue normally. See [Execution Policy](docs/EXECUTION_POLICY.md) § Manuscript writing lock.
 
 ## Quick use
