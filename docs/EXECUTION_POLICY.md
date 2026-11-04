@@ -2,6 +2,10 @@
 
 This file is the **single shared source** for execution efficiency. Read it once per research session; each Skill adds only its specific task. Requirements are defaults unless scientific correctness, actual permissions or the user's instruction require otherwise.
 
+## Next-step user/Agent handoff (mandatory)
+
+Follow [NEXT_ACTION_POLICY](NEXT_ACTION_POLICY.md). **Within verified authorization**, choose and emit a compact, immediately usable next-Agent instruction for autonomous technical work or a strongly justified in-scope option. **For human-owned decisions or missing permissions**, state the recommendation with reasons and 2–3 viable choices; do not output an Agent execution command until the user chooses. The user owns scope/pivot/project-STOP, new money/download/fit/compute/sealed/communication permissions, reviewed research summary and manuscript-writing authorization. This rule does not weaken the writing lock or turn a route into approval.
+
 ## Manuscript writing lock (highest-priority, no automatic unlock)
 
 - **Default `WRITING_LOCKED`** for every project and agent session. First produce a research-results summary (task/protocol, verified and negative Runs, baselines, named prior-work gap, independent evidence, caveats, incomplete experiments). The user must **explicitly review/accept that summary**, then **separately and explicitly authorize writing** the named manuscript/project. Both decisions may occur in one clear user instruction after the summary exists, but neither can be inferred from silence or agent judgment.
