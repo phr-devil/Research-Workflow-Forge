@@ -4,6 +4,8 @@
 
 **Minimum publication goal:** prioritize scientifically meaningful, falsifiable upgrades that can turn an existing algorithm into an evidence-backed **JCR Q2+ publication-potential** research result; Q1 is preferable when realistic. Actual journal acceptance is not required. Evaluate novelty and venue fit separately; PD-RW [Q2 policy](https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/Q2_PUBLICATION_GOAL.md) owns the final decision. Do not stop at a Q3/Q4-only small-paper exit or overfit research to a journal label.
 
+**High-value route comparison:** follow [HIGH_VALUE_RESEARCH_ENGINEERING](HIGH_VALUE_RESEARCH_ENGINEERING.md) to compare distinct mechanisms vs boundary/measurement/cost research, including which scientific explanation legal data can actually distinguish. Choose the next probe by expected change in the Claim and its evidence, not ease of model tuning. Avoid falsely attributing confounded DEV patterns to mechanisms.
+
 ## Read-only evidence first (no fit, sealed access or new dependencies)
 
 - Reuse a verified `Task`, evaluator/split, selected DEV `Run`, matched-information simple reference, source predictions and current failure history. Check prediction-level receipts (not only a reported score); `core.cli brief`, `core.cli compare` and `tools.feasibility_probe` are *optional existing aids* subject to their actual input contracts.
