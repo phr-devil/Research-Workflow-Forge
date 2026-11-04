@@ -9,6 +9,8 @@
 
 A narrow, reproducible incremental capability, cost/accuracy tradeoff, or new failure boundary may proceed toward a paper candidate without global SOTA or a new backbone. The existing Claim/confirmation contracts remain unchanged; this is a decision rule rather than a new machine state.
 
+**Writing authorization invariant:** the controller's `CLAIM_CANDIDATE` / `DRAFTABLE` / confirmed-claim decisions never trigger manuscript text. The research summary must be explicitly user-reviewed and a separate user instruction must authorize writing; see [EXECUTION_POLICY.md](EXECUTION_POLICY.md). This remains an Agent policy, not a new machine state or automatic writing system.
+
 **v0.15 paper-first handoff:** `RUN_RESULT`, `NO_GAIN`, and `TASK_BLOCKED` route through the existing Decision Skill and now explicitly prompt a narrow paper-opportunity review before model escalation or abandoning the Task. The route **does not** automatically review literature, assert manuscript readiness, train, confirm or submit; PD-RW remains the optional paper/venue controller.
 
 The route follows the current blocker: `NO_GAIN` → 06 → back to 05 if a different mechanism remains; `TASK_PIVOT` → 03; `CLAIM_CANDIDATE` → 07. **No mandatory linear seven-stage gate.**
