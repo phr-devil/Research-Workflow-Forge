@@ -129,6 +129,10 @@ class ResearchDiscoveryTests(unittest.TestCase):
         self.assertEqual(outcome["candidates"][0]["next_action"],
                          "DISTINCT_LEVER_OR_PIVOT_REVIEW")
         self.assertEqual(outcome["research_success_rate"], "NOT_MEASURED")
+        self.assertEqual(outcome["scientific_impact_ranking"], "NOT_COMPUTED")
+        self.assertEqual(outcome["candidates"][0]["q2_competitiveness"], "NOT_ASSESSED")
+        self.assertIn("Cheapest feasible", outcome["recommended_meaning"])
+        self.assertIn("CONFOUNDING", outcome["candidates"][0]["data_discriminability"])
 
     def test_costly_bounded_hypothesis_requires_cheaper_probe(self):
         seeds, _ = self.seed_file()
