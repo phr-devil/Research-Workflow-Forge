@@ -17,7 +17,7 @@ ORDER = {"BOUNDED_TEST_CANDIDATE": 0,
          "REVISE_ILLEGAL_INFORMATION_PREMISE": 7}
 
 
-def review_opportunities(project: Path, bank: dict) -> dict:
+def review_opportunities(project: Path, bank: dict, *, selected_hypothesis_id: str | None = None) -> dict:
     project = project.resolve()
     validate_bank(bank)
     verify_bank_sources(project, bank)
@@ -64,11 +64,19 @@ def review_opportunities(project: Path, bank: dict) -> dict:
     rows.sort(key=lambda r: (ORDER[r["next_action"]],
                              {"LOW":0,"MEDIUM":1,"UNKNOWN":2,"HIGH":3}[r["declared_test_cost"]],
                              r["hypothesis_id"]))
+    if selected_hypothesis_id is not None and not any(
+            row["hypothesis_id"] == selected_hypothesis_id for row in rows):
+        raise ValueError("selected scientific hypothesis ID is not in the source-bound bank")
+    selected_probe = next((r for r in rows if r["hypothesis_id"] == selected_hypothesis_id), None)
     return {
         "status": "ORDINAL_REVIEW_ONLY",
         "scientific_impact_ranking": "NOT_COMPUTED",
-        "recommended_meaning": "Cheapest feasible NEXT EVIDENCE ACTION, not best scientific claim",
-        "recommended": rows[0]["hypothesis_id"],
+        "recommended_meaning": "Cheapest feasible NEXT EVIDENCE ACTION within a prior PD-RW/user scientific choice; no selected question => no recommendation",
+        "recommended": selected_hypothesis_id,
+        "selected_research_problem": "NOT_SELECTED_BY_FORGE",
+        "selected_scientific_hypothesis_id_declared": selected_hypothesis_id,
+        "selected_next_evidence_action": selected_probe["next_action"] if selected_probe else None,
+        "scientific_choice_requires_original_PD_RW_or_user_decision": True,
         "candidates": rows,
         "interpretation": "Next evidence action, NOT rank of novelty/paper probability. Unknown is not automatic STOP.",
         "authorization": "NOT_GRANTED",
@@ -81,13 +89,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--project", type=Path, required=True)
     parser.add_argument("--bank", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--selected-hypothesis-id", help="ID previously chosen by PD-RW/user; NOT chosen by this tool")
     args = parser.parse_args(argv)
     try:
         project = args.project.resolve()
         out = args.out.resolve()
         if not out.is_relative_to(project) or out == project:
             raise ValueError("output must be project-contained")
-        result = review_opportunities(project, _load_json(project, args.bank))
+        result = review_opportunities(project, _load_json(project, args.bank),
+                                      selected_hypothesis_id=args.selected_hypothesis_id)
         _write_new(out, result)
         print(json.dumps({"recommended": result["recommended"], "review": str(out),
                           "training_performed": False, "science_confirmed": False}, ensure_ascii=False))
