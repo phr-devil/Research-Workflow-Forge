@@ -1,6 +1,6 @@
 # Research Workflow Forge · v0.15
 
-An evidence-first research workflow with **one controller, three engines, seven on-demand Skills**. Starting point: the current blocker. **Primary outcome is a credible, complete, appropriately scoped manuscript for a suitable specialist journal per total cost**, not the largest model gain or breakthrough. PD-RW remains the optional scientific/venue controller; Forge verifies evidence and proposes the next necessary experiment, not a guarantee of publication.
+An evidence-first research workflow with **one controller, three engines, seven on-demand Skills**. Starting point: the current blocker. **Primary outcome before writing authorization is a credible, complete, appropriately scoped evidence package for a potential specialist-journal manuscript per total cost**, not the largest model gain or breakthrough. PD-RW remains the optional scientific/venue controller; Forge verifies evidence and proposes the next necessary experiment, not a guarantee of publication.
 
 **v0.12 evidence-first default**: first verify legal data/evaluator and existing baseline; favor the smallest falsifiable observation or simple correction, preserve a trustworthy simple reference, and escalate model complexity only for a distinct unresolved mechanism or deployment requirement. Separate viable signal, reliable performance and independent scientific novelty. This is a routing preference, not another gate; a complex model can be justified from physical/temporal needs. RWF executes/diagnoses evidence, while PD-RW remains the optional scientific decision lead.
 
@@ -9,6 +9,8 @@ An evidence-first research workflow with **one controller, three engines, seven 
 **v0.14 small-discovery exit:** a valid negative challenger, narrowly positive result or efficiency/label-cost tradeoff must be screened for one evidence-backed incremental Claim *before* abandoning the research branch. RWF reports the evidence/gaps; when PD-RW is used, it owns the optional S/A/B/C manuscript-potential and stretch/target/fallback journal matching ([venue strategy](https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/VENUE_STRATEGY.md)). Neither a journal tier nor an IF estimate is an automatic STOP/GO rule; do not invent acceptance probabilities or new CLI states.
 
 **v0.15 submit-ready priority:** after a verified DEV result or decisive negative Pilot, check whether one modest genuine contribution plus a small set of claim-matched experiments can form a complete paper. If yes, prefer the decisive baseline/confirmation/cost measurement over building another network. While defining a topic, inexpensive lookup of 1–3 *actually published* analogous papers can calibrate article scope; do not grade journals or impose SOTA in initial discovery. This is Agent guidance, not a new CLI state or permission.
+
+**Mandatory manuscript writing lock:** scientific results/confirmation and `DRAFTABLE` do not authorize manuscript production. Produce a research-results summary, obtain the user's explicit review of it and then a separate explicit writing instruction before creating an outline, abstract, sections or draft. Research experiments and evidence-gap closure continue normally. See [Execution Policy](docs/EXECUTION_POLICY.md) § Manuscript writing lock.
 
 ## Quick use
 
