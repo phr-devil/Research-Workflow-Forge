@@ -40,6 +40,8 @@ To resume an existing project, run `python -m core.cli brief --dir PROJECT --rec
 
 A real CPU fit requires separately verified user permission and `--allow-cpu-fit` on the allowlisted runner; the flag is **not** itself authorization. The tools are cooperative guards, not an arbitrary-code sandbox. No autonomous Codex/WorkBuddy integration, GPU engine, full-text novelty verification, or established improvement in paper success rate.
 
+**External models and larger datasets:** [EXTERNAL_MODEL_EVIDENCE.md](docs/EXTERNAL_MODEL_EVIDENCE.md) describes separately authorized Codex/WorkBuddy training, streamed read-only artifact integrity checks and existing bounded DEV evaluation import. No new arbitrary-code executor or automatic scientific confirmation.
+
 **Completed algorithm, better science (optional):** [post-algorithm science audit](docs/POST_ALGORITHM_SCIENCE_AUDIT.md) adapts WILDS/DomainBed group evaluation, SHAP/Captum/DoWhy hypothesis-and-refutation and Cleanlab/Evidently data checks into a low-cost `reuse → distinguish → one bounded test → retain or summarize` route. No new Skill, CLI event, dependency or automatic writing authority.
 
 ## Efficient execution defaults
