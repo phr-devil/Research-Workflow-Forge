@@ -4,11 +4,15 @@
 
 **Decision owner:** PD-RW or the researcher chooses the scientific question using importance, named-neighbor difference, discriminability and evidence potential. RWF may check the source-bound [science handoff](../adapters/science_handoff.py), but its `opportunity_review` ranks **experiment-action feasibility only**. Its `recommended` is `null` until `--selected-hypothesis-id` is supplied. The source packet and its SHA receipts cannot prove a research problem's quality or that training is authorized. Never make a cross-hypothesis problem recommendation simply because an action is cheaper.
 
+**Three internal checks without three extra user turns:** new opportunity search uses `BREADTH_SCAN → DEEP_FALSIFICATION → COMPETING_CHOICE` within the user's scope. Finding a trainable dataset or one plausible gap is not yet a scientifically selected question; challenge it with a genuinely different failure premise or record a limited, negative contrasting search. Novelty remains unverified until closest original/counterevidence are reviewed. Search effort scales with *decision-changing* unknowns, not fixed paper counts or endless Agent discussions. The authority and decision history remain in PD-RW's [Search Discovery](https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/SEARCH_DISCOVERY.md), optionally checked structurally by `core.search_choice_review`—not a science ranker.
+
 ## 01: question search, not dataset-and-model shopping
 
 Adapt [STORM](https://github.com/stanford-oval/storm) multi-perspective questions + [PaperQA2](https://github.com/Future-House/paper-qa) original full-text checking. One Agent can consider: real consequence/demand, physical/measurement limitations, and limitations of named strongest methods. At most 1–3 distinct scientific opportunities; preserve counterexamples/reasons literature may **already cover** the purported contribution. RAG/metadata and GitHub stars do not prove novelty.
 
 Minimal opportunity packet: `QUESTION_IMPORTANCE | NAMED_NEIGHBOR + READ_STATUS | UNANSWERED_KNOWLEDGE | WHAT_SUCCESS_TEACHES | CHEAPEST_DISCRIMINATOR | ELIGIBLE_DATA/UNKNOWN | Q2_ANALOG/UNKNOWN`. PaperQA-style evidence is optional; do not auto-index whole libraries, download papers, spawn agents, generate manuscript text or rank by an invented acceptance score.
+
+**`PRE_DOWNLOAD_SCIENCE_FIT` for the proposed D1:** inspect official public metadata for variables/truth, independent group crossing, possible confounding, legal information, confirmation path, license and volume before declaring the *scientific* D1 choice. `OFFICIAL_METADATA_SUPPORTS` is not a scientific PASS; `UNKNOWN` permits provisional planning but not a claim of data suitability; `OFFICIAL_METADATA_CONTRADICTS` triggers re-framing or a comparison to saved alternative topics before large downloads. Real DEV analysis only after separately authorized full required data acquisition, manifest checks and sealed isolation. Theory/proof research checks proof obligations/parameter ranges instead.
 
 ## 02: candidate data as scientific instruments
 
@@ -20,6 +24,8 @@ Before choosing the principal dataset, sketch the **smallest discriminability ma
 - Crossed factor counts are descriptive only; adequate independent group replication, label comparability, measurement validity, exposure history, legal time direction and other confounders still need expert judgment. Missing metadata → `UNKNOWN`, not `PASS`.
 - Reuse official dataset descriptions before downloads. Once necessary data are authorized and `DATA_ACQUIRED_VERIFIED`, conduct legal **DEV-only** data observation. Do not read SEALED_CONFIRM, use a selected external dataset as untouched confirmation, or turn pre-task exploratory slices into pre-registered findings. Theory/simulation tasks use parameter contrast/counterexample coverage instead of requiring a downloaded dataset.
 - Existing `core.data_access` / `tools.data_audit` are data integrity tools, **not** scientific identification auditors. No new capability claim is attached to them.
+
+**Feedback to selection**: when valid DEV evidence refutes the discovery-stage assumptions, return the allowed factual evidence to PD-RW and re-examine saved contrasting opportunities; do not silently pivot the main scientific Task or authorize new dataset/download/GPU. Retain the original data and negative evidence. Avoid treating sunk download costs as a reason to keep training an unsupported mechanism.
 
 ## 03: hypotheses that really compete
 
