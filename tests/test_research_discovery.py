@@ -144,6 +144,20 @@ class ResearchDiscoveryTests(unittest.TestCase):
         self.assertEqual(outcome["candidates"][0]["next_action"],
                          "REDUCE_COST_OR_FIND_CHEAPER_DISCRIMINATOR")
 
+    def test_cheap_evidence_probe_does_not_choose_scientific_question(self):
+        seeds, _ = self.seed_file()
+        bank = create_bank(self.project, self.cards, seed_path=seeds, literature_path=self.lit)
+        unselected = review_opportunities(self.project, bank)
+        self.assertIsNone(unselected["recommended"])
+        self.assertEqual(unselected["selected_research_problem"], "NOT_SELECTED_BY_FORGE")
+        self.assertIsNone(unselected["selected_next_evidence_action"])
+        chosen = review_opportunities(self.project, bank, selected_hypothesis_id="H01")
+        self.assertEqual(chosen["recommended"], "H01")
+        self.assertEqual(chosen["selected_next_evidence_action"], "LEGAL_INFORMATION_PROBE")
+        self.assertTrue(chosen["scientific_choice_requires_original_PD_RW_or_user_decision"])
+        with self.assertRaises(ValueError):
+            review_opportunities(self.project, bank, selected_hypothesis_id="INVENTED")
+
     def test_seed_and_literature_combine_into_unverified_hypothesis(self):
         s, _ = self.seed_file()
         bank=create_bank(self.project,self.cards,seed_path=s,literature_path=self.lit)
