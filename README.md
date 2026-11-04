@@ -36,6 +36,8 @@ To resume an existing project, run `python -m core.cli brief --dir PROJECT --rec
 
 A real CPU fit requires separately verified user permission and `--allow-cpu-fit` on the allowlisted runner; the flag is **not** itself authorization. The tools are cooperative guards, not an arbitrary-code sandbox. No autonomous Codex/WorkBuddy integration, GPU engine, full-text novelty verification, or established improvement in paper success rate.
 
+**Completed algorithm, better science (optional):** [post-algorithm science audit](docs/POST_ALGORITHM_SCIENCE_AUDIT.md) adapts WILDS/DomainBed group evaluation, SHAP/Captum/DoWhy hypothesis-and-refutation and Cleanlab/Evidently data checks into a low-cost `reuse → distinguish → one bounded test → retain or summarize` route. No new Skill, CLI event, dependency or automatic writing authority.
+
 ## Efficient execution defaults
 
 **Load only one Skill** and relevant evidence; reuse verified runs, searches and data. Batch inspect→edit→focused test→repair→record. During exploration skip decorative images and publication figures; make a small diagnostic chart only when needed to decide. Use concise *delta-only* updates instead of repeated reports. Full CI at integration/release, not after every minor edit. A negative Pilot prompts diagnosis, not automatic project STOP. **Never weaken legal splits, permissions, reproducibility or independent confirmation to save tokens.**
