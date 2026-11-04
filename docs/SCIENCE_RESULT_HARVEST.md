@@ -24,7 +24,7 @@ The non-manuscript `CONTRIBUTION_EVIDENCE_BRIEF` records:
 - `BOTH`: first fix evidence-level interpretation, then seek the decisive missing proof.
 - `NONE`: reuse existing research evidence; no embellished story needed.
 
-**No manuscript writing**: the user's review of the research-results summary and a separate explicit manuscript-writing authorization are still mandatory. Do not output submission title, abstract, Results, Discussion, outline, manuscript figures or full draft. No new GPU/download/SEALED action without permission; follow [NEXT_ACTION_POLICY.md](NEXT_ACTION_POLICY.md).
+**No manuscript writing while `WRITING_LOCKED`**: the user's review of the research-results summary and a separate explicit manuscript-writing authorization are still mandatory. Do not output submission title, abstract, Results, Discussion, outline, manuscript figures or full draft. No new GPU/download/SEALED action without permission; follow [NEXT_ACTION_POLICY.md](NEXT_ACTION_POLICY.md).
 
 **High-Star concept references (no auto-install):** [MLflow](https://github.com/mlflow/mlflow) and [DVC](https://github.com/treeverse/dvc) for Run lineage; [Cleanlab](https://github.com/cleanlab/cleanlab) and [Evidently](https://github.com/evidentlyai/evidently) for error/quality/drift candidates; [SHAP](https://github.com/shap/shap) and [DoWhy](https://github.com/py-why/dowhy) for distinguishing explanation from causal proof; [RD-Agent](https://github.com/microsoft/RD-Agent) for evidence-driven experiment feedback. None prove scientific novelty or Q2 publication potential.
 
