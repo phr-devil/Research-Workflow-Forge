@@ -1,0 +1,15 @@
+# External models / large research data: bounded, honest integration
+
+**Problem solved:** Forge's built-in fit runner is deliberately small (dummy/logistic/forest, 10,000 rows/64 features), and its standard DEV verifier/importers have bounded CSV/artifact sizes. Large IMU/PPG/robotics models must be run by a separately authorized and secured executor (e.g., Codex/WorkBuddy) using the user's actual compute/data privileges. **Do not bypass the bounded model runner or unlock sealed resources to make large runs pass.**
+
+## Minimal external-agent handoff, no duplicate framework
+
+1. PD-RW freezes the specific scientific Task, permitted information/K, group protocol, evaluator and eligible development data. Verify real user training authorization; a recommendation never grants it. External Agent runs under its *own* resource and access boundaries; do not send sealed data.
+2. Save code/config, source dataset version, frozen train/development group IDs, prediction timestamps, raw **DEV predictions** and execution logs/checkpoints in project-local files; preserve Run/parent lineage and negative experiments. Mark all training details that cannot be independently corroborated `REPORTED`.
+3. For large code/checkpoint/prediction files, use a **read-only streaming hash preflight** (no whole-file RAM load):
+   `python -m tools.external_artifact_preflight --project PROJECT --manifest DEV_OUTPUT_HASHES.json`.
+   The explicit manifest contains `{"split":"dev","artifacts":[{"path":"runs/X/source.py","kind":"source","sha256":"..."}]}`; calculate expected hashes from a separate trusted receipt. Allowed kinds: source, predictions, log, checkpoint, configuration. This tool cannot attest which data trained the model and **does not** independently verify metrics or fit.
+4. For a compatible **bounded** DEV evaluation export only, use existing `adapters.agent_bridge` (classification) or `adapters.typed_agent_bridge` (group-pinned regression/event); the independently trusted DEV truth/metric verifier must accept its real data and prediction volume. **Do not silently sample or relabel a large task as a smaller one to force compatibility.** If the verified export would exceed built-in limits, mark `METRICS_NOT_VERIFIED_BY_FORGE`, retain hashes, full original evaluated metrics and appropriate uncertainty, and use a task-specific independent evaluator supplied and reviewed under the user's authorization.
+5. PD-RW receives `RUN_RECEIPT | EVALUATOR_SCOPE | METRICS_RECOMPUTED/REPORTED | NEAREST_WORK | INDEPENDENCE | SCIENCE_LIMITATIONS`. Full independent scientific confirmation remains separately authorized and is **not automated here**. Q2 potential is always a scientific, source-backed judgment, never a checkpoint hash or one metric.
+
+**Scope:** read-only preflight only; no implicit installation, hardware driver, GPU training, data download, sealed inspection, file edits, publication drafting or external submission. Agent response mode follows [NEXT_ACTION_POLICY](NEXT_ACTION_POLICY.md): an in-scope task receives a concise next-Agent instruction, missing permission requires recommendation and user choices with no execution prompt.
