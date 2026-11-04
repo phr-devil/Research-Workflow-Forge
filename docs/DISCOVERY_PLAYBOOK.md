@@ -20,6 +20,7 @@
    ```bash
    python -m adapters.hypothesis_bank build --project PROJECT --cards PROJECT/ideas.json --seeds PROJECT/observation-seeds.json --literature PROJECT/papers.json --out PROJECT/HYPOTHESES_v1.json
    python -m adapters.opportunity_review --project PROJECT --bank PROJECT/HYPOTHESES_v1.json --out PROJECT/OPPORTUNITIES_v1.json
+# Once PD-RW/user has chosen a scientific hypothesis, add --selected-hypothesis-id H01 to get the next evidence action for THAT hypothesis. Without selection, recommended=null and no scientific topic is auto-selected.
    ```
    Omit either `--seeds` or `--literature` if absent. Alternatively attach `--data-note PROJECT/data-notes.txt` as **agent narrative, not an independently verified data effect**. Source IDs in idea cards must match exactly those in the seed/metadata bundles.
 4. Use the cheapest result-changing next probe in the existing Task/Experiment process. When a **genuine independently verified DEV** Run exists (not merely a self-reported score), append versioned feedback:
@@ -57,7 +58,7 @@
 
 ## Review semantics / safety
 
-- `adapters.opportunity_review` sorts by **next evidence action**, not estimated scientific success: first identify blocked information, absent DEV signal, untested legitimate inputs, strong-matched-baseline need, or a bounded discriminator. No fake numerical priority score or publication probability. Missing information is `UNKNOWN`, not automatic STOP.
+- `adapters.opportunity_review` sorts by **next evidence action** only; `recommended=null` until a valid prior `--selected-hypothesis-id` is provided. `selected_research_problem=NOT_SELECTED_BY_FORGE` is always preserved. It cannot select the science target, which belongs to PD-RW/user. It does not rank expected research value, Q2 potential or acceptance. Its action advice is advisory, **not a user authorization**. For this stage, before proposing any extra model, first check the named comparison and strongest alternative. Existing heuristic: first identify blocked information, absent DEV signal, untested legitimate inputs, strong-matched-baseline need, or a bounded discriminator. No fake numerical priority score or publication probability. Missing information is `UNKNOWN`, not automatic STOP.
 - Observation seeds link to independently recomputed Run receipts but are selected DEV descriptions; **not** independent scientific discovery, headroom bound, causality or novelty. Paper metadata is **METADATA_ONLY** until original nearest work is read.
 - Real experiments remain with authorized Codex/WorkBuddy or existing allowlisted CPU executor. Run/Task/Claim contracts and protected evaluator remain authoritative. Future-scoped causal event semantics require additional provenance; stored predictions alone cannot certify execution.
 - Do not force a literature query, GPU Pilot, hypothesis bank or 1–3 candidates for already-certain Tasks; simply resume the existing verified state and next action.
