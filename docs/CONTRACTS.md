@@ -1,5 +1,7 @@
 # Active research contracts · schema_version 0.1
 
+**Manuscript lock:** `DRAFTABLE`, `CLAIM.json` and any other machine record are scientific evidence descriptors, never writing approval. Human-reviewed results summary plus explicit user-origin writing permission are mandatory before manuscript prose; see [EXECUTION_POLICY.md](EXECUTION_POLICY.md). No new machine event is introduced.
+
 **Source of truth:** [core/contracts.py](../core/contracts.py). Passing a shape check does *not* validate real labels, provenance, scientific truth or user authorization.
 
 | Artifact | Purpose and additional checks |
