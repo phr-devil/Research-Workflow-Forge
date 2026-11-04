@@ -11,6 +11,8 @@ A narrow, reproducible incremental capability, cost/accuracy tradeoff, or new fa
 
 **Research success invariant:** Q2+ submission competitiveness supported by real science/venue evidence is the *goal*; actual acceptance is not required. Forge may propose `Q2_POTENTIAL_SUPPORTED` for PD-RW review, but it does not prove publication potential by CLI state, S/A/B/C grade or DEV score. Higher Q1 potential is preferable when supportable; see [Execution Policy](EXECUTION_POLICY.md). These are Agent judgments, **not new machine states**.
 
+**Next-action invariant:** the router returns advisory skills/evidence pointers, never a permission-granting execution command. Agent outputs obey [NEXT_ACTION_POLICY](NEXT_ACTION_POLICY.md); only scope-authorized technical decisions produce next-Agent prompts, human choices return recommendation+options without executable prompts. See the optional read-only `core.action_output` handoff preflight.
+
 **Writing authorization invariant:** the controller's `CLAIM_CANDIDATE` / `DRAFTABLE` / confirmed-claim decisions never trigger manuscript text. The research summary must be explicitly user-reviewed and a separate user instruction must authorize writing; see [EXECUTION_POLICY.md](EXECUTION_POLICY.md). This remains an Agent policy, not a new machine state or automatic writing system.
 
 **v0.15 paper-first handoff:** `RUN_RESULT`, `NO_GAIN`, and `TASK_BLOCKED` route through the existing Decision Skill and now explicitly prompt a narrow paper-opportunity review before model escalation or abandoning the Task. The route **does not** automatically review literature, assert manuscript readiness, train, confirm or submit; PD-RW remains the optional paper/venue controller.
