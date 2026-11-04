@@ -21,6 +21,8 @@ The route follows the current blocker: `NO_GAIN` → 06 → back to 05 if a diff
 
 **Optional completed-algorithm audit:** existing Skills 05→06→07 can read [POST_ALGORITHM_SCIENCE_AUDIT.md](POST_ALGORITHM_SCIENCE_AUDIT.md) when stable verified evidence exists. It yields `UPGRADE_PILOT/EVIDENCE_ONLY/KEEP_ORIGINAL/UNKNOWN` as advice, not machine states. No automatic fitting/holdout access/manuscript generation; the scientific controller remains PD-RW when both are used.
 
+**Large-model integration boundary:** use [EXTERNAL_MODEL_EVIDENCE.md](EXTERNAL_MODEL_EVIDENCE.md) and `tools.external_artifact_preflight` to verify large DEV *output* file hashes without running the model. Existing metric recomputation remains limited to supported, pinned DEV datasets; other large outputs are `METRICS_NOT_VERIFIED_BY_FORGE` until independently evaluated. This is not sealed evaluation or independent scientific confirmation.
+
 ## Persistent artifacts and boundaries
 
 `STATE.json` holds current pointers; `EVENTS.jsonl` contains append-only evidence-linked transitions; Task/Experiment/Run/Claim contracts live in `core/contracts.py`. `DATA_MANIFEST.json` and `DATA_ACCESS.jsonl` protect eligible DEV use; raw Run logs/predictions retain SHA digests. Version changes retire incompatible Champions without erasing negative results. Sealed confirmation and user authorization are independent protected gates.
