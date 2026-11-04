@@ -20,11 +20,11 @@ ROUTES: dict[str, Route] = {
     "PROTOCOL_REVISED": Route("FEASIBILITY", "skills/04_feasibility/SKILL.md", "Revalidate revised protocol; previous Champion retired", "EXPERIMENT_PLAN"),
     "EXPERIMENT_PLAN_READY": Route("ALGORITHM", "skills/05_algorithm/SKILL.md", "Review experiment and real authorization; do not assume fitting is approved", "EXPERIMENT_PLAN"),
     "BASELINE_VALID": Route("ALGORITHM", "skills/05_algorithm/SKILL.md", "Develop traceable Champion and Challenger", "RUN"),
-    "RUN_RESULT": Route("DECISION", "skills/06_decision/SKILL.md", "Assess minimum complete-paper opportunity before further algorithm search", "DECISION"),
-    "NO_GAIN": Route("DECISION", "skills/06_decision/SKILL.md", "Diagnose failed mechanism and assess narrow paper opportunity or boundary", "DECISION"),
+    "RUN_RESULT": Route("DECISION", "skills/06_decision/SKILL.md", "Assess credible JCR Q2+ science/venue evidence and decisive gaps before further algorithm search", "DECISION"),
+    "NO_GAIN": Route("DECISION", "skills/06_decision/SKILL.md", "Diagnose mechanism failure and Q2+ scientific opportunity, keeping credible assets", "DECISION"),
     "RUN_INVALID": Route("DECISION", "skills/06_decision/SKILL.md", "Isolate invalid evidence and repair", "DECISION"),
     "CODE_FAILURE": Route("DECISION", "skills/06_decision/SKILL.md", "Reproduce earliest error, repair and verify", "DECISION"),
-    "TASK_BLOCKED": Route("DECISION", "skills/06_decision/SKILL.md", "Review residual paper opportunity before holding or pivoting Task", "DECISION"),
+    "TASK_BLOCKED": Route("DECISION", "skills/06_decision/SKILL.md", "Review Q2+ evidence/upgrade possibilities before human-owned Task pivot or project STOP", "DECISION"),
     "CLAIM_CANDIDATE": Route("CONFIRMATION", "skills/07_confirmation/SKILL.md", "Freeze claim/protocol and plan independent verification", "CLAIM_EVIDENCE"),
     "CONFIRM_REQUEST": Route("CONFIRMATION", "skills/07_confirmation/SKILL.md", "Check real approval and untouched confirmation resources", "CLAIM_EVIDENCE"),
 }
@@ -40,7 +40,8 @@ def route(state: dict, event: str) -> dict:
     if event in {"CLAIM_CANDIDATE", "CONFIRM_REQUEST"}:
         warnings.append("Planning only: verify frozen protocol, eligible untouched holdout and separate real authorization")
     if event in {"RUN_RESULT", "NO_GAIN", "TASK_BLOCKED"}:
-        warnings.append("Advisory: inspect existing Run for one narrow paper opportunity and decisive evidence gaps before expensive model escalation or project-level STOP; no scientific or submission certification")
+        warnings.append("Advisory: inspect genuine Q2+ scientific potential, strongest named neighbor, independent confirmation and cheapest decisive gap before expensive escalation or project-level STOP; Q2 status is not certified by routing")
+    warnings.append("Next output: already-authorized in-scope technical action -> concise next-Agent instruction; user-owned scope/budget/confirmation/STOP/writing decision -> recommendation and options, NO executable Agent prompt")
     warnings.append("STATE authorization_refs are pointers, NOT permission; check the original user instruction")
     return {"event": event, "phase": dest.phase, "skill": dest.skill,
             "next_action": dest.next_action, "handoff": dest.handoff,
