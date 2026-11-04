@@ -2,6 +2,8 @@
 
 **Purpose:** after an algorithm has a credible champion / stable baseline and another round of model search is being considered, ask whether a *small, falsifiable intervention* could improve the **scientific claim**, not merely its DEV score. This is an optional route through existing Skills 04→05→06→07, **not an eighth Skill, new CLI event/state, autonomous runner, or manuscript writer**. When PD-RW is present, its [post-algorithm audit](https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/POST_ALGORITHM_SCIENCE_AUDIT.md) owns novelty, scientific value and venue choices. Always obey [EXECUTION_POLICY](EXECUTION_POLICY.md), especially `WRITING_LOCKED`.
 
+**Minimum publication goal:** prioritize scientifically meaningful, falsifiable upgrades that can turn an existing algorithm into an evidence-backed **JCR Q2+ publication-potential** research result; Q1 is preferable when realistic. Actual journal acceptance is not required. Evaluate novelty and venue fit separately; PD-RW [Q2 policy](https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/Q2_PUBLICATION_GOAL.md) owns the final decision. Do not stop at a Q3/Q4-only small-paper exit or overfit research to a journal label.
+
 ## Read-only evidence first (no fit, sealed access or new dependencies)
 
 - Reuse a verified `Task`, evaluator/split, selected DEV `Run`, matched-information simple reference, source predictions and current failure history. Check prediction-level receipts (not only a reported score); `core.cli brief`, `core.cli compare` and `tools.feasibility_probe` are *optional existing aids* subject to their actual input contracts.
@@ -16,6 +18,8 @@
 | **A: REUSE** | Group-paired error, matched-run re-analysis, data-quality/drift checks; zero fit | Do not label post-hoc slices as established laws; never inspect sealed resources |
 | **B: SMALL_DEV** | One authorized matched ablation, simple substitute, calibration-cost curve, real deployment constraint or controlled perturbation | Same task/information/K, fair tuning budget and fixed DEV analysis unit; preserve old Champion and negative Runs. New K/deployment information = versioned Task |
 | **C: CONFIRM** | Separate user-authorized claim-matched independent evaluation after freezing method/claim/selection history | No repeated model selection on holdout or laundering DEV as fresh confirmation |
+
+If the first bounded test reveals a distinct scientific direction that can justify reaching Q2+ or materially improving Q1 competitiveness, pursue further **authorized and decision-changing** tests as justified; do not impose a fixed count or endlessly retune.
 
 For claimed mechanisms, define what outcomes the proposed mechanism predicts **differently** from a simpler explanation. Attribution, observational correlations and assumed shifts alone are not causal proof. A diagnostic perturbation must respect physical/data semantics and avoid label leakage. A rejected test can be scientifically useful but is not a stand-alone publishable result.
 
