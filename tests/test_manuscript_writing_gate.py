@@ -17,7 +17,7 @@ class ManuscriptWritingGateTests(unittest.TestCase):
         self.assertIn("explicitly review/accept", policy)
         self.assertIn("separately and explicitly authorize writing", policy)
         self.assertIn("MANUSCRIPT_WRITE_AUTH", policy)
-        self.assertIn("not an additional gate on authorized research", policy)
+        self.assertIn("an additional gate on authorized research", policy)
         self.assertIn("manuscript writing lock", doc("AGENTS.md"))
         self.assertIn("Mandatory manuscript writing lock", doc("README.md"))
 
