@@ -29,7 +29,7 @@ class PostAlgorithmScienceAuditTests(unittest.TestCase):
     def test_keeps_original_writing_and_auth_lock(self):
         self.assertIn("Manuscript writing lock", read("docs/EXECUTION_POLICY.md"))
         self.assertIn("one minimal fair DEV", read("docs/EXECUTION_POLICY.md"))
-        self.assertIn("not machine states", read("docs/POST_ALGORITHM_SCIENCE_AUDIT.md"))
+        self.assertIn("do not invent new machine states", read("docs/POST_ALGORITHM_SCIENCE_AUDIT.md"))
         self.assertIn("No automatic paper title", read("docs/POST_ALGORITHM_SCIENCE_AUDIT.md"))
 
 
