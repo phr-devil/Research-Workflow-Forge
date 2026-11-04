@@ -3,6 +3,7 @@
 - `core.cli`: versioned Task/Run/Champion, immutable evidence hashes and dev-metric recomputation, history and branch recovery.
 - `tools.data_audit`: manifest-bound DEV integrity and label/group check, not training or sealed confirmation.
 - `tools.experiment_runner`: optional real grouped CPU DEV classification fit (dummy/logistic/forest), only under actual user permission. Does not run arbitrary Agent source.
+- `tools.external_artifact_preflight`: read-only, streamed SHA-256 verification of explicitly supplied project-contained DEV output artifacts; useful for large external model files but **not** training provenance, metric validation or independent science. [Guide](../docs/EXTERNAL_MODEL_EVIDENCE.md).
 - `tools.feasibility_probe`: **no fitting**, uses independently verified DEV Run predictions to report group error/residual and optional matched-reference paired gain. Does not declare learnability/Oracle, scientific novelty or attainable headroom. Reading DEV logs data access; `--out` writes a fresh report only when requested.
 - `core.action_output`: optional human-vs-Agent output-mode preflight; flags alone never prove user authorization or execute actions. Follow [NEXT_ACTION_POLICY](../docs/NEXT_ACTION_POLICY.md).
 - `adapters.agent_bridge`, `adapters.typed_agent_bridge`: import external classification/regression/event predictions under trusted DEV evaluator; external training/sandbox provenance is **not attested**.
