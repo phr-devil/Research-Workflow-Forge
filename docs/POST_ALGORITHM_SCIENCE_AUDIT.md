@@ -25,6 +25,8 @@ For claimed mechanisms, define what outcomes the proposed mechanism predicts **d
 
 ## Decision & handoff (no auto paper draft)
 
+Route the **next output** per [NEXT_ACTION_POLICY](NEXT_ACTION_POLICY.md): in-scope, already-authorized scientific diagnostics → direct next Agent instruction; additional GPU/sealed access, major project pivot or termination → recommendation+user options, no executable Agent prompt. A strong recommendation never grants itself authorization.
+
 `SOURCE_RUN/PROTOCOL | HYPOTHESIS+NAMED_GAP/UNKNOWN | RELEVANT_GROUP_EFFECT | FAIR_ALTERNATIVE | DISTINGUISHING_TEST+EXPECTED_OUTCOMES | DATA/CONFIRM_ELIGIBILITY | COST/AUTH | NEXT`
 
 - `UPGRADE_PILOT`: one falsifiable inexpensive B test is worth running **only if actually authorized**.
