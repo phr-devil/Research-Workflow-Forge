@@ -15,6 +15,8 @@ Shared rules: [EXECUTION_POLICY](../../docs/EXECUTION_POLICY.md). Invoke when no
 - `adapters.novelty_check` creates a **UNVERIFIED** prior-paper screening matrix, not proof of novelty. Read real originals before claiming independent contribution. Selected development data and selection history remain auditable.
 - DRAFT Tasks allow uncertainty. ACTIVE needs actual protocol, group split, metric, legal_inputs, baseline and holdout policy.
 
+**Handoff authority**: after choosing an in-scope technical next probe, directly output a short next-Agent instruction; if a major Task change, new dataset/compute permission or project stop is needed, give your recommendation and user options **without** a Codex/WorkBuddy prompt. See [NEXT_ACTION_POLICY](../../docs/NEXT_ACTION_POLICY.md).
+
 **Handoff:** TaskSpec, minimal first falsification probe, reason for proposed mechanism and alternate route if its premise fails. Once credible DEV evidence supports a potential incremental difference, a short Claim/evidence-gap outline is useful; do not write claimed confirmed findings or polished figures before confirmation.
 
 **Information feasibility (trigger only when relevant):** An Oracle or perfect-action gain is **correctability**, not proof a policy can identify that action from information available before prediction. Check the legal label budget K (unit, acquisition time), support/query separation and same-K strong simple baseline. A K=0→K=1 shift is a new versioned Task/protocol/Claim, never success of the old K=0 goal. Cross-project case: https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/LESSONS/SAFE_GAIT_APACE.md (read only on symptom).
