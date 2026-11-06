@@ -19,3 +19,5 @@ python -m tools.feasibility_probe --project PROJECT --candidate PROJECT/runs/C/R
 ```
 
 Without a reference it reports **UNKNOWN signal**, not failure. A reference is not independently guaranteed to be an appropriate dummy/strong baseline; inspect implementation, K, legal information, tuning parity and selection history separately. No automatic scientific STOP/GO or charts.
+
+- `tools.figure_qa`: opt-in, read-only structural QA of existing user-requested SVG/PNG, source/plot-data SHA and declared semantic color/paired-scale consistency. It never renders plots, runs Agent scripts or validates scientific claims. See [figure contract](../docs/FIGURE_QA_CONTRACT.md).

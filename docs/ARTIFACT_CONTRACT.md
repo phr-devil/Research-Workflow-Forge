@@ -55,3 +55,7 @@ The optional `adapters.science_handoff` requires an already PD-RW/user-selected 
 ## PD-RW read-only verified DEV handoff
 
 `python -m adapters.pd_rw_bridge --project FORGE_PROJECT --forge-run FORGE_RUN --pd-root PD_PROJECT --pd-run PD_RUN --metric METRIC` independently reloads and recomputes the Forge Run, then checks matched task/protocol/dataset/evaluator/split/group/sample identities, legal inputs, calibration/level fields when present, numerical metrics, and **byte-identical original prediction JSON** referenced by both Runs. Missing calibration fields in both old Runs are reported as `PARTIAL_LEGACY`; unequal or one-sided fields fail. Output is read-only, `METRIC_VERIFIED_DEV_ONLY`, and is not a certificate of source-code execution or scientific confirmation. This is a controlled bridge, not a unified schema or full repository merge.
+
+## Optional figure artifact provenance and QA
+
+Any new figure, preview, redraw or contact sheet **requires the actual user's explicit request to draw the specific images**. Only then may a project use the optional [Figure QA Contract](FIGURE_QA_CONTRACT.md), [example contract](../templates/FIGURE_CONTRACT.example.json) and read-only `tools.figure_qa`. Source hashes and SVG/PNG file validation bind bytes/structure, not user authority, independent source correctness, plotted-value semantics, confirmation or Q2 potential. Figure status never promotes scientific Run/Claim status. No implicit SEALED access, re-training, manuscript drafting or uploads.

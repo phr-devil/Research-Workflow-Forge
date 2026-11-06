@@ -1,5 +1,7 @@
 # Research Workflow Forge · v0.15
 
+**No automatic figures:** diagnostic charts, evidence plots, journal images, algorithm diagrams and previews are generated **only when the user explicitly asks to draw/modify specified images**. See [figure policy](docs/FIGURE_QA_CONTRACT.md).
+
 An evidence-first research workflow with **one controller, three engines, seven on-demand Skills**. Starting point: the current blocker. **Primary outcome before writing authorization is defensible independent scientific evidence with a credible JCR Q2+ submission-potential route (Q1 preferred), not a cheap specialist-journal manuscript at any level**, not the largest model gain or breakthrough. PD-RW remains the optional scientific/venue controller; Forge verifies evidence and proposes the next necessary experiment, not a guarantee of publication.
 
 **Previously hidden science and contribution clarity:** [SCIENCE_RESULT_HARVEST.md](docs/SCIENCE_RESULT_HARVEST.md) integrates existing Skills 05–07. Meaningful DEV results and negative Runs may contain unexplored boundaries, scientific heterogeneity and resource tradeoffs; before project close or expensive retraining, inventory at most three genuine Claim candidates. Distinguish `ARTICULATION_GAP` (research evidence insufficiently explained) from `EVIDENCE_GAP` (proof lacking). Writing lock remains in force.
