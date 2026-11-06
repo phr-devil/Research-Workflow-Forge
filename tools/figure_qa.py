@@ -250,6 +250,9 @@ def _check_one(root: Path, record: dict) -> tuple[dict, dict]:
         if colors:
             observed_paints = inspect_svg_semantic_paints(svg_content, colors)
         typography = inspect_svg_typography(svg_content, lock["theme"]["font_family"])
+        if record.get("figure_kind") == "PUBLICATION" and record.get("figure_type", "data") == "data":
+            if not typography["text_elements"]:
+                raise ValueError("v2 publication data SVG has no editable text labels")
         if style.get("comparison_group") and not style.get("axis_limits"):
             raise ValueError("v2 comparison group requires explicit comparable axis limits")
     detail = {"figure_id": figure_id, "status": "STRUCTURAL_PASS_REVIEW_REQUIRED",
