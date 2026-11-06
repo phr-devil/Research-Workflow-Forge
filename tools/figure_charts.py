@@ -197,6 +197,7 @@ def validate_matrix(matrix: list[list[float]], xlabels, ylabels):
 
 def draw_heatmap(ax, matrix, xlabels, ylabels, *, palette_name: str = "viridis",
                  palette_kind: str = "sequential", colorbar: bool = True,
+                 cycle_domain: tuple[float, float] | None = None,
                  explicitly_requested: bool = False, user_request_ref: str = ""):
     """Continuous heatmap: scientific semantic colormap, not categorical model colors."""
     _gate(explicitly_requested, user_request_ref)
@@ -221,7 +222,14 @@ def draw_heatmap(ax, matrix, xlabels, ylabels, *, palette_name: str = "viridis",
             raise ValueError("all-zero effects need an explicit nonzero reference scale")
         norm = TwoSlopeNorm(vmin=-bound, vcenter=0, vmax=bound)
     elif palette_kind == "cyclic":
-        raise ValueError("cyclic phase plots require an explicit domain-specific normalizer")
+        if (cycle_domain is None or len(cycle_domain) != 2
+                or any(isinstance(v, bool) or not isinstance(v, Real)
+                       or not math.isfinite(float(v)) for v in cycle_domain)
+                or cycle_domain[1] <= cycle_domain[0]):
+            raise ValueError("cyclic phase plots require an explicit ordered domain (e.g. 0 to 2π)")
+        if minimum < cycle_domain[0] or maximum > cycle_domain[1]:
+            raise ValueError("phase values outside specified cycle domain")
+        norm = Normalize(vmin=cycle_domain[0], vmax=cycle_domain[1])
     else:
         # A uniform matrix has no visual gradient to show; do not fabricate one.
         norm = Normalize(vmin=minimum, vmax=maximum) if minimum != maximum else None
