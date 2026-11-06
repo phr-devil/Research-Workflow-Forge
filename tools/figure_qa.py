@@ -51,11 +51,24 @@ def _inch(value: str) -> float:
     return num * {"pt": 1 / 72, "px": 1 / 96, "in": 1, "mm": 1 / 25.4, "cm": 1 / 2.54}[unit]
 
 
+def _safe_svg_xml(raw: bytes) -> bytes:
+    """Allow only Matplotlib's fixed SVG 1.1 PUBLIC DTD; never resolve entities."""
+    if b"<!ENTITY" in raw.upper():
+        raise ValueError("SVG entity declarations prohibited")
+    # Matplotlib's SVG backend includes this harmless standard prolog.
+    fixed = re.compile(
+        rb'<!DOCTYPE\s+svg\s+PUBLIC\s+"-//W3C//DTD SVG 1\.1//EN"\s+'
+        rb'"http://www\.w3\.org/Graphics/SVG/1\.1/DTD/svg11\.dtd"\s*>',
+        flags=re.IGNORECASE,
+    )
+    cleaned = fixed.sub(b"", raw)
+    if b"<!DOCTYPE" in cleaned.upper():
+        raise ValueError("unrecognized SVG DOCTYPE prohibited")
+    return cleaned
+
+
 def _svg_size(path: Path) -> tuple[float, float]:
-    raw = path.read_bytes()
-    if b"<!DOCTYPE" in raw.upper() or b"<!ENTITY" in raw.upper():
-        raise ValueError("SVG DOCTYPE/ENTITY prohibited")
-    root = ET.fromstring(raw)
+    root = ET.fromstring(_safe_svg_xml(path.read_bytes()))
     if root.tag.split("}")[-1] != "svg":
         raise ValueError("SVG root element missing")
     w, h = _inch(root.get("width", "")), _inch(root.get("height", ""))
@@ -117,10 +130,7 @@ def inspect_svg_semantic_paints(svg_xml: bytes, expected: dict[str, str]) -> dic
     separate inspection. No SVG/image creation.
     """
     from tools.figure_style import semantic_gid
-    upper = svg_xml.upper()
-    if b"<!DOCTYPE" in upper or b"<!ENTITY" in upper:
-        raise ValueError("SVG DOCTYPE/ENTITY prohibited")
-    root = ET.fromstring(svg_xml)
+    root = ET.fromstring(_safe_svg_xml(svg_xml))
     result = {}
     for semantic_key, specified in expected.items():
         tag = semantic_gid(semantic_key)
@@ -138,6 +148,32 @@ def inspect_svg_semantic_paints(svg_xml: bytes, expected: dict[str, str]) -> dic
             raise ValueError(f"actual SVG paint mismatch: {semantic_key}, expected {target}, observed {sorted(observed)}")
         result[semantic_key] = sorted(observed)
     return result
+
+
+def inspect_svg_typography(svg_xml: bytes, expected_family: str) -> dict:
+    """Inspect explicit SVG text font/fill declarations; not OS font substitution."""
+    root = ET.fromstring(_safe_svg_xml(svg_xml))
+    text_nodes = [el for el in root.iter() if el.tag.split("}")[-1] == "text"]
+    checked = 0
+    for el in text_nodes:
+        style = el.attrib.get("style", "")
+        family = el.attrib.get("font-family", "") or el.attrib.get("font", "")
+        if family and expected_family.lower() not in family.lower():
+            raise ValueError(f"actual SVG text font mismatch: {family!r}")
+        if ("font:" in style or "font-family:" in style):
+            if expected_family.lower() not in style.lower():
+                raise ValueError(f"actual SVG font style differs from locked family: {style!r}")
+            checked += 1
+        colors = []
+        if "fill" in el.attrib:
+            colors += SVG_PAINT.findall(el.attrib["fill"])
+        fill_rule = re.search(r"(?:^|;)\s*fill\s*:\s*(#[0-9A-Fa-f]{6})\b", style)
+        if fill_rule:
+            colors.append(fill_rule.group(1))
+        if any(color.upper() != "#000000" for color in colors):
+            raise ValueError("non-black SVG text fill under locked theme")
+    return {"text_elements": len(text_nodes), "explicit_font_checks": checked,
+            "note": "Font metadata only; actual font rendering/substitution requires visual inspection"}
 
 
 def _check_one(root: Path, record: dict) -> tuple[dict, dict]:
@@ -200,19 +236,27 @@ def _check_one(root: Path, record: dict) -> tuple[dict, dict]:
         raise ValueError("invalid declared background color")
     lock = None
     observed_paints = {}
+    typography = None
     if version == "figure-v2":
         from tools.figure_style import validate_style_lock
 
         lock = validate_style_lock(record, root)
-        # For v2, check tagged artist groups in the *exported SVG*.
+        svg_content = svg.read_bytes()
+        xml = ET.fromstring(_safe_svg_xml(svg_content))
+        expected_template_gid = "template--" + lock["template_id"]
+        if not any(node.attrib.get("id") == expected_template_gid for node in xml.iter()):
+            raise ValueError("SVG lacks tagged template group: " + expected_template_gid)
+        # Tagged series paint checks inspect the *exported* SVG rather than style declarations alone.
         if colors:
-            observed_paints = inspect_svg_semantic_paints(svg.read_bytes(), colors)
+            observed_paints = inspect_svg_semantic_paints(svg_content, colors)
+        typography = inspect_svg_typography(svg_content, lock["theme"]["font_family"])
         if style.get("comparison_group") and not style.get("axis_limits"):
             raise ValueError("v2 comparison group requires explicit comparable axis limits")
     detail = {"figure_id": figure_id, "status": "STRUCTURAL_PASS_REVIEW_REQUIRED",
               "svg_inches": [round(sw, 4), round(sh, 4)], "png_pixels": [pw, ph],
               "style_lock": "VERIFIED" if lock else "LEGACY_V1_UNFROZEN",
               "tagged_semantic_paints": observed_paints,
+              "svg_typography": typography,
               "note": "User permission, actual data-to-mark linkage, white-pixel opacity, font substitution, rendered layout and science NOT verified"}
     cross = {"colors": {k: v.upper() for k, v in colors.items()},
              "group": group, "axes": axes, "canvas": canvas,
