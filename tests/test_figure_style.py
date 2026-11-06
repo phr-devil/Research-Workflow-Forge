@@ -8,7 +8,7 @@ from tools.figure_style import (
     BASE_THEME, REGISTRY, frozen_style_fields, load_registry, load_theme, semantic_color,
     semantic_gid, style_fingerprint, template_spec, validate_theme,
 )
-from tools.figure_templates import require_drawing_request, create_template_figure, export_figure, rendering_environment_receipt
+from tools.figure_templates import require_drawing_request, create_template_figure, export_figure, rendering_environment_receipt, _write_pair_exclusive
 
 
 class FigureStyleTests(unittest.TestCase):
@@ -82,6 +82,30 @@ class FigureStyleTests(unittest.TestCase):
         theme["background"] = "#EEEEEE"
         with self.assertRaises(ValueError):
             validate_theme(theme)
+
+    def test_exclusive_export_pair_rolls_back_on_collision(self):
+        # Plain text files, never generated SVG/PNG or preview images.
+        import tempfile
+        with tempfile.TemporaryDirectory() as directory:
+            first = Path(directory) / "output-a.txt"
+            second = Path(directory) / "output-b.txt"
+            second.write_bytes(b"important-existing-original")
+            with self.assertRaises(FileExistsError):
+                _write_pair_exclusive([(first, b"first"), (second, b"second")])
+            self.assertFalse(first.exists())
+            self.assertEqual(second.read_bytes(), b"important-existing-original")
+            _write_pair_exclusive([(first, b"first")])
+            self.assertEqual(first.read_bytes(), b"first")
+
+    def test_exclusive_export_pair_rejects_empty_second_payload(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as directory:
+            first = Path(directory) / "output-a.txt"
+            second = Path(directory) / "output-b.txt"
+            with self.assertRaises(ValueError):
+                _write_pair_exclusive([(first, b"data"), (second, b"")])
+            self.assertFalse(first.exists())
+            self.assertFalse(second.exists())
 
     def test_request_guard_blocks_before_plotting_import(self):
         with self.assertRaises(PermissionError):

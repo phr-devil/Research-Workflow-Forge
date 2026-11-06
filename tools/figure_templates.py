@@ -185,11 +185,38 @@ def export_figure(fig, svg: Path, png: Path, *, explicitly_requested: bool = Fal
     import matplotlib.style as mplstyle
 
     theme = validate_theme(getattr(fig, "_rwf_theme", None) or load_theme())
-    # Repeat the figure's theme during export: some properties resolve at draw time.
+    # Prepare both exports before touching either destination. The two final
+    # filenames are reserved with 'xb': no silent clobber and no stale lone SVG
+    # if PNG rendering or writing fails. This occurs ONLY on authorized drawing.
+    from io import BytesIO
+
     with mplstyle.context(str(BASE_MPLSTYLE)), mpl.rc_context(rc=_render_rc(theme)):
         font_preflight(theme["font_family"])
-        fig.savefig(svg, format="svg", transparent=False, facecolor="#FFFFFF", dpi=dpi)
-        fig.savefig(png, format="png", transparent=False, facecolor="#FFFFFF", dpi=dpi)
+        svg_bytes, png_bytes = BytesIO(), BytesIO()
+        fig.savefig(svg_bytes, format="svg", transparent=False, facecolor="#FFFFFF", dpi=dpi)
+        fig.savefig(png_bytes, format="png", transparent=False, facecolor="#FFFFFF", dpi=dpi)
+    _write_pair_exclusive([(svg, svg_bytes.getvalue()), (png, png_bytes.getvalue())])
+
+
+def _write_pair_exclusive(outputs: list[tuple[Path, bytes]]) -> None:
+    """Best-effort all-or-clean rollback for output files; no plotting or imports.
+
+    File creation is exclusive even under concurrent runs. A power loss is not
+    transactional, so users must still verify the complete output pair.
+    """
+    created: list[Path] = []
+    try:
+        for path, payload in outputs:
+            path = Path(path)
+            if not isinstance(payload, bytes) or not payload:
+                raise ValueError("empty or invalid rendered output payload")
+            with path.open("xb") as stream:
+                created.append(path)
+                stream.write(payload)
+    except BaseException:
+        for path in reversed(created):
+            path.unlink(missing_ok=True)
+        raise
 
 
 def rendering_environment_receipt(fig, *, explicitly_requested: bool = False,
