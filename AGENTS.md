@@ -21,14 +21,14 @@
 
 | 目标 | Skill / 按需专题 |
 | --- | --- |
-| 研究方向/文献/数据 | `01_search`，按需 `02_evidence_data`；未知科研机会需考虑不同失败前提 |
+| 研究方向/文献/数据 | `01_search`，按需 `02_evidence_data`；未知方向先 `BREADTH_SCAN → DEEP_FALSIFICATION → COMPETING_CHOICE`，比较不同失败前提，不能只选第一个可行题目 |
 | 科学 Task 与可辨识假设 | `03_problem_design`，按需 `docs/HIGH_VALUE_RESEARCH_ENGINEERING.md` |
 | DEV 协议、简单基线/评估 | `04_feasibility` |
 | 算法编码/误差与机制实验 | `05_algorithm` |
 | 负结果、修复、收窄或转向 | `06_decision`；按需 [Science Result Harvest](docs/SCIENCE_RESULT_HARVEST.md) 或 [Post-Algorithm Audit](docs/POST_ALGORITHM_SCIENCE_AUDIT.md) |
 | 独立科学主张/确认方案 | `07_confirmation`，按真实 SEALED 权限；PD-RW 负责最终主张决策 |
 
-既有有效 Run 直接续做，不重新开选题、下载或重复训练；强简单基线和可区分的科学预言优先于盲目复杂化。七个 Skills 是能力，不是七次强制审批。
+既有有效 Run 直接续做，不重新开选题、下载或重复训练；强简单基线和可区分的科学预言优先于盲目复杂化。七个 Skills 是能力，不是七次强制审批。**Load only the skill needed for the current blocker**；不要预读所有 Skills、vendor 源码或实验历史。
 
 ## 3. 增量输出与交接
 
