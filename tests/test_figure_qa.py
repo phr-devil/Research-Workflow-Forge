@@ -119,7 +119,7 @@ class FigureQATests(unittest.TestCase):
 
     def test_v2_style_lock_and_actual_svg_semantic_tag(self):
         v2 = self._v2()
-        svg = b'<svg><g id="template--rate_ablation"/><g id="series--model--SF"><path style="fill: #769eb2; stroke: #000000"/></g></svg>'
+        svg = b'<svg><g id="template--rate_ablation"/><g id="series--model--SF"><path style="fill: #769eb2; stroke: #000000"/></g><text style="font: 10px &apos;DejaVu Sans&apos;; fill: #000000">F1</text></svg>'
         result = self._check_records([v2], svg_bytes=svg)
         self.assertEqual(result["status"], "STRUCTURAL_PASS_REVIEW_REQUIRED")
         self.assertEqual(result["results"][0]["style_lock"], "VERIFIED")
@@ -127,7 +127,7 @@ class FigureQATests(unittest.TestCase):
 
     def test_v2_theme_drift_and_silent_color_override_fail(self):
         v2 = self._v2()
-        svg = b'<svg><g id="template--rate_ablation"/><g id="series--model--SF"><path style="fill: #769eb2"/></g></svg>'
+        svg = b'<svg><g id="template--rate_ablation"/><g id="series--model--SF"><path style="fill: #769eb2"/></g><text style="font: 10px &apos;DejaVu Sans&apos;; fill: #000000">F2</text></svg>'
         v2["style"]["semantic_colors"]["model:SF"] = "#FF0000"
         self.assertEqual(self._check_records([v2], svg_bytes=svg)["status"], "QA_FAIL")
         v2["style"]["semantic_colors"]["model:SF"] = "#769EB2"
@@ -147,6 +147,11 @@ class FigureQATests(unittest.TestCase):
             inspect_svg_typography(xml, "Arial")
         with self.assertRaises(ValueError):
             _safe_svg_xml(b'<!DOCTYPE svg SYSTEM "http://other.com/x.dtd"><svg/>')
+
+    def test_v2_publication_data_requires_editable_text(self):
+        v2 = self._v2()
+        no_text = b'<svg><g id="template--rate_ablation"/><g id="series--model--SF"><path style="fill: #769eb2"/></g></svg>'
+        self.assertEqual(self._check_records([v2], svg_bytes=no_text)["status"], "QA_FAIL")
 
     def test_actual_tagged_svg_paint(self):
         okay = b'<svg><g id="series--model--SF"><path style="stroke: #769eb2; fill: none"/></g></svg>'
