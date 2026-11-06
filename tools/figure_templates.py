@@ -190,3 +190,40 @@ def export_figure(fig, svg: Path, png: Path, *, explicitly_requested: bool = Fal
         font_preflight(theme["font_family"])
         fig.savefig(svg, format="svg", transparent=False, facecolor="#FFFFFF", dpi=dpi)
         fig.savefig(png, format="png", transparent=False, facecolor="#FFFFFF", dpi=dpi)
+
+
+def rendering_environment_receipt(fig, *, explicitly_requested: bool = False,
+                                  user_request_ref: str = "") -> dict:
+    """Non-image metadata for a figure that the user explicitly requested.
+
+    Records environment/version and font facts; no source science or user
+    authorization is proven by this receipt. Only invoke within the already
+    authorized plotting task, never as a CI image-generation prerequisite.
+    """
+    require_drawing_request(explicitly_requested=explicitly_requested, user_request_ref=user_request_ref)
+    import hashlib
+    import platform
+    import matplotlib
+    from tools.figure_style import REGISTRY, style_fingerprint
+
+    theme = validate_theme(getattr(fig, "_rwf_theme", None) or load_theme())
+    template_id = getattr(fig, "_rwf_template_id", None)
+    if template_id is None:
+        raise ValueError("figure template ID not stored; use figure_session")
+    font = font_preflight(theme["font_family"])
+    files = [Path(__file__), Path(__file__).with_name("figure_style.py"),
+             Path(__file__).with_name("figure_charts.py")]
+    return {
+        "theme_version": theme["theme_version"],
+        "palette_id": theme["colors"].get("palette_id", "LEGACY_UNPINNED"),
+        "template_id": template_id,
+        "template_registry_sha256": hashlib.sha256(REGISTRY.read_bytes()).hexdigest(),
+        "style_fingerprint": style_fingerprint(theme, template_id),
+        "matplotlib_version": matplotlib.__version__,
+        "python_version": platform.python_version(),
+        "font_family_requested": font["requested"],
+        "font_family_resolved": font["resolved"],
+        "plot_helper_sha256": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in files},
+        "status": "RENDER_ENV_METADATA_ONLY",
+        "science_verified": False,
+    }
