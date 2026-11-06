@@ -124,7 +124,7 @@ def draw_rate_ablation(ax, labels, rates, semantic_keys, *, theme,
     if any(v < 0 for v in vals):
         raise ValueError("rates cannot be negative; use effect template for signed deltas")
     if limits is not None and (
-        len(limits) != 2 or limits[0] != 0 or limits[1] <= max(vals)
+        len(limits) != 2 or limits[0] != 0 or limits[1] < max(vals)
     ):
         raise ValueError("rate axis must start at zero and include all observed rates")
     artists = {}
@@ -211,7 +211,21 @@ def draw_heatmap(ax, matrix, xlabels, ylabels, *, palette_name: str = "viridis",
     else:
         import matplotlib
         cmap = matplotlib.colormaps[colormap["name"]]
-    im = ax.imshow(matrix, interpolation="nearest", cmap=cmap, aspect="auto")
+    from matplotlib.colors import Normalize, TwoSlopeNorm
+    values = [float(v) for row in matrix for v in row]
+    minimum, maximum = min(values), max(values)
+    if palette_kind == "diverging":
+        # A signed effect must be centered at the scientific neutral point.
+        bound = max(abs(minimum), abs(maximum))
+        if bound == 0:
+            raise ValueError("all-zero effects need an explicit nonzero reference scale")
+        norm = TwoSlopeNorm(vmin=-bound, vcenter=0, vmax=bound)
+    elif palette_kind == "cyclic":
+        raise ValueError("cyclic phase plots require an explicit domain-specific normalizer")
+    else:
+        # A uniform matrix has no visual gradient to show; do not fabricate one.
+        norm = Normalize(vmin=minimum, vmax=maximum) if minimum != maximum else None
+    im = ax.imshow(matrix, interpolation="nearest", cmap=cmap, norm=norm, aspect="auto")
     ax.set_xticks(range(len(xlabels)), xlabels)
     ax.set_yticks(range(len(ylabels)), ylabels)
     if colorbar:
