@@ -1,4 +1,4 @@
-"""Static policy test: RWF provides evidence but does not unlock manuscript prose."""
+"""RWF's compact entry / two-file handoff; structure checks only, no images or experiments."""
 import unittest
 from pathlib import Path
 
@@ -11,14 +11,31 @@ class DualDocumentHandoffTests(unittest.TestCase):
         for value in ("RESEARCH_RECORD.md", "PAPER_BLUEPRINT.md", "H1/H2",
                       "EXP/Run/Claim", "WRITING_LOCKED", "user reviews",
                       "separately authorizes", "explicit drawing request",
-                      "SEALED/CONFIRMATION", "NOT_RUN", "negative"):
-            self.assertIn(value, text)
+                      "SEALED/CONFIRMATION", "NOT_RUN", "negative",
+                      "SEC_ID", "SOURCE_CONFLICT", "no new phase"):
+            with self.subTest(value=value):
+                self.assertIn(value.lower(), text.lower())
 
-    def test_entrypoints_link_handoff(self):
+    def test_entrypoints_and_read_order(self):
         for name in ("AGENTS.md", "README.md", "docs/EXECUTION_POLICY.md"):
             with self.subTest(path=name):
                 self.assertIn("PD_RW_DUAL_DOCUMENT_HANDOFF.md",
                               (ROOT / name).read_text(encoding="utf-8"))
+        agent = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        for phrase in ("最短读取顺序", "RESEARCH_RECORD.md", "PAPER_BLUEPRINT.md",
+                       "SEC_ID", "STATE.json", "NEXT_ACTION_POLICY.md",
+                       "SCIENCE_RESULT_HARVEST.md", "POST_ALGORITHM_SCIENCE_AUDIT.md"):
+            self.assertIn(phrase, agent)
+
+    def test_original_seven_skills_and_authority_retained(self):
+        entry = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        for sid in ("01_search", "02_evidence_data", "03_problem_design",
+                    "04_feasibility", "05_algorithm", "06_decision",
+                    "07_confirmation"):
+            self.assertIn(sid, entry)
+        for boundary in ("Q2", "SEALED", "WRITING_LOCKED", "用户明确要求",
+                         "HIGH_VALUE_RESEARCH_ENGINEERING"):
+            self.assertIn(boundary, entry)
 
 
 if __name__ == "__main__":

@@ -1,52 +1,35 @@
-# Research Workflow Forge · AI entry (v0.15)
+# Research Workflow Forge｜Agent 入口 v0.15
 
-**Image generation locked by default:** Only the user's explicit request to draw/modify specified images may start any diagnostic plot, evidence figure, journal image, flowchart, algorithm diagram, preview or redraw. Research progress, evidence, writing approval and Agent suggestions never trigger figures. For a real request read [FIGURE_QA_CONTRACT](docs/FIGURE_QA_CONTRACT.md) and on-demand [FIGURE_STYLE_SYSTEM](docs/FIGURE_STYLE_SYSTEM.md): preserve the project's chosen palette/semantic colors, use the full rendering session, and distinguish structural QA from actual scientific/visual review. Otherwise preserve normal experiments and text/table evidence; NEVER draw to test a style.
+> **这是导航与权限摘要，不是第二个科研主控。** 在与 PD-RW 共同工作时，以 PD-RW 的科研选择/用户授权为准；RWF 负责可复核 DEV 工件、机制验证及必要的科研实验建议。完整规则在 [Execution Policy](docs/EXECUTION_POLICY.md)，按需读相关段落，不把所有专题和历史同时加载。
 
-**Default goal:** develop trustworthy, important scientific contributions with credible JCR Q2+ submission potential (Q1 preferred); no actual acceptance guarantee. Evaluate the science already present in existing Runs, not just the easiest small paper candidate. Manuscript drafting is a separate user-authorized task. New model complexity is optional. At a credible Run/negative Pilot or before costly model escalation/HOLD/PIVOT, use `06_decision` to ask whether an existing narrow Claim only needs a decisive fair comparison or independent evidence. If yes, prioritize paper-critical experiments and hand off `ONE_CLAIM | CORE_RUN | GAP_1-3 | NEXT_REQUIRED_TEST | VENUE_ANALOGS_IF_KNOWN` to PD-RW, without asserting acceptance or scientific confirmation. When task design requires it, inspect 1–3 recent published analogous studies cheaply; formal journal matching belongs to PD-RW.
+## 0. 最短读取顺序（新 Agent / 跨会话）
 
-**Scientific-priority ownership**: RWF must not convert its `opportunity_review.recommended` (cheap evidence action) into a scientific problem choice. When PD-RW/user has selected a question, use the optional [source-hash science handoff](adapters/science_handoff.py) and run the cheapest decisive test only in that question and within real permission. When no question is selected, return evidence/action alternatives without falsely claiming an optimum or automatically fitting. **No agent-generated metadata can grant authorization or Q2 status.**
+1. 确定**当前用户请求及原始授权**，确认是 PD-RW 项目还是独立 RWF 项目。用户原始许可优先于本地 STATE 或任何 handoff。
+2. **PD-RW 项目**：先读 `RESEARCH_RECORD.md` 首页当前状态/最佳 Run/重要失败/下一步；论文相关任务再读 `PAPER_BLUEPRINT.md` 构思快照与相关 `SEC_ID`。之后核原始 STATE/Run/任务协议，必要时使用 [two-file handoff](docs/PD_RW_DUAL_DOCUMENT_HANDOFF.md)；RWF 不建第三套科研日记。
+3. **独立 RWF 项目**：先读 `STATE.json`（或 `python -m core.cli brief --dir PROJECT`）→ 当前有效 Run/Task 与权限 → 当前阻碍需要的单个 Skill。旧版工件照常复用，未证实的来源/运行状态不升级。
+4. 只有遇到具体规则/机制问题才读相应 [Execution Policy](docs/EXECUTION_POLICY.md)、[Artifact Contract](docs/ARTIFACT_CONTRACT.md)、[Science Handoff](adapters/science_handoff.py) 或专业文档。真实原始 Run/协议优于摘要；哈希/结构通过不自动证明科学有效。
 
-**First-stage comparative search (when PD-RW/user has not yet selected a topic):** do not auto-select the first feasible hypothesis. Follow [HIGH_VALUE_RESEARCH_ENGINEERING](docs/HIGH_VALUE_RESEARCH_ENGINEERING.md) §01–02: BREADTH_SCAN across distinct failure premises → DEEP_FALSIFICATION of nearest-original/counterevidence → COMPETING_CHOICE with a contrasting-opportunity challenge → PRE_DOWNLOAD_SCIENCE_FIT on official metadata. Reuse sources and complete the reasoning within one ChatGPT response or 2–3 interactions where possible; do not create a new mandatory Skill. If PD-RW/user already selected the Task, continue from its saved evidence, not a new search. RWF may propose an experiment for the selected question but cannot promote a cheaper experiment into a science-choice verdict.
+## 1. 不可越过的边界
 
-**High-value research quality (on demand):** [HIGH_VALUE_RESEARCH_ENGINEERING](docs/HIGH_VALUE_RESEARCH_ENGINEERING.md) directs the existing Skills 01–06 to prioritize important unanswered knowledge, scientifically discriminating datasets, competing explanations and bounded high-upside mechanisms; existing Task/Run assets and permissions remain protected. The easiest small F1 gain is not automatically the best Q2 research opportunity.
+- **授权**：[NEXT_ACTION_POLICY](docs/NEXT_ACTION_POLICY.md) 将授权内技术执行与用户必须决策的下载、安装、CPU/GPU、SEALED/CONFIRMATION、重大 Task 改变、HOLD/STOP、投稿、外传和付费分开。保存的许可字段或 Agent 建议不是原始用户授权。
+- **科研与 Q2 目标**：追求真实证据支持的 JCR Q2+ 投稿潜力（优先 Q1），不保证录用；DEV 增益、廉价实验和期刊元信息都不是独立科学确认。PD-RW 拥有科研选择和选刊判断，RWF 的廉价下一 Probe 排序不能替代。见 [HIGH_VALUE_RESEARCH_ENGINEERING](docs/HIGH_VALUE_RESEARCH_ENGINEERING.md)。
+- **写作**：允许更新 `PAPER_BLUEPRINT.md` 的 H1/H2 及逐节要点；论文正式标题、摘要、章节正文和初稿仍 `WRITING_LOCKED`，须用户审查真实科研成果总结后**另行明确授权**。参见 [Execution Policy](docs/EXECUTION_POLICY.md)；蓝图或 Run 不授权写稿。
+- **图片**：**只在用户明确要求绘制/修改具体图片时**才可调用绘图、重绘、预览或导出；科技图表、诊断图与稿件图一律不自动生成。获授权时读 [Figure QA Contract](docs/FIGURE_QA_CONTRACT.md) 与 [Figure Style](docs/FIGURE_STYLE_SYSTEM.md)。
+- **工具边界**：RWF 不自带通用自主编码 Agent、GPU 执行器或独立论文确认器。只有可复算的合法 DEV 预测/指标才能据实验证；外部代码、日志和 JSON 声明不自动成为已验证 Run，封存集不得用于开发。
 
-**Minimum research success: evidence-backed JCR Q2+ publication potential, preferably Q1 (not actual journal acceptance).** An incremental DEV effect or plausible specialist-journal submission is only a candidate. Project success requires defensible novel scientific contribution, fair evidence/appropriate confirmation, and a verified relevant Q1/Q2 journal with comparable published articles; no one can guarantee acceptance. PD-RW owns the final scientific/venue judgment; when operating alone, apply this same standard using the [PD-RW goal policy](https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/Q2_PUBLICATION_GOAL.md). Failure of one mechanism or unknown journal evidence is not project failure. **This rule does not unlock manuscript writing.**
+## 2. 当前阻碍 → 只加载相关 Skill
 
-**Next Agent instruction or user decision (mandatory):** follow [NEXT_ACTION_POLICY](docs/NEXT_ACTION_POLICY.md). For technical choices already within real authorization or strongly preferred in-scope actions, output a concise ready-to-copy next-agent instruction. For new permissions, major project/pivot/STOP, sealed evaluation or manuscript review/writing, first explain the recommendation and offer options; do **not** emit an execution prompt before the user chooses.
-
-**Two-file research memory, manuscript still locked:** [PD-RW dual-document handoff](docs/PD_RW_DUAL_DOCUMENT_HANDOFF.md) allows updating RESEARCH_RECORD.md for substantive experiments, failures, outcomes and replay; PAPER_BLUEPRINT.md may contain H1/H2 section titles, intended content bullets, Run/Claim citations and gaps. This is planning rather than formal manuscript writing. WRITING_LOCKED still prohibits publication titles, abstracts, manuscript paragraphs and drafts until the actual research-results summary has been explicitly reviewed by the user and a separate real user instruction authorizes drafting this manuscript. Neither a blueprint, trustworthy Run, stored approval, Q2 assessment nor image request grants prose permission. RWF should add evidence to PD-RW's existing two documents, not create an independent ledger.
-
-**Science Result Harvest / Contribution Amplification (on demand):** when a meaningful VALID Run, informative negative Pilot, major algorithm fork or research closure appears, consult [SCIENCE_RESULT_HARVEST.md](docs/SCIENCE_RESULT_HARVEST.md). Before chasing new models or the first small paper candidate, inventory overlooked capability/boundary/cost/negative-evidence Claims (max 3), then distinguish `ARTICULATION_GAP` from `EVIDENCE_GAP`. Produce only scientific evidence briefs; do not draft a paper or reinterpret weak evidence as Q2 success. Reuse unchanged prior work.
-
-**Completed-algorithm science upgrade (on demand):** if a credible Champion/Run is stable and another architecture or project closure is proposed, use [post-algorithm science audit](docs/POST_ALGORITHM_SCIENCE_AUDIT.md) through existing Skills 05–07: reuse existing predictions, identify a distinct falsifiable Claim vs nearest work, choose one authorized low-cost test or keep the original. This does not unlock manuscript writing.
-
-**Read once:** [Execution Policy](docs/EXECUTION_POLICY.md), current project `STATE.json` (or `python -m core.cli brief --dir PROJECT`), and **only the Skill needed for the current blocker**. Do not preload all Skills, previous version notes, vendor code, papers or historical logs. Existing verified evidence takes precedence over repeating work.
-
-| Need | Skill |
+| 目标 | Skill / 按需专题 |
 | --- | --- |
-| Discover direction, papers, datasets | `01_search` → optional `02_evidence_data` |
-| Design/replace a falsifiable Task | `03_problem_design` |
-| Validate evaluator, baseline and DEV | `04_feasibility` |
-| Implement/debug/compare a model | `05_algorithm` |
-| Diagnose, repair, narrow or pivot | `06_decision` |
-| Independent scientific Claim | `07_confirmation` |
+| 研究方向/文献/数据 | `01_search`，按需 `02_evidence_data`；未知科研机会需考虑不同失败前提 |
+| 科学 Task 与可辨识假设 | `03_problem_design`，按需 `docs/HIGH_VALUE_RESEARCH_ENGINEERING.md` |
+| DEV 协议、简单基线/评估 | `04_feasibility` |
+| 算法编码/误差与机制实验 | `05_algorithm` |
+| 负结果、修复、收窄或转向 | `06_decision`；按需 [Science Result Harvest](docs/SCIENCE_RESULT_HARVEST.md) 或 [Post-Algorithm Audit](docs/POST_ALGORITHM_SCIENCE_AUDIT.md) |
+| 独立科学主张/确认方案 | `07_confirmation`，按真实 SEALED 权限；PD-RW 负责最终主张决策 |
 
-**Default sequence:** inspect current valid Run and Task → reuse or establish a legal, reasonably tuned simple reference → identify a reproducible error/signal and its cheapest falsifying test → escalate architecture only if a distinct lever/prediction or actual deployment constraint requires it. A simple success is not novelty; a complex failure is not Task failure. No second state ledger or compulsory skill chain.
+既有有效 Run 直接续做，不重新开选题、下载或重复训练；强简单基线和可区分的科学预言优先于盲目复杂化。七个 Skills 是能力，不是七次强制审批。
 
-**Incremental-claim candidate (not Q2 project success):** when a credible result exists, assess a single concrete paper contribution under the actual task constraints rather than demanding a new architecture or global SOTA. Quantify any cost/accuracy tradeoff, inspect the nearest named paper(s), and pass a narrow Claim plus missing evidence to `07_confirmation` when appropriate. A draftable candidate is not independently confirmed; these are narrative rules, not new CLI statuses.
+## 3. 增量输出与交接
 
-**Small-result scientific rescue (candidate, not Q2 success):** before HOLD/PIVOT after a valid model-level negative, consider whether a real effect, efficiency tradeoff, less costly calibration, robust failure boundary or meaningful known-method combination supports one narrow new Claim. If so, preserve evidence and hand a one-line paper candidate + missing confirmation to PD-RW; paper tiers are advisory, *not* Forge machine statuses or a reason to train larger models. For journal matching, PD-RW's optional [venue strategy](https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/VENUE_STRATEGY.md) is authoritative.
-
-**Shared efficiency, output, plotting, tests, autonomy, permissions and scientific boundaries:** [docs/EXECUTION_POLICY.md](docs/EXECUTION_POLICY.md). Do not repeat these rules inside Skills. The seven Skills are **capabilities, not seven compulsory approvals**.
-
-**Tool truth:** metadata search works; novelty precheck is UNVERIFIED; experiment planning is PLAN_ONLY; DEV audit and bounded opt-in CPU grouped pilots run on manifest-bound data; Run/Champion and recovery utilities verify receipts. There is **no general autonomous coding Agent, GPU executor or independent paper confirmation** yet. A JSON authorization reference or CLI flag is not actual user permission.
-
-**Result:** concise new evidence, evidence path, next decision and any real blocker. Save raw logs in the project, not in chat. [Architecture](docs/ARCHITECTURE.md) · [Contracts](docs/CONTRACTS.md) · [Source provenance](SOURCES.md).
-
-**v0.7 performance trust rule:** only `core.metric_verify` / `load_verified_run` can certify DEV metrics; a hashed log or self-reported RUN.metrics cannot become Champion. Event ledger requires verified chained history; legacy logs use explicit `migrate-ledger` (preview first). Sealed Runs are prohibited in development events. External Agent code is **not executed by Forge**; ingest only original DEV predictions through `adapters.agent_bridge`. See `docs/ARTIFACT_CONTRACT.md` when needed; do not read by default.
-
-**按需低成本机制诊断（v0.9）**：当已有可信 DEV Run、拟开发复杂机制时，可调用 `tools.feasibility_probe` 读取既有预测，检查独立组误差和同协议配对差值；残差≠可达增益，无匹配参照≠无信号。此工具不是模型训练、科研确认或必须执行的前置审批。按需读 `tools/README.md`，不要重复预加载全部文档。
-
-**v0.10 discovery (only when Task is unknown or research hypothesis changes):** inspect existing DEV observation via `adapters.hypothesis_bank seed` (no fit), then let the current Agent draft at most 1–3 distinct, falsifiable hypotheses anchored to those seeds and/or existing paper metadata. `hypothesis_bank build` checks receipt/source IDs; `adapters.opportunity_review` proposes one cheap evidence action. After an actual verified DEV Run, `hypothesis_bank feedback` creates a new version. Start with [discovery playbook](docs/DISCOVERY_PLAYBOOK.md) only when needed; no extra mandatory Skill, second controller or multi-agent debate.
-
-**v0.11 optional PD-RW handoff:** for a key external DEV Run, use `adapters.pd_rw_bridge` only when the original PD-RW and Forge prediction bytes and task/legal metadata can be matched; it calls the existing independent Forge verifier and returns a DEV arithmetic receipt. Never reformat merely to copy model scores, claim attested training provenance, or load PD-RW's `core` in-process. See [artifact contract](docs/ARTIFACT_CONTRACT.md) on demand.
+仅交付**真实新增证据 + 原始路径/协议/状态 + 决策或 UNKNOWN + 一项下一行动及权限依赖**。有意义的实验和失败补进 PD-RW 的 RESEARCH_RECORD.md；科学主张确有变化才更新 PAPER_BLUEPRINT.md 相应 SEC_ID。保留原本 RWF Run/STATE/ledger/bridge 及源数据，不重复堆砌日志、不新增 CLI 状态或自动生成稿件图片。其余技术约束见 [Architecture](docs/ARCHITECTURE.md) · [Contracts](docs/CONTRACTS.md) · [Sources](SOURCES.md)。
