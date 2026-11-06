@@ -81,6 +81,9 @@ def validate_theme(theme: dict) -> dict:
         if not SEMANTIC.fullmatch(name):
             raise ValueError(f"invalid semantic color key {name!r}")
         _color(value, name)
+    # Do not migrate old project themes that lack palette_id.
+    from tools.figure_palette import validate_theme_palette
+    validate_theme_palette(colors)
     return theme
 
 
@@ -138,6 +141,10 @@ def style_fingerprint(theme: dict, template_id: str,
     payload = {"theme": theme, "template_id": template_id, "template": item,
                "registry_version": registry["registry_version"],
                "mplstyle_sha256": hashlib.sha256(mplstyle_path.read_bytes()).hexdigest()}
+    # Existing v2 projects without a named palette retain their old fingerprints.
+    if theme["colors"].get("palette_id") is not None:
+        from tools.figure_palette import PALETTES
+        payload["palette_registry_sha256"] = hashlib.sha256(PALETTES.read_bytes()).hexdigest()
     return hashlib.sha256(_canonical(payload)).hexdigest()
 
 
@@ -157,6 +164,8 @@ def frozen_style_fields(theme_path: Path, template_id: str) -> dict:
         "background": theme["background"],
         "style_fingerprint": style_fingerprint(theme, template_id),
         "semantic_colors": theme["colors"]["semantic_colors"].copy(),
+        "palette_id": theme["colors"].get("palette_id"),
+        "palette_registry_version": theme["colors"].get("palette_registry_version"),
     }
 
 
@@ -200,6 +209,11 @@ def validate_style_lock(record: dict, project: Path) -> dict:
         raise ValueError("font differs from locked theme")
     if style.get("background", "#FFFFFF").upper() != theme["background"].upper():
         raise ValueError("background differs from theme")
+    if theme["colors"].get("palette_id") is not None:
+        if style.get("palette_id", theme["colors"]["palette_id"]) != theme["colors"]["palette_id"]:
+            raise ValueError("palette_id differs from frozen theme")
+        if style.get("palette_registry_version", theme["colors"]["palette_registry_version"]) != theme["colors"]["palette_registry_version"]:
+            raise ValueError("palette registry version differs from frozen theme")
     template = template_spec(template_id)
     width_key = "single_width_mm" if template["canvas"] == "single" else "double_width_mm"
     expected_width_inches = theme["canvas"][width_key] / 25.4

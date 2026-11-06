@@ -41,6 +41,37 @@ class FigureStyleTests(unittest.TestCase):
         self.assertEqual(len(fields["theme_sha256"]), 64)
         self.assertNotIn("user_request_ref", fields)  # cannot self-grant authorization
 
+    def test_named_palette_version_is_pinned_and_legacy_themes_still_valid(self):
+        from tools.figure_palette import load_palettes, palette_colors, assign_semantic_colors, colormap_spec
+        registry = load_palettes()
+        theme = load_theme()
+        self.assertEqual(theme["colors"]["palette_id"], registry["existing_default"])
+        self.assertEqual(theme["colors"]["categorical"], palette_colors("tol-bright"))
+        self.assertEqual(registry["recommended_new_project"], "tol-muted")
+        self.assertEqual(colormap_spec("vik", "diverging")["backend"], "cmcrameri")
+        with self.assertRaises(ValueError):
+            colormap_spec("viridis", "diverging")
+        mapped = assign_semantic_colors(["model:A", "model:B"], "tol-muted")
+        stable = assign_semantic_colors(["model:B", "model:A"], "tol-muted", existing=mapped)
+        self.assertEqual(stable, mapped)
+        old_theme = copy.deepcopy(theme)
+        old_theme["colors"].pop("palette_id")
+        old_theme["colors"].pop("palette_registry_version")
+        old_theme["colors"].pop("accents")
+        self.assertIs(validate_theme(old_theme), old_theme)
+        bad = copy.deepcopy(theme)
+        bad["colors"]["palette_registry_version"] = "stale-version"
+        with self.assertRaises(ValueError):
+            validate_theme(bad)
+
+    def test_palette_contrast_warning_not_overstated_as_accessibility(self):
+        from tools.figure_palette import white_contrast, palette_diagnostics
+        self.assertAlmostEqual(white_contrast("#000000"), 21.0, places=5)
+        self.assertAlmostEqual(white_contrast("#FFFFFF"), 1.0, places=5)
+        summary = palette_diagnostics(["#4477AA", "#66CCEE"])
+        self.assertEqual(len(summary["warnings"]), 1)
+        self.assertIn("not a color-vision", summary["note"])
+
     def test_invalid_or_missing_semantic_color_cannot_use_default_cycle(self):
         theme = load_theme()
         with self.assertRaises(ValueError):

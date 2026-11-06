@@ -39,6 +39,13 @@
       "#AA3377",
       "#EE6677"
     ],
-    "semantic_colors": {}
+    "semantic_colors": {},
+    "palette_id": "tol-bright",
+    "palette_registry_version": "palettes-v1",
+    "accents": [
+      "#004488",
+      "#DDAA33",
+      "#BB5566"
+    ]
   }
 }
