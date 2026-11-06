@@ -45,6 +45,8 @@
     "canvas_inches": [
       3.34646,
       3.07087
-    ]
+    ],
+    "palette_id": "tol-bright",
+    "palette_registry_version": "palettes-v1"
   }
 }

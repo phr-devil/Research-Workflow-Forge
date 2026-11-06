@@ -23,3 +23,5 @@ Without a reference it reports **UNKNOWN signal**, not failure. A reference is n
 - `tools.figure_qa`: opt-in, read-only structural QA of existing user-requested SVG/PNG, source/plot-data SHA and declared semantic color/paired-scale consistency. It never renders plots, runs Agent scripts or validates scientific claims. See [figure contract](../docs/FIGURE_QA_CONTRACT.md).
 
 - `tools.figure_style`: pure static theme/template validation and content-derived style fingerprint; no Matplotlib or image generation. `tools.figure_templates`: optional Matplotlib figure/series helpers with a real-user-request guard; never call merely for tests or research progress. [Style guide](../docs/FIGURE_STYLE_SYSTEM.md).
+
+- `tools.figure_palette`: standard-library-only registered categorical/continuous color choices, stable semantic mapping and contrast-risk advisories; never renders. `tools.figure_charts`: requested-only real chart families, no import-time rendering. `tools.figure_artist_audit`: read-only actual series-coordinate checks against supplied reference rows, **not** independent Run verification. See [style guide](../docs/FIGURE_STYLE_SYSTEM.md).

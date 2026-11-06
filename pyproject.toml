@@ -10,6 +10,7 @@ paper-search = ["requests>=2.31,<3"]
 openreview = ["requests>=2.31,<3", "openreview-py>=1.46"]
 runner = ["scikit-learn>=1.4,<2"]
 figures = ["matplotlib>=3.8,<4"]  # install only for explicitly requested figure rendering
+figure-colormaps = ["matplotlib>=3.8,<4", "cmcrameri>=1.9"]  # only when required for optional scientific maps
 
 [build-system]
 requires = ["setuptools>=68"]
