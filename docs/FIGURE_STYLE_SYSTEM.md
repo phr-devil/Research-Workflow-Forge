@@ -10,20 +10,29 @@
 
 ### Project theme and style freeze
 
-Copy the baseline JSON into the project only after a user has asked to configure the plotting workflow, or when their explicit drawing request makes it necessary (copying/editing text is not image creation). Set a **single project theme** before first official render. Provide semantic keys like \`model:SF\` or \`skill:Walk\` under \`colors.semantic_colors\`; the same key must have the same color throughout the project. Unknown semantic keys must fail, not fall back to Matplotlib's color cycle.
+Copy the baseline JSON into the project only after a user has asked to configure the plotting workflow, or when their explicit drawing request makes it necessary (copying/editing text is not image creation). Set a **single project theme** before first official render. Provide semantic keys like `model:SF` or `skill:Walk` under `colors.semantic_colors`; the same key must have the same color throughout the project. Unknown semantic keys must fail, not fall back to Matplotlib's color cycle.
 
-- For every new **figure-v2** contract, pin \`style.theme_ref\` (project-relative), \`style.theme_sha256\`, \`style.template_id\`, \`style.style_profile\`, \`style.font_family\` and \`style.style_fingerprint\`. The fingerprint covers normalized effective theme + template definition + base MPL style bytes. See [v2 example](../templates/FIGURE_CONTRACT.v2.example.json).
-- Never silently alter a project theme after it is frozen. If the journal's official requirements or a user's explicit request require a new theme, increment \`theme_version\`, record reason, and redraw **only explicitly requested/affected figures**.
+- For every new **figure-v2** contract, pin `style.theme_ref` (project-relative), `style.theme_sha256`, `style.template_id`, `style.style_profile`, `style.font_family` and `style.style_fingerprint`. The fingerprint covers normalized effective theme + template definition + base MPL style bytes. See [v2 example](../templates/FIGURE_CONTRACT.v2.example.json).
+
+A **read-only** command calculates the v2 style lock fields from an existing project theme, without importing Matplotlib or generating images:
+
+```bash
+python -m tools.figure_style --theme PROJECT/figures/theme.json --template rate_ablation
+```
+
+Copy the result into the per-figure contract, supply a project-relative `theme_ref`, and separately cite the real original user figure request. The hash is not a permission token or a scientific verification.
+
+- Never silently alter a project theme after it is frozen. If the journal's official requirements or a user's explicit request require a new theme, increment `theme_version`, record reason, and redraw **only explicitly requested/affected figures**.
 - Same-template comparable figures should share axes geometry, labels/legend conventions, coherent marker and line sizes. Same metric/comparison group should also use the same template ID, physical canvas and scale. Different amounts of content may justify different **height** and position; explicit exceptions should be documented, not treated as general style drift.
 - Project-specific Arial and font sizes are intentional choices, **not proof that the submission journal accepts them**. Verify official requirements at the actual journal/submission stage. Effective font size must be reviewed at final publication size.
 
 ### Actual figure code (optional Matplotlib; never run in CI)
 
-[figure_templates.py](../tools/figure_templates.py) provides a request-gated \`create_template_figure\`, \`add_semantic_series\`, optional Cartesian arrowheads and \`export_figure\`. The implementation lazily imports Matplotlib **only after** a verified user request is asserted by the calling Agent. The guard's Boolean/message reference does **not** itself prove permission: check the original user message. It never accesses raw training/SEALED data or runs model fitting.
+[figure_templates.py](../tools/figure_templates.py) provides a request-gated `create_template_figure`, `add_semantic_series`, optional Cartesian arrowheads and `export_figure`. The implementation lazily imports Matplotlib **only after** a verified user request is asserted by the calling Agent. The guard's Boolean/message reference does **not** itself prove permission: check the original user message. It never accesses raw training/SEALED data or runs model fitting.
 
-Use \`artist.set_gid("series--model--SF")\` (the helper sets this automatically) on each significant semantic series so the exported SVG can be checked for its **actual** declared paint color. This tagged-group convention is only a limited check and does not prove correspondence to source values, font fallback, visual contrast or correctness of plot labels. For a matrix with continuous colormap, use a properly chosen scale and colorbar; do not force categorical colors or meaningless axis arrows onto it.
+Use `artist.set_gid("series--model--SF")` (the helper sets this automatically) on each significant semantic series so the exported SVG can be checked for its **actual** declared paint color. This tagged-group convention is only a limited check and does not prove correspondence to source values, font fallback, visual contrast or correctness of plot labels. For a matrix with continuous colormap, use a properly chosen scale and colorbar; do not force categorical colors or meaningless axis arrows onto it.
 
-Do **not** create figures from \`__main__\`, Python imports, initialization, tests or CI. Automated tests should exercise theme parsing, template metadata, permission guards and XML **in memory**; no generated figure files, snapshots or contact sheets. An authorized plotting task can use its specific data and produce one or more SVG/PNG exports from the same Matplotlib figure object; use explicit figure size instead of silently changing physical canvas with \`bbox_inches="tight"\`.
+Do **not** create images automatically from imports, initialization, ordinary tests or CI. A dedicated script may render only after a real, explicit user request for those specific figures. Automated tests should exercise theme parsing, template metadata, permission guards and XML **in memory**; no generated figure files, snapshots or contact sheets. An authorized plotting task can use its specific data and produce one or more SVG/PNG exports from the same Matplotlib figure object; use explicit figure size instead of silently changing physical canvas with `bbox_inches="tight"`.
 
 ### QA and exceptions
 
