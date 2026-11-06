@@ -29,7 +29,7 @@ def create_template_figure(template_id: str, *, explicitly_requested: bool = Fal
     source. This function does not render/save and must not be called by CI.
     """
     require_drawing_request(explicitly_requested=explicitly_requested, user_request_ref=user_request_ref)
-    from tools.figure_style import validate_theme
+    from tools.figure_style import BASE_MPLSTYLE, validate_theme
 
     theme = validate_theme(theme or load_theme())
     cfg = template_spec(template_id, load_registry())
@@ -41,7 +41,7 @@ def create_template_figure(template_id: str, *, explicitly_requested: bool = Fal
     if isinstance(size_mm, bool) or not isinstance(size_mm, (int, float)) or not 25 <= size_mm <= 500:
         raise ValueError("invalid figure height")
     sz = theme["font_sizes_pt"]
-    with mpl.rc_context(rc={
+    with mpl.style.context(str(BASE_MPLSTYLE)), mpl.rc_context(rc={
         "figure.facecolor": theme["background"], "axes.facecolor": theme["background"],
         "savefig.facecolor": theme["background"], "savefig.transparent": False,
         "text.color": theme["text_color"], "axes.labelcolor": theme["text_color"],
@@ -87,6 +87,21 @@ def add_semantic_series(ax, x, y, *, theme: dict, semantic_key: str,
     return artist
 
 
+def apply_template_legend(ax, template_id: str, theme: dict):
+    """Place legends consistently within a template family, only on a drawn axis."""
+    cfg = template_spec(template_id, load_registry())
+    placement = cfg.get("legend_slot") or theme["legend"]["placement"]
+    if placement == "none":
+        return None
+    kwargs = {"frameon": theme["legend"]["frame"],
+              "fontsize": theme["font_sizes_pt"]["legend"]}
+    if placement == "outside_top":
+        return ax.legend(loc="lower center", bbox_to_anchor=(0.5, 1.02), ncol=2, **kwargs)
+    if placement == "outside_right":
+        return ax.legend(loc="center left", bbox_to_anchor=(1.03, 0.5), **kwargs)
+    return ax.legend(loc="best", **kwargs)
+
+
 def add_cartesian_arrows(ax) -> None:
     """Optional project policy, only meaningful on genuine Cartesian axes."""
     for xy, xytext in (((1.025, 0), (0.965, 0)), ((0, 1.025), (0, 0.965))):
@@ -108,5 +123,10 @@ def export_figure(fig, svg: Path, png: Path, *, explicitly_requested: bool = Fal
         raise FileExistsError("version output paths instead of overwriting existing images")
     if not svg.parent.is_dir() or not png.parent.is_dir():
         raise ValueError("requested output directories must already exist")
-    fig.savefig(svg, transparent=False, facecolor="#FFFFFF", dpi=dpi)
-    fig.savefig(png, transparent=False, facecolor="#FFFFFF", dpi=dpi)
+    import matplotlib as mpl  # lazy import; drawing request checked above
+    # Retain SVG text as text instead of silently converting labels to paths.
+    from tools.figure_style import BASE_MPLSTYLE
+    with mpl.style.context(str(BASE_MPLSTYLE)), \
+         mpl.rc_context(rc={"svg.fonttype": "none", "savefig.transparent": False}):
+        fig.savefig(svg, transparent=False, facecolor="#FFFFFF", dpi=dpi)
+        fig.savefig(png, transparent=False, facecolor="#FFFFFF", dpi=dpi)
