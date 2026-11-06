@@ -141,6 +141,25 @@ def style_fingerprint(theme: dict, template_id: str,
     return hashlib.sha256(_canonical(payload)).hexdigest()
 
 
+def frozen_style_fields(theme_path: Path, template_id: str) -> dict:
+    """Prepare figure-v2 style metadata from trusted local *text* only.
+
+    The user/project must still supply the real user_request_ref separately.
+    This function never reads data Runs, renders a figure or grants permission.
+    """
+    theme_path = Path(theme_path)
+    theme = load_theme(theme_path)
+    return {
+        "theme_sha256": hashlib.sha256(theme_path.read_bytes()).hexdigest(),
+        "template_id": template_id,
+        "style_profile": theme["style_profile"],
+        "font_family": theme["font_family"],
+        "background": theme["background"],
+        "style_fingerprint": style_fingerprint(theme, template_id),
+        "semantic_colors": theme["colors"]["semantic_colors"].copy(),
+    }
+
+
 def semantic_gid(key: str) -> str:
     if not SEMANTIC.fullmatch(key):
         raise ValueError("series key must look like model:SF")
@@ -189,3 +208,19 @@ def validate_style_lock(record: dict, project: Path) -> dict:
             raise ValueError(f"semantic color differs from theme: {key}")
     return {"theme": theme, "template_id": template_id,
             "style_fingerprint": fingerprint, "semantic_colors": colors}
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Read-only project style fingerprint CLI. Never creates images."""
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Calculate an opt-in figure style lock without rendering")
+    parser.add_argument("--theme", type=Path, default=BASE_THEME, help="Existing project theme JSON")
+    parser.add_argument("--template", required=True, help="Registered template ID")
+    args = parser.parse_args(argv)
+    print(json.dumps(frozen_style_fields(args.theme, args.template), ensure_ascii=False, indent=2))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
