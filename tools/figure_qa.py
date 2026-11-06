@@ -19,6 +19,7 @@ PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
 SHA256 = re.compile(r"^[0-9a-fA-F]{64}$")
 HEX = re.compile(r"^#[0-9A-Fa-f]{6}$")
 DIM = re.compile(r"^([0-9.]+)(pt|px|in|mm|cm)$")
+SVG_PAINT = re.compile(r"#[0-9a-fA-F]{6}\b")
 
 
 def _local(root: Path, rel: str) -> Path:
@@ -107,9 +108,42 @@ def _png_info(path: Path) -> tuple[int, int, tuple[float, float] | None]:
     return width, height, dpi
 
 
+def inspect_svg_semantic_paints(svg_xml: bytes, expected: dict[str, str]) -> dict[str, list[str]]:
+    """Inspect *actual SVG-tagged artists*, not just expected palette metadata.
+
+    Each artist from tools.figure_templates.add_semantic_series has gid
+    series--model--SF etc. Only six-digit literal paints can be proven by
+    this structural test; inherited/CSS paints and data correctness require
+    separate inspection. No SVG/image creation.
+    """
+    from tools.figure_style import semantic_gid
+    upper = svg_xml.upper()
+    if b"<!DOCTYPE" in upper or b"<!ENTITY" in upper:
+        raise ValueError("SVG DOCTYPE/ENTITY prohibited")
+    root = ET.fromstring(svg_xml)
+    result = {}
+    for semantic_key, specified in expected.items():
+        tag = semantic_gid(semantic_key)
+        matching = [node for node in root.iter() if node.attrib.get("id") == tag]
+        if len(matching) != 1:
+            raise ValueError(f"semantic SVG artist group missing/duplicated: {tag}")
+        group = matching[0]
+        observed = set()
+        for node in group.iter():
+            for attr in ("style", "fill", "stroke"):
+                value = node.attrib.get(attr, "")
+                observed.update(color.upper() for color in SVG_PAINT.findall(value))
+        target = specified.upper()
+        if target not in observed:
+            raise ValueError(f"actual SVG paint mismatch: {semantic_key}, expected {target}, observed {sorted(observed)}")
+        result[semantic_key] = sorted(observed)
+    return result
+
+
 def _check_one(root: Path, record: dict) -> tuple[dict, dict]:
-    if record.get("schema_version") != "figure-v1":
-        raise ValueError("figure-v1 schema required")
+    version = record.get("schema_version")
+    if version not in ("figure-v1", "figure-v2"):
+        raise ValueError("figure-v1 or figure-v2 schema required")
     figure_id = record.get("figure_id")
     if not isinstance(figure_id, str) or not figure_id.strip():
         raise ValueError("figure_id required")
@@ -164,11 +198,26 @@ def _check_one(root: Path, record: dict) -> tuple[dict, dict]:
     background = style.get("background", "#FFFFFF")
     if not isinstance(background, str) or not HEX.fullmatch(background):
         raise ValueError("invalid declared background color")
+    lock = None
+    observed_paints = {}
+    if version == "figure-v2":
+        from tools.figure_style import validate_style_lock
+
+        lock = validate_style_lock(record, root)
+        # For v2, check tagged artist groups in the *exported SVG*.
+        if colors:
+            observed_paints = inspect_svg_semantic_paints(svg.read_bytes(), colors)
+        if style.get("comparison_group") and not style.get("axis_limits"):
+            raise ValueError("v2 comparison group requires explicit comparable axis limits")
     detail = {"figure_id": figure_id, "status": "STRUCTURAL_PASS_REVIEW_REQUIRED",
               "svg_inches": [round(sw, 4), round(sh, 4)], "png_pixels": [pw, ph],
-              "note": "Actual user permission, white-pixel opacity, rendered layout and scientific meaning NOT verified"}
+              "style_lock": "VERIFIED" if lock else "LEGACY_V1_UNFROZEN",
+              "tagged_semantic_paints": observed_paints,
+              "note": "User permission, actual data-to-mark linkage, white-pixel opacity, font substitution, rendered layout and science NOT verified"}
     cross = {"colors": {k: v.upper() for k, v in colors.items()},
-             "group": group, "axes": axes, "canvas": canvas}
+             "group": group, "axes": axes, "canvas": canvas,
+             "template": style.get("template_id") if lock else None,
+             "fingerprint": lock["style_fingerprint"] if lock else None}
     return detail, cross
 
 
@@ -189,7 +238,8 @@ def check_contracts(project: Path, contract_paths: list[Path]) -> dict:
                     raise ValueError(f"semantic color conflict {key}")
             if cross["group"]:
                 group = cross["group"]
-                signature = (json.dumps(cross["axes"], sort_keys=True), tuple(cross["canvas"]))
+                signature = (json.dumps(cross["axes"], sort_keys=True), tuple(cross["canvas"]),
+                             cross["template"], cross["fingerprint"])
                 if group in group_registry and group_registry[group] != signature:
                     raise ValueError(f"comparison group scale/canvas mismatch: {group}")
                 group_registry[group] = signature
