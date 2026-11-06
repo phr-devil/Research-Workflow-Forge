@@ -237,10 +237,19 @@ def _check_one(root: Path, record: dict) -> tuple[dict, dict]:
     lock = None
     observed_paints = {}
     typography = None
+    palette_report = None
     if version == "figure-v2":
         from tools.figure_style import validate_style_lock
 
         lock = validate_style_lock(record, root)
+        from tools.figure_palette import palette_diagnostics
+
+        palette_report = {
+            "palette_id": lock["theme"]["colors"].get("palette_id", "LEGACY_UNPINNED"),
+            "palette_registry_version": lock["theme"]["colors"].get("palette_registry_version"),
+            # Checks colors actually declared for this figure, not every unused swatch.
+            **palette_diagnostics(list(colors.values())),
+        }
         svg_content = svg.read_bytes()
         xml = ET.fromstring(_safe_svg_xml(svg_content))
         expected_template_gid = "template--" + lock["template_id"]
@@ -260,6 +269,7 @@ def _check_one(root: Path, record: dict) -> tuple[dict, dict]:
               "style_lock": "VERIFIED" if lock else "LEGACY_V1_UNFROZEN",
               "tagged_semantic_paints": observed_paints,
               "svg_typography": typography,
+              "palette_report": palette_report,
               "note": "User permission, actual data-to-mark linkage, white-pixel opacity, font substitution, rendered layout and science NOT verified"}
     cross = {"colors": {k: v.upper() for k, v in colors.items()},
              "group": group, "axes": axes, "canvas": canvas,
