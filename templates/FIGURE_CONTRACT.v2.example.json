@@ -1,0 +1,50 @@
+{
+  "schema_version": "figure-v2",
+  "figure_id": "Figure8a",
+  "figure_kind": "PUBLICATION",
+  "user_request_ref": "REPLACE_WITH_ACTUAL_USER_MESSAGE_REFERENCE",
+  "source_artifacts": [
+    {
+      "path": "runs/DEV_RUN.json",
+      "sha256": "REPLACE_WITH_REAL_SHA256",
+      "role": "DEV"
+    }
+  ],
+  "plot_data": {
+    "path": "figures/data/Figure8a.csv",
+    "sha256": "REPLACE_WITH_REAL_SHA256"
+  },
+  "metric": "lift_to_approach_rate",
+  "unit": "percent",
+  "independent_unit": "episode",
+  "denominator": "true Lift samples",
+  "outputs": {
+    "svg": "figures/Figure8a.svg",
+    "png": "figures/Figure8a.png"
+  },
+  "style": {
+    "theme_ref": "figures/theme.json",
+    "theme_sha256": "REPLACE_WITH_ACTUAL_THEME_SHA256",
+    "template_id": "rate_ablation",
+    "style_fingerprint": "REPLACE_WITH_COMPUTED_STYLE_FINGERPRINT",
+    "style_profile": "PROJECT_CUSTOM",
+    "background": "#FFFFFF",
+    "font_family": "Arial",
+    "semantic_colors": {
+      "model:SF": "#769EB2",
+      "model:GRUctx": "#C17683"
+    },
+    "comparison_group": "Figure8_pair",
+    "axis_limits": {
+      "y": [
+        0,
+        100
+      ]
+    },
+    "png_dpi": 600,
+    "canvas_inches": [
+      5,
+      3.2
+    ]
+  }
+}
