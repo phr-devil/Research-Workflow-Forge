@@ -20,8 +20,9 @@ This is an on-demand reference, not an eighth Skill, new research stage, CLI sta
 
 ## 3. Lightweight per-figure contract
 
-Formal image QA may accept an opt-in project-relative JSON spec:
-`schema_version="figure-v1"`, `figure_id`, `figure_kind`, `user_request_ref`, `source_artifacts:[{path,sha256,role}]`, `plot_data:{path,sha256}`, `outputs:{svg,png}` and `style:{background,font_family,semantic_colors,comparison_group,axis_limits,png_dpi,canvas_inches}`. Add metric/units/denominator/independent sampling unit and transformations when applicable. See [example](../templates/FIGURE_CONTRACT.example.json).
+Formal image QA accepts the legacy project-relative `figure-v1` contract for compatibility. The existing fields remain unchanged: `figure_id`, `figure_kind`, `user_request_ref`, actual source/plot-data SHA-256, `outputs:{svg,png}`, and `style:{background,font_family,semantic_colors,comparison_group,axis_limits,png_dpi,canvas_inches}`. Legacy v1 passes only report `LEGACY_V1_UNFROZEN`, **not** a style-system pass; see [legacy example](../templates/FIGURE_CONTRACT.example.json).
+
+**New publication data plots should use `figure-v2`**, adding `style.theme_ref` (project-relative theme JSON), `theme_sha256`, `template_id`, `style_fingerprint`, `style_profile` and the locked `font_family`. Use the [v2 contract example](../templates/FIGURE_CONTRACT.v2.example.json) and [Figure Style System](FIGURE_STYLE_SYSTEM.md). Fingerprints include the theme, selected template and baseline mplstyle; no default-color-cycle or silent single-figure override is permitted.
 
 Hashes bind bytes only. The figure checker does not independently certify a metric, sample provenance, research claim, legal access, actual color-to-data mapping or original human authorization. A Figure Contract cannot promote `REPORTED` to `METRIC_VERIFIED_DEV_ONLY`, or DEV evidence to confirmation. Unknown scientific status remains UNKNOWN; inappropriate sources remain BLOCKED.
 
@@ -31,7 +32,7 @@ Hashes bind bytes only. The figure checker does not independently certify a metr
 python -m tools.figure_qa --project PROJECT --contracts figures/Figure8a.json figures/Figure8b.json
 ```
 
-It performs only source/plot-data SHA checks, project path confinement, SVG/PNG structural/dimension checks and declared cross-figure semantic-color/scale checks. It never runs plotting scripts, retrains, downloads or creates images. `STRUCTURAL_PASS_REVIEW_REQUIRED` is **not** figure correctness or scientific verification; rendering/visual checks and science checks stay separate.
+It performs read-only source/plot-data SHA checks, project path confinement, SVG/PNG structure/dimensions and cross-figure color/scale checks. For v2 it **also checks pinned theme/template/style fingerprint and inspects the tagged series groups actually present in SVG** for their declared paint values (`series--model--SF` etc.). These checks do not prove actual category-to-source-data binding, semantic accuracy, font substitution, text readability, opaque pixel background or scientific confirmation. It never executes plot code, trains, downloads or creates images. `STRUCTURAL_PASS_REVIEW_REQUIRED` is **not** figure correctness or scientific verification; rendering/visual checks and science checks stay separate.
 
 ## 4. Styles and real visual review
 
@@ -41,7 +42,7 @@ Reference relevant parts of GitHub [scientific-visualization](https://github.com
 - Default white opaque figure background, readable consistent fonts and dark labels. Map colors by **semantic identity** (model:SF etc.) across figures, never by bar position when categories differ; use markers/linestyles when helpful.
 - Treat Arial, 15pt axis labels, all-black text, axis arrows, fixed color palette, 600dpi, one-/two-column widths and SVG text editing as **project-specific** directives. Apply the user's chosen settings precisely, without forcing meaningless axes onto a heatmap/timeline or identical dimensions onto unlike diagrams.
 - Check actual rendered images at publication size for font substitution, overlap, arrow clipping, legends, margins, palette, meaningful units and accurate figure comparison. Automated checking cannot fully judge these.
-- Frozen chart choice after a first scientifically valid design; fix only affected images and run local regression checks. Contact sheets are also images; only build them within the original explicit batch image request.
+- Frozen chart choice after a first scientifically valid design; fix only affected images and run local regression checks. Use a project-wide theme version and template ID rather than independent styling per figure; compare style fingerprints, consistent axes boxes and actual tagged SVG paints. Contact sheets are also images; only build them within the original explicit batch image request.
 
 ## 5. Outcome and handoff
 
