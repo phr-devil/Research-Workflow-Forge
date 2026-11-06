@@ -1,6 +1,6 @@
 {
   "schema_version": "figure-template-registry-v1",
-  "registry_version": "templates-v1",
+  "registry_version": "templates-v2",
   "templates": {
     "model_dot": {
       "purpose": "model comparison dot plot",
@@ -9,9 +9,9 @@
       "height_mm": 75,
       "axes_box": [
         0.27,
-        0.22,
+        0.2,
         0.68,
-        0.73
+        0.61
       ],
       "legend_slot": "outside_top",
       "axis_arrows": false
@@ -23,9 +23,9 @@
       "height_mm": 92,
       "axes_box": [
         0.16,
-        0.2,
+        0.18,
         0.8,
-        0.73
+        0.62
       ],
       "legend_slot": "outside_top",
       "axis_arrows": false
@@ -37,9 +37,9 @@
       "height_mm": 115,
       "axes_box": [
         0.23,
-        0.17,
+        0.16,
         0.73,
-        0.78
+        0.65
       ],
       "legend_slot": "outside_top",
       "axis_arrows": false
@@ -51,9 +51,9 @@
       "height_mm": 73,
       "axes_box": [
         0.24,
-        0.23,
+        0.2,
         0.71,
-        0.69
+        0.6
       ],
       "legend_slot": "outside_top",
       "axis_arrows": false
@@ -65,9 +65,9 @@
       "height_mm": 78,
       "axes_box": [
         0.23,
-        0.21,
+        0.19,
         0.72,
-        0.73
+        0.61
       ],
       "legend_slot": "outside_top",
       "axis_arrows": false
@@ -79,9 +79,9 @@
       "height_mm": 82,
       "axes_box": [
         0.16,
-        0.2,
+        0.16,
         0.8,
-        0.72
+        0.64
       ],
       "legend_slot": "outside_top",
       "axis_arrows": false
