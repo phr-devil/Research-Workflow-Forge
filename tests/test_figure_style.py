@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 from tools.figure_style import (
-    BASE_THEME, REGISTRY, load_registry, load_theme, semantic_color,
+    BASE_THEME, REGISTRY, frozen_style_fields, load_registry, load_theme, semantic_color,
     semantic_gid, style_fingerprint, template_spec, validate_theme,
 )
 from tools.figure_templates import require_drawing_request, create_template_figure, export_figure
@@ -32,6 +32,14 @@ class FigureStyleTests(unittest.TestCase):
         modified = copy.deepcopy(theme)
         modified["font_sizes_pt"]["axis_title"] += 1
         self.assertNotEqual(original, style_fingerprint(modified, "model_dot"))
+
+    def test_static_style_metadata_matches_fingerprint(self):
+        fields = frozen_style_fields(BASE_THEME, "paired_dot")
+        self.assertEqual(fields["style_fingerprint"], style_fingerprint(load_theme(), "paired_dot"))
+        self.assertEqual(fields["template_id"], "paired_dot")
+        self.assertEqual(fields["background"], "#FFFFFF")
+        self.assertEqual(len(fields["theme_sha256"]), 64)
+        self.assertNotIn("user_request_ref", fields)  # cannot self-grant authorization
 
     def test_invalid_or_missing_semantic_color_cannot_use_default_cycle(self):
         theme = load_theme()
