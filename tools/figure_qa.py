@@ -264,9 +264,9 @@ def _check_one(root: Path, record: dict) -> tuple[dict, dict]:
                 raise ValueError("v2 publication data SVG has no editable text labels")
         if style.get("comparison_group") and not style.get("axis_limits"):
             raise ValueError("v2 comparison group requires explicit comparable axis limits")
-    from tools.figure_evidence import inspect_evidence_metadata
+    from tools.figure_evidence import enforce_evidence_profile
 
-    evidence_metadata = inspect_evidence_metadata(record)
+    evidence_metadata = enforce_evidence_profile(record)
     detail = {"figure_id": figure_id, "status": "STRUCTURAL_PASS_REVIEW_REQUIRED",
               "svg_inches": [round(sw, 4), round(sh, 4)], "png_pixels": [pw, ph],
               "style_lock": "VERIFIED" if lock else "LEGACY_V1_UNFROZEN",

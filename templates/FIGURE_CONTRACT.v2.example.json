@@ -55,5 +55,6 @@
     "missing_policy": "No missing values (replace with actual missing/censored policy)",
     "uncertainty_definition": "No intervals shown; descriptive summary only (replace with actual estimator/CI if shown)",
     "selection_history": "Descriptive figure of preselected comparison; disclose tuning and attempted analyses"
-  }
+  },
+  "evidence_profile": "strict-scientific-v1"
 }

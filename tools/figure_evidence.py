@@ -43,3 +43,19 @@ def inspect_evidence_metadata(record: dict) -> dict:
         "scientific_source_verified": False,
         "note": "Declarations only: not independent Run, sample unit, uncertainty or metric verification",
     }
+
+
+
+def enforce_evidence_profile(record: dict) -> dict:
+    """Require complete declarations for newly opted-in strict publication specs.
+
+    Legacy v1/v2 without a profile remain advisory. Source truth, significance,
+    sample independence and permission are never inferred from metadata.
+    """
+    profile = record.get("evidence_profile", "advisory")
+    if profile not in ("advisory", "strict-scientific-v1"):
+        raise ValueError("unsupported evidence_profile")
+    info = inspect_evidence_metadata(record)
+    if profile == "strict-scientific-v1" and info["status"] != "METADATA_COMPLETE_NOT_SCIENCE_VERIFIED":
+        raise ValueError("strict figure evidence metadata incomplete: " + ", ".join(info["missing_fields"]))
+    return info

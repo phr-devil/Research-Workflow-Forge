@@ -1,6 +1,6 @@
 """Text-only scientific metadata checks; no images or plotting."""
 import unittest
-from tools.figure_evidence import inspect_evidence_metadata
+from tools.figure_evidence import inspect_evidence_metadata, enforce_evidence_profile
 
 
 class FigureEvidenceTests(unittest.TestCase):
@@ -29,6 +29,19 @@ class FigureEvidenceTests(unittest.TestCase):
         self.assertEqual(report["status"], "INCOMPLETE_METADATA")
         self.assertIn("science_context.missing_policy", report["missing_fields"])
         self.assertIn("science_context.uncertainty_definition", report["missing_fields"])
+
+    def test_strict_profile_requires_declared_science_context(self):
+        spec = {**self.example, "evidence_profile": "strict-scientific-v1"}
+        self.assertEqual(enforce_evidence_profile(spec)["status"],
+                         "METADATA_COMPLETE_NOT_SCIENCE_VERIFIED")
+        spec["science_context"] = {"missing_policy": "No missing observations"}
+        with self.assertRaisesRegex(ValueError, "strict figure evidence"):
+            enforce_evidence_profile(spec)
+        spec.pop("evidence_profile")
+        self.assertEqual(enforce_evidence_profile(spec)["status"], "INCOMPLETE_METADATA")
+        spec["evidence_profile"] = "guess"
+        with self.assertRaises(ValueError):
+            enforce_evidence_profile(spec)
 
     def test_schematic_does_not_demand_fictitious_denominator(self):
         rec = {"figure_type": "schematic"}
