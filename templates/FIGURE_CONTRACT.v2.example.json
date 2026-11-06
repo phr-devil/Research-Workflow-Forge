@@ -27,9 +27,9 @@
     "theme_sha256": "REPLACE_WITH_ACTUAL_THEME_SHA256",
     "template_id": "rate_ablation",
     "style_fingerprint": "REPLACE_WITH_COMPUTED_STYLE_FINGERPRINT",
-    "style_profile": "PROJECT_CUSTOM",
+    "style_profile": "GENERAL_JOURNAL",
     "background": "#FFFFFF",
-    "font_family": "Arial",
+    "font_family": "DejaVu Sans",
     "semantic_colors": {
       "model:SF": "#769EB2",
       "model:GRUctx": "#C17683"
@@ -43,8 +43,8 @@
     },
     "png_dpi": 600,
     "canvas_inches": [
-      5,
-      3.2
+      3.34646,
+      3.07087
     ]
   }
 }
