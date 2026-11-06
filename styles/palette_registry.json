@@ -1,0 +1,111 @@
+{
+  "schema_version": "figure-palette-registry-v1",
+  "registry_version": "palettes-v1",
+  "existing_default": "tol-bright",
+  "recommended_new_project": "tol-muted",
+  "notes": "Design references only. Identical semantic category must retain its mapping within a project. White-background contrast values are advisory for non-text marks, not proof of color-vision accessibility.",
+  "categorical": {
+    "tol-bright": {
+      "source": "Paul Tol Bright",
+      "colors": [
+        "#4477AA",
+        "#66CCEE",
+        "#228833",
+        "#CCBB44",
+        "#AA3377",
+        "#EE6677"
+      ],
+      "description": "Legacy default; never automatically recolor existing projects"
+    },
+    "tol-muted": {
+      "source": "Paul Tol Muted (selected six)",
+      "colors": [
+        "#332288",
+        "#88CCEE",
+        "#44AA99",
+        "#117733",
+        "#CC6677",
+        "#AA4499"
+      ],
+      "description": "Recommended candidate for new projects; pale cyan is weak on white as a thin line"
+    },
+    "tol-vibrant": {
+      "source": "Paul Tol Vibrant (selected six)",
+      "colors": [
+        "#0077BB",
+        "#33BBEE",
+        "#009988",
+        "#EE7733",
+        "#CC3311",
+        "#EE3377"
+      ],
+      "description": "More saturated; verify thin-line contrast against white"
+    },
+    "okabe-ito": {
+      "source": "Okabe-Ito (selected six)",
+      "colors": [
+        "#0072B2",
+        "#D55E00",
+        "#009E73",
+        "#CC79A7",
+        "#E69F00",
+        "#56B4E9"
+      ],
+      "description": "Color-vision-oriented categorical palette; light orange/blue need marker outlines"
+    },
+    "tableau10": {
+      "source": "Tableau 10",
+      "colors": [
+        "#4E79A7",
+        "#F28E2B",
+        "#E15759",
+        "#76B7B2",
+        "#59A14F",
+        "#EDC948",
+        "#B07AA1",
+        "#FF9DA7",
+        "#9C755F",
+        "#BAB0AC"
+      ],
+      "description": "Recognizable ten-category visualization palette; multiple light colors"
+    }
+  },
+  "accents": {
+    "id": "tol-high-contrast",
+    "colors": [
+      "#004488",
+      "#DDAA33",
+      "#BB5566"
+    ],
+    "description": "Independent annotation/attention roles; not default additional model identities"
+  },
+  "continuous": {
+    "viridis": {
+      "kind": "sequential",
+      "backend": "matplotlib",
+      "name": "viridis"
+    },
+    "cividis": {
+      "kind": "sequential",
+      "backend": "matplotlib",
+      "name": "cividis"
+    },
+    "batlow": {
+      "kind": "sequential",
+      "backend": "cmcrameri",
+      "name": "batlow",
+      "optional_dependency": "cmcrameri"
+    },
+    "vik": {
+      "kind": "diverging",
+      "backend": "cmcrameri",
+      "name": "vik",
+      "optional_dependency": "cmcrameri"
+    },
+    "twilight": {
+      "kind": "cyclic",
+      "backend": "matplotlib",
+      "name": "twilight"
+    }
+  }
+}
