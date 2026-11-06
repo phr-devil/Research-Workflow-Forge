@@ -117,7 +117,7 @@ class FigureQATests(unittest.TestCase):
 
     def test_v2_style_lock_and_actual_svg_semantic_tag(self):
         v2 = self._v2()
-        svg = b'<svg><g id="series--model--SF"><path style="fill: #769eb2; stroke: #000000"/></g></svg>'
+        svg = b'<svg><g id="template--rate_ablation"/><g id="series--model--SF"><path style="fill: #769eb2; stroke: #000000"/></g></svg>'
         result = self._check_records([v2], svg_bytes=svg)
         self.assertEqual(result["status"], "STRUCTURAL_PASS_REVIEW_REQUIRED")
         self.assertEqual(result["results"][0]["style_lock"], "VERIFIED")
@@ -125,12 +125,26 @@ class FigureQATests(unittest.TestCase):
 
     def test_v2_theme_drift_and_silent_color_override_fail(self):
         v2 = self._v2()
-        svg = b'<svg><g id="series--model--SF"><path style="fill: #769eb2"/></g></svg>'
+        svg = b'<svg><g id="template--rate_ablation"/><g id="series--model--SF"><path style="fill: #769eb2"/></g></svg>'
         v2["style"]["semantic_colors"]["model:SF"] = "#FF0000"
         self.assertEqual(self._check_records([v2], svg_bytes=svg)["status"], "QA_FAIL")
         v2["style"]["semantic_colors"]["model:SF"] = "#769EB2"
         v2["style"]["style_fingerprint"] = "0" * 64
         self.assertEqual(self._check_records([v2], svg_bytes=svg)["status"], "QA_FAIL")
+
+    def test_matplotlib_prolog_and_explicit_font_checks(self):
+        from tools.figure_qa import _safe_svg_xml, inspect_svg_typography
+        prefix = (b'<?xml version="1.0"?>'
+                  b'<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" '
+                  b'"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">')
+        xml = (prefix + b'<svg><text style="font: 11px &apos;DejaVu Sans&apos;; fill: #000000">'
+               b'F1</text></svg>')
+        self.assertIn(b"<svg>", _safe_svg_xml(xml))
+        self.assertEqual(inspect_svg_typography(xml, "DejaVu Sans")["explicit_font_checks"], 1)
+        with self.assertRaises(ValueError):
+            inspect_svg_typography(xml, "Arial")
+        with self.assertRaises(ValueError):
+            _safe_svg_xml(b'<!DOCTYPE svg SYSTEM "http://other.com/x.dtd"><svg/>')
 
     def test_actual_tagged_svg_paint(self):
         okay = b'<svg><g id="series--model--SF"><path style="stroke: #769eb2; fill: none"/></g></svg>'
