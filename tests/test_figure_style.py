@@ -8,7 +8,7 @@ from tools.figure_style import (
     BASE_THEME, REGISTRY, frozen_style_fields, load_registry, load_theme, semantic_color,
     semantic_gid, style_fingerprint, template_spec, validate_theme,
 )
-from tools.figure_templates import require_drawing_request, create_template_figure, export_figure
+from tools.figure_templates import require_drawing_request, create_template_figure, export_figure, rendering_environment_receipt
 
 
 class FigureStyleTests(unittest.TestCase):
@@ -94,6 +94,9 @@ class FigureStyleTests(unittest.TestCase):
                           explicitly_requested=False, user_request_ref="user-message")
         with self.assertRaises(PermissionError):
             require_drawing_request(explicitly_requested=True, user_request_ref="REPLACE_WITH_ID")
+        with self.assertRaises(PermissionError):
+            rendering_environment_receipt(None, explicitly_requested=False,
+                                          user_request_ref="ungranted")
         # No call above is permitted to import Matplotlib or produce a figure.
 
 
