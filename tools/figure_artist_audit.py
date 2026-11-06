@@ -129,7 +129,7 @@ def audit_rate_bars(artists: dict, expected: dict) -> dict:
             raise ValueError("bar index must be numeric")
         value = _native(rect.get_height())
         baseline = _native(rect.get_y())
-        center = (_native(rect.get_x()) + _native(rect.get_width())) / 2
+        center = _native(rect.get_x()) + _native(rect.get_width()) / 2
         if abs(value - expected_value) > 1e-10 or abs(baseline) > 1e-10 or abs(center - expected_index) > 1e-10:
             raise ValueError(f"actual rate bar geometry differs from supplied rows: {key}")
         rgba = _native(rect.get_facecolor())
