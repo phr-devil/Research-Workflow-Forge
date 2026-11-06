@@ -58,7 +58,7 @@ A real CPU fit requires separately verified user permission and `--allow-cpu-fit
 
 ## Efficient execution defaults
 
-**Load only one Skill** and relevant evidence; reuse verified runs, searches and data. Batch inspect→edit→focused test→repair→record. During exploration skip decorative images and publication figures; make a small diagnostic chart only when needed to decide. Use concise *delta-only* updates instead of repeated reports. Full CI at integration/release, not after every minor edit. A negative Pilot prompts diagnosis, not automatic project STOP. **Never weaken legal splits, permissions, reproducibility or independent confirmation to save tokens.**
+**Load only one Skill** and relevant evidence; reuse verified runs, searches and data. Batch inspect→edit→focused test→repair→record. During exploration **do not generate any image**, including diagnostic charts and previews, unless the user explicitly requests the specified image; keep numeric/text evidence available without plots. Use concise *delta-only* updates instead of repeated reports. Full CI at integration/release, not after every minor edit. A negative Pilot prompts diagnosis, not automatic project STOP. **Never weaken legal splits, permissions, reproducibility or independent confirmation to save tokens.**
 
 The [shared execution policy](docs/EXECUTION_POLICY.md) is authoritative for these defaults. [AGENTS.md](AGENTS.md) is the shortest AI entry; [architecture](docs/ARCHITECTURE.md), [contracts](docs/CONTRACTS.md), and [build plan](docs/BUILD_PLAN.md) describe current behavior, not appended version histories. Prior changes remain under [UPGRADE_V04](docs/UPGRADE_V04.md) and [UPGRADE_V05](docs/UPGRADE_V05.md); upstream copyrights in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 

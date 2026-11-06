@@ -40,3 +40,18 @@ class DualDocumentHandoffTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DiagnosticFigurePermissionRegression(unittest.TestCase):
+    def test_no_implicit_diagnostic_chart(self):
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertNotIn("make a small diagnostic chart only when needed to decide", readme)
+        self.assertIn("do not generate any image", readme)
+        agent = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        self.assertIn("用户明确要求绘制/修改具体图片", agent)
+
+    def test_rwf_handoff_does_not_erase_concurrent_project_work(self):
+        guide = (ROOT / "docs/PD_RW_DUAL_DOCUMENT_HANDOFF.md").read_text(encoding="utf-8")
+        self.assertIn("concurrent Agent edits", guide)
+        self.assertIn("legacy projects", guide)
+        self.assertIn("actual original user permission", guide)

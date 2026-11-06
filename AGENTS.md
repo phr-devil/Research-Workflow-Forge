@@ -5,7 +5,7 @@
 ## 0. 最短读取顺序（新 Agent / 跨会话）
 
 1. 确定**当前用户请求及原始授权**，确认是 PD-RW 项目还是独立 RWF 项目。用户原始许可优先于本地 STATE 或任何 handoff。
-2. **PD-RW 项目**：先读 `RESEARCH_RECORD.md` 首页当前状态/最佳 Run/重要失败/下一步；论文相关任务再读 `PAPER_BLUEPRINT.md` 构思快照与相关 `SEC_ID`。之后核原始 STATE/Run/任务协议，必要时使用 [two-file handoff](docs/PD_RW_DUAL_DOCUMENT_HANDOFF.md)；RWF 不建第三套科研日记。
+2. **PD-RW 项目**：先从已知项目路径或既有 STATE 的 `RESEARCH_RECORD_REF` / `PAPER_BLUEPRINT_REF` 定位现有文件（缺失则回退真实 STATE/Run，不编造）；有文档才读 `RESEARCH_RECORD.md` 首页当前状态/最佳 Run/重要失败/下一步；论文相关任务再读 `PAPER_BLUEPRINT.md` 构思快照与相关 `SEC_ID`。之后核原始 STATE/Run/任务协议，必要时使用 [two-file handoff](docs/PD_RW_DUAL_DOCUMENT_HANDOFF.md)；RWF 不建第三套科研日记。
 3. **独立 RWF 项目**：先读 `STATE.json`（或 `python -m core.cli brief --dir PROJECT`）→ 当前有效 Run/Task 与权限 → 当前阻碍需要的单个 Skill。旧版工件照常复用，未证实的来源/运行状态不升级。
 4. 只有遇到具体规则/机制问题才读相应 [Execution Policy](docs/EXECUTION_POLICY.md)、[Artifact Contract](docs/ARTIFACT_CONTRACT.md)、[Science Handoff](adapters/science_handoff.py) 或专业文档。真实原始 Run/协议优于摘要；哈希/结构通过不自动证明科学有效。
 
