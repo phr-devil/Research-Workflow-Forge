@@ -34,6 +34,7 @@ def create_template_figure(template_id: str, *, explicitly_requested: bool = Fal
     theme = validate_theme(theme or load_theme())
     cfg = template_spec(template_id, load_registry())
     import matplotlib as mpl  # lazy import: no dependency in ordinary research
+    import matplotlib.style as mplstyle
     from matplotlib.figure import Figure
 
     width_mm = theme["canvas"]["single_width_mm" if cfg["canvas"] == "single" else "double_width_mm"]
@@ -41,7 +42,7 @@ def create_template_figure(template_id: str, *, explicitly_requested: bool = Fal
     if isinstance(size_mm, bool) or not isinstance(size_mm, (int, float)) or not 25 <= size_mm <= 500:
         raise ValueError("invalid figure height")
     sz = theme["font_sizes_pt"]
-    with mpl.style.context(str(BASE_MPLSTYLE)), mpl.rc_context(rc={
+    with mplstyle.context(str(BASE_MPLSTYLE)), mpl.rc_context(rc={
         "figure.facecolor": theme["background"], "axes.facecolor": theme["background"],
         "savefig.facecolor": theme["background"], "savefig.transparent": False,
         "text.color": theme["text_color"], "axes.labelcolor": theme["text_color"],
@@ -124,6 +125,7 @@ def export_figure(fig, svg: Path, png: Path, *, explicitly_requested: bool = Fal
     if not svg.parent.is_dir() or not png.parent.is_dir():
         raise ValueError("requested output directories must already exist")
     import matplotlib as mpl  # lazy import; drawing request checked above
+    import matplotlib.style as mplstyle
     # Retain SVG text as text instead of silently converting labels to paths.
     from tools.figure_style import BASE_MPLSTYLE
     with mpl.style.context(str(BASE_MPLSTYLE)), \
