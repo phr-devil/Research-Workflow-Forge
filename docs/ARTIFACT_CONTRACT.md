@@ -46,6 +46,9 @@ V0.6 hashed-log-only Runs remain historical but are not trusted for newly verifi
 
 **Existing-result harvest as optional source evidence:** a PD-RW DEV-only `result_harvest` scientific-inventory JSON may be included as a *source_receipt* in `adapters.science_handoff`, subject to existing SHA/size and DEV/public role checks. Its condition effects, costs and candidate flags are exploratory, and a hash pass does not independently recompute metrics, validate independent groups, identify mechanisms or certify a publication claim. Evidence-level `CONTRIBUTION_EVIDENCE_BRIEF` is never a manuscript artifact. See [SCIENCE_RESULT_HARVEST.md](SCIENCE_RESULT_HARVEST.md).
 
+**PD-RW dual-file evidence handoff:** verified DEV/public Run receipts can be referenced in RESEARCH_RECORD.md and the related PAPER_BLUEPRINT.md H1/H2 plans, via [dual-file handoff](PD_RW_DUAL_DOCUMENT_HANDOFF.md). This does not verify scientific truth, authorize sealed reads or training, unlock manuscript prose or trigger rendering; do not create a competing RWF narrative ledger.
+
+
 **Pre-download discovery is NOT a metric/Run handoff:** PD-RW's short `SEARCH_HANDOFF` may carry `BREADTH_COVERAGE / STRONGEST_NEIGHBOR+COUNTEREVIDENCE / DIFFERENT_PREMISE_COMPARISON / PRE_DOWNLOAD_SCIENCE_FIT / NEXT_DISCRIMINATING_CHECK` as **public-source claims or UNKNOWN**. `adapters.science_handoff` still expects actual permitted DEV/public source receipts after they exist; do not invent DEV SHA files for an early ChatGPT research search or use a passed hash to grant data access or certify Q2. With no chosen problem, RWF's feasibility rankings cannot choose it. Original user authorization remains decisive.
 
 ## PD-RW scientific-choice handoff (separate from metrics)
