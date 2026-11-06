@@ -124,6 +124,9 @@ class FigureQATests(unittest.TestCase):
         self.assertEqual(result["status"], "STRUCTURAL_PASS_REVIEW_REQUIRED")
         self.assertEqual(result["results"][0]["style_lock"], "VERIFIED")
         self.assertIn("model:SF", result["results"][0]["tagged_semantic_paints"])
+        self.assertEqual(result["results"][0]["evidence_metadata"]["status"],
+                         "INCOMPLETE_METADATA")
+        self.assertFalse(result["results"][0]["evidence_metadata"]["scientific_source_verified"])
 
     def test_v2_theme_drift_and_silent_color_override_fail(self):
         v2 = self._v2()

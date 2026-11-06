@@ -50,6 +50,13 @@ Use `artist.set_gid("series--model--SF")` (the helper sets this automatically) o
 Do **not** create images automatically from imports, initialization, ordinary tests or CI. A dedicated script may render only after a real, explicit user request for those specific figures. Automated tests should exercise theme parsing, template metadata, permission guards and XML **in memory**; no generated figure files, snapshots or contact sheets. An authorized plotting task can use its specific data and produce one or more SVG/PNG exports from the same Matplotlib figure object; use explicit figure size instead of silently changing physical canvas with `bbox_inches="tight"`.
 
 ### QA and exceptions
+### Review lessons from established GitHub projects
+
+[SciencePlots](https://github.com/garrettj403/SciencePlots) demonstrates composable journal style presets; [Seaborn](https://github.com/mwaskom/seaborn) separates semantic palette, style and size contexts; [K-Dense scientific-visualization](https://github.com/K-Dense-AI/scientific-agent-skills/blob/main/skills/scientific-visualization/SKILL.md) explicitly requires truthful sample/interval/missing-data definitions and inspection of deliverables. These are **design references, not mandatory package dependencies or a claim of endorsement**. See the compact [implementation audit](FIGURE_IMPLEMENTATION_AUDIT.md).
+
+Use `figure_session` throughout the expressly requested drawing task; the old `create_template_figure` convenience function closes its styling context at return and must not be used for a new multi-step figure. `export_figure` first produces SVG/PNG in memory and then writes a non-overwriting pair with rollback. Verify both files before use. For scientific results, an output pair and a valid style hash are insufficient without source-data reconciliation.
+
+
 
 - **Static:** verify theme/palette registry versions, semantic colors, source hashes, template ID, fingerprint, comparable axis limits, file structure, actual tagged SVG colors when supported, and a contrast-risk report for declared series. The checks are read-only and never generate new figures. Do not claim to verify image aesthetics or scientific claims from config hashes alone.
 - **Authorized visual review:** inspect the actual exported SVG/PNG at final paper width for font substitution, black labels, axes arrows, legend overlap, plot alignment, clipping, color contrast, symbol legibility, and whether identical templates really appear consistent. Keep source-data reconciliation separate from file QA.
