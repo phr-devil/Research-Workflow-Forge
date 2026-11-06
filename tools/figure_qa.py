@@ -122,6 +122,8 @@ def _check_one(root: Path, record: dict) -> tuple[dict, dict]:
     if not isinstance(sources, list) or not sources:
         raise ValueError("source_artifacts required")
     for item in sources:
+        if not isinstance(item, dict) or not isinstance(item.get("role", ""), str):
+            raise ValueError("invalid source artifact record")
         if item.get("role", "").upper() in ("SEALED", "CONFIRMATION"):
             raise ValueError("direct sealed/confirmation sources not accepted by generic QA")
         _verify_hash(root, item)
@@ -178,6 +180,8 @@ def check_contracts(project: Path, contract_paths: list[Path]) -> dict:
         fig = str(manifest)
         try:
             spec = json.loads(_local(root, str(manifest)).read_text(encoding="utf-8"))
+            if not isinstance(spec, dict):
+                raise ValueError("figure contract must be a JSON object")
             detail, cross = _check_one(root, spec)
             ident = detail["figure_id"]
             for key, value in cross["colors"].items():

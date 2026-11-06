@@ -28,7 +28,7 @@ Hashes bind bytes only. The figure checker does not independently certify a metr
 ### Optional read-only QA (only after the user requested actual figures and those figures already exist)
 
 ```bash
-python -m tools.figure_qa --project PROJECT --contracts PROJECT/figures/Figure8a.json PROJECT/figures/Figure8b.json
+python -m tools.figure_qa --project PROJECT --contracts figures/Figure8a.json figures/Figure8b.json
 ```
 
 It performs only source/plot-data SHA checks, project path confinement, SVG/PNG structural/dimension checks and declared cross-figure semantic-color/scale checks. It never runs plotting scripts, retrains, downloads or creates images. `STRUCTURAL_PASS_REVIEW_REQUIRED` is **not** figure correctness or scientific verification; rendering/visual checks and science checks stay separate.

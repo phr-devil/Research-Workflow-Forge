@@ -63,6 +63,11 @@ class FigureQATests(unittest.TestCase):
         self.assertFalse(result["science_verified"])
         self.assertFalse(result["rendered_visual_review_verified"])
 
+    def test_malformed_contract_is_failure_not_crash(self):
+        (self.root / "bad.json").write_text("[]", encoding="utf-8")
+        outcome = check_contracts(self.root, [Path("bad.json")])
+        self.assertEqual(outcome["status"], "QA_FAIL")
+
     def test_hash_tamper(self):
         (self.root / "results.csv").write_text("tampered", encoding="utf-8")
         self.assertEqual(self._check()["status"], "QA_FAIL")
