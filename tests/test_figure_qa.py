@@ -72,6 +72,8 @@ class FigureQATests(unittest.TestCase):
     def _v2(self):
         theme = load_theme(BASE_THEME)
         theme["colors"]["semantic_colors"] = {"model:SF": "#769EB2"}
+        # Structural fixtures mock a one-inch SVG, not an actual rendered image.
+        theme["canvas"]["single_width_mm"] = 25.4
         dest = self.root / "theme.json"
         dest.write_text(json.dumps(theme, sort_keys=True), encoding="utf-8")
         v2 = json.loads(json.dumps(self.base))
