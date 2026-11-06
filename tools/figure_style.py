@@ -200,6 +200,13 @@ def validate_style_lock(record: dict, project: Path) -> dict:
         raise ValueError("font differs from locked theme")
     if style.get("background", "#FFFFFF").upper() != theme["background"].upper():
         raise ValueError("background differs from theme")
+    template = template_spec(template_id)
+    width_key = "single_width_mm" if template["canvas"] == "single" else "double_width_mm"
+    expected_width_inches = theme["canvas"][width_key] / 25.4
+    canvas = style.get("canvas_inches")
+    if not isinstance(canvas, list) or len(canvas) != 2 or abs(canvas[0] - expected_width_inches) > 0.02:
+        raise ValueError("locked figure width differs from template canvas profile")
+
     colors = style.get("semantic_colors", {})
     if not isinstance(colors, dict):
         raise ValueError("semantic_colors must be a dictionary")
