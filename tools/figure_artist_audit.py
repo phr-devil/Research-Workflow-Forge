@@ -95,3 +95,81 @@ def audit_artist_coordinates(artists: dict, expected: dict) -> dict:
     return {"status": "ARTIST_COORDINATES_MATCH_EXPECTED_ROWS_ONLY",
             "series": details, "scientific_source_verified": False,
             "note": "Not an independent metric, dataset/label, denominator or scientific-confirmation audit"}
+
+
+
+def audit_rate_bars(artists: dict, expected: dict) -> dict:
+    """Compare actual rate-bar rectangle geometry/color to trusted plot rows.
+
+    expected[key] = {value: 0.35, index: 0, color: "#4477AA",
+                     source_ref: "verified-run:..."}. Bars must begin at zero.
+    Does not infer denominators, uncertainty, confidence intervals or units.
+    """
+    from tools.figure_palette import _hex
+
+    if not isinstance(artists, dict) or not isinstance(expected, dict) or not expected:
+        raise ValueError("nonempty bar artists and expected plot rows required")
+    if set(artists) != set(expected):
+        raise ValueError("missing or extra semantic bars")
+    report = []
+    for key in sorted(expected):
+        rec = expected[key]
+        rect = artists[key]
+        if not isinstance(rec, dict) or not isinstance(rec.get("source_ref"), str) or not rec["source_ref"]:
+            raise ValueError("bar source reference is required")
+        if not hasattr(rect, "get_gid") or rect.get_gid() != semantic_gid(key):
+            raise ValueError(f"bar semantic identity mismatch: {key}")
+        if not all(hasattr(rect, m) for m in ("get_x", "get_width", "get_y", "get_height", "get_facecolor")):
+            raise ValueError("bar artist lacks rectangle geometry")
+        expected_value = _native(rec.get("value"))
+        expected_index = _native(rec.get("index"))
+        if not isinstance(expected_value, (int, float)) or expected_value < 0:
+            raise ValueError("rate must be numeric and nonnegative")
+        if not isinstance(expected_index, (int, float)):
+            raise ValueError("bar index must be numeric")
+        value = _native(rect.get_height())
+        baseline = _native(rect.get_y())
+        center = (_native(rect.get_x()) + _native(rect.get_width())) / 2
+        if abs(value - expected_value) > 1e-10 or abs(baseline) > 1e-10 or abs(center - expected_index) > 1e-10:
+            raise ValueError(f"actual rate bar geometry differs from supplied rows: {key}")
+        rgba = _native(rect.get_facecolor())
+        if not isinstance(rgba, list) or len(rgba) != 4 or any(
+            not isinstance(v, (int, float)) or v < 0 or v > 1 for v in rgba
+        ):
+            raise ValueError("invalid bar artist facecolor")
+        observed_color = "#" + "".join(f"{round(c * 255):02X}" for c in rgba[:3])
+        if rgba[3] != 1 or observed_color != _hex(rec.get("color")):
+            raise ValueError(f"actual bar color/opacity differs from project mapping: {key}")
+        report.append({"series": key, "index": expected_index, "height": expected_value,
+                       "color": observed_color, "source_ref": rec["source_ref"]})
+    return {"status": "BAR_GEOMETRY_AND_PAINT_MATCH_EXPECTED_ROWS_ONLY",
+            "bars": report, "scientific_source_verified": False}
+
+
+def audit_heatmap_array(artist, expected: dict) -> dict:
+    """Compare pre-rendered heatmap's actual matrix to independently supplied rows.
+
+    expected = {matrix: [[...], ...], source_ref: "...", clim: [min,max]}
+    Clipping, labeling, normalization and colormap interpretation still require
+    independent scientific/visual review. No graphics are created.
+    """
+    if not isinstance(expected, dict) or not isinstance(expected.get("source_ref"), str) or not expected["source_ref"]:
+        raise ValueError("heatmap source reference is required")
+    if not hasattr(artist, "get_array") or not hasattr(artist, "get_clim"):
+        raise ValueError("heatmap artist lacks matrix/clim metadata")
+    raw = _native(artist.get_array())
+    wanted = _native(expected.get("matrix"))
+    if not isinstance(raw, list) or not raw or any(not isinstance(row, list) for row in raw):
+        raise ValueError("heatmap must contain a rectangular numeric matrix")
+    if raw != wanted:
+        raise ValueError("actual heatmap matrix differs from supplied source rows")
+    bounds = expected.get("clim")
+    if bounds is not None:
+        if not isinstance(bounds, (list, tuple)) or len(bounds) != 2:
+            raise ValueError("invalid expected heatmap color limits")
+        observed = _native(artist.get_clim())
+        if observed != _native(bounds):
+            raise ValueError("heatmap color scale differs from expected scientific limits")
+    return {"status": "HEATMAP_VALUES_MATCH_EXPECTED_ROWS_ONLY",
+            "shape": [len(raw), len(raw[0])], "source_ref": expected["source_ref"],
+            "scientific_source_verified": False}

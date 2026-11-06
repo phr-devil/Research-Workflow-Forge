@@ -75,3 +75,69 @@ class AuditTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+
+class MockBar:
+    def __init__(self, height=0.35, gid="series--model--SF", rgba=(68/255, 119/255, 170/255, 1)):
+        self.height, self.gid, self.rgba = height, gid, rgba
+
+    def get_height(self):
+        return self.height
+
+    def get_y(self):
+        return 0
+
+    def get_x(self):
+        return -0.35
+
+    def get_width(self):
+        return 0.7
+
+    def get_gid(self):
+        return self.gid
+
+    def get_facecolor(self):
+        return self.rgba
+
+
+class MockMatrix:
+    def __init__(self, values=None, limits=(0.0, 1.0)):
+        self.values = values if values is not None else [[0.25, 0.75], [0.0, 1.0]]
+        self.limits = limits
+
+    def get_array(self):
+        return self.values
+
+    def get_clim(self):
+        return self.limits
+
+
+class ExtraFigureAuditTests(unittest.TestCase):
+    def test_bars_are_checked_for_exact_height_baseline_identity_and_paint(self):
+        from tools.figure_artist_audit import audit_rate_bars
+
+        expected = {"model:SF": {"value": 0.35, "index": 0, "color": "#4477AA",
+                                  "source_ref": "verified-dev-01"}}
+        result = audit_rate_bars({"model:SF": MockBar()}, expected)
+        self.assertEqual(result["status"], "BAR_GEOMETRY_AND_PAINT_MATCH_EXPECTED_ROWS_ONLY")
+        self.assertFalse(result["scientific_source_verified"])
+        with self.assertRaisesRegex(ValueError, "geometry"):
+            audit_rate_bars({"model:SF": MockBar(height=0.45)}, expected)
+        with self.assertRaisesRegex(ValueError, "color"):
+            audit_rate_bars({"model:SF": MockBar(rgba=(1, 0, 0, 1))}, expected)
+        with self.assertRaisesRegex(ValueError, "identity"):
+            audit_rate_bars({"model:SF": MockBar(gid="series--model--X")}, expected)
+
+    def test_heatmap_array_and_color_limits(self):
+        from tools.figure_artist_audit import audit_heatmap_array
+
+        expected = {"source_ref": "verified-run-heatmap", "matrix": [[0.25, 0.75], [0.0, 1.0]],
+                    "clim": [0.0, 1.0]}
+        r = audit_heatmap_array(MockMatrix(), expected)
+        self.assertEqual(r["shape"], [2, 2])
+        self.assertFalse(r["scientific_source_verified"])
+        with self.assertRaisesRegex(ValueError, "matrix differs"):
+            audit_heatmap_array(MockMatrix(values=[[0.75, 0.25], [0.0, 1.0]]), expected)
+        with self.assertRaisesRegex(ValueError, "color scale"):
+            audit_heatmap_array(MockMatrix(limits=(0.1, 1.0)), expected)
