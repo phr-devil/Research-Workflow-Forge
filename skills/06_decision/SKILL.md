@@ -4,7 +4,7 @@ description: Diagnose failures at their correct scope and choose repair, continu
 ---
 # 06 | Decision, repair and pivot
 
-Shared rules: [EXECUTION_POLICY](../../docs/EXECUTION_POLICY.md), especially the **manuscript writing lock**. Read original Run receipts before interpreting summaries; `PAPER_OPPORTUNITY=YES` never authorizes a paper outline or draft.
+Shared rules: [EXECUTION_POLICY](../../docs/EXECUTION_POLICY.md), especially the **manuscript writing lock**. Read original Run receipts before interpreting summaries; `PAPER_OPPORTUNITY=YES` never authorizes manuscript prose or a paper draft; maintaining RESEARCH_RECORD.md and pure H1/H2 PAPER_BLUEPRINT.md planning is permitted. See [two-file handoff](../../docs/PD_RW_DUAL_DOCUMENT_HANDOFF.md).
 
 - Distinguish INVALID (broken protocol/leakage), INCONCLUSIVE (insufficient evidence), real negative at mechanism level, Task infeasibility and Claim novelty failure.
 - **Scope-specific cause map:** ENGINEERING_ERROR → repair affected code/data/evaluator; SIGNAL_LIMITATION → inspect predecision legal information and Task; MECHANISM_FAILURE → HOLD challenger while preserving verified simple reference; NOVELTY_FAILURE → revisit independent scientific gap (PD-RW if applicable); CONFIRMATION_FAILURE → narrow Claim or plan new independent evidence. These are reasoning labels, not new CLI enum values. Do not treat a simple method's valid success as proof of paper novelty or a complex model's loss as proof the entire data area is unusable. Retain valid old evidence; do not elevate model-score improvement into scientific novelty.

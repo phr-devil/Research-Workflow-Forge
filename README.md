@@ -26,7 +26,7 @@ An evidence-first research workflow with **one controller, three engines, seven 
 
 **Next-step decision routing:** [NEXT_ACTION_POLICY](docs/NEXT_ACTION_POLICY.md): give a ready-to-copy Agent instruction for authorized in-scope technical actions; for user-owned decisions, provide recommendation and options, never an early execution prompt.
 
-**Mandatory manuscript writing lock:** scientific results/confirmation and `DRAFTABLE` do not authorize manuscript production. Produce a research-results summary, obtain the user's explicit review of it and then a separate explicit writing instruction before creating an outline, abstract, sections or draft. Research experiments and evidence-gap closure continue normally. See [Execution Policy](docs/EXECUTION_POLICY.md) § Manuscript writing lock.
+**Mandatory manuscript writing lock:** scientific results, DRAFTABLE and the early PAPER_BLUEPRINT.md H1/H2 planning **do not authorize manuscript prose**. RESEARCH_RECORD.md and outline/section-intent bullets may be updated while research proceeds; to draft formal title, abstract, manuscript sections or full paper, first produce a research-results summary, obtain the user's explicit review, then a separate explicit writing instruction. Image generation remains independently opt-in. See [Execution Policy](docs/EXECUTION_POLICY.md) § Research memory / outline planning versus manuscript writing lock.
 
 ## Quick use
 
