@@ -1,0 +1,52 @@
+{
+  "schema_version": "figure-theme-v1",
+  "theme_version": "pd-rw-publication-v1",
+  "style_profile": "PD_RW_PUBLICATION",
+  "background": "#FFFFFF",
+  "text_color": "#000000",
+  "font_family": "DejaVu Sans",
+  "font_sizes_pt": {
+    "axis_title": 11,
+    "ticks": 9,
+    "legend": 9,
+    "annotation": 8
+  },
+  "axes": {
+    "line_width_pt": 1.2,
+    "tick_width_pt": 1,
+    "tick_length_pt": 4,
+    "arrow_policy": "cartesian"
+  },
+  "marks": {
+    "line_width_pt": 1.8,
+    "marker_size_pt": 5,
+    "bar_overlay_policy": "no_redundant_points"
+  },
+  "legend": {
+    "placement": "outside_top",
+    "frame": false
+  },
+  "canvas": {
+    "single_width_mm": 85,
+    "double_width_mm": 175,
+    "default_height_mm": 76
+  },
+  "colors": {
+    "categorical": [
+      "#4477AA",
+      "#66CCEE",
+      "#228833",
+      "#CCBB44",
+      "#AA3377",
+      "#EE6677"
+    ],
+    "semantic_colors": {},
+    "palette_id": "tol-bright",
+    "palette_registry_version": "palettes-v1",
+    "accents": [
+      "#004488",
+      "#DDAA33",
+      "#BB5566"
+    ]
+  }
+}

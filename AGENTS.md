@@ -30,6 +30,8 @@
 
 既有有效 Run 直接续做，不重新开选题、下载或重复训练；强简单基线和可区分的科学预言优先于盲目复杂化。七个 Skills 是能力，不是七次强制审批。**Load only the skill needed for the current blocker**；不要预读所有 Skills、vendor 源码或实验历史。
 
+- **已明确要求的 PD-RW 正式数据图**：读取 [Figure Style System](docs/FIGURE_STYLE_SYSTEM.md) 的 PD-RW 图表段落，新项目复用 [figure_theme_pdrw.json](styles/figure_theme_pdrw.json)，对适用 Cartesian 图强制双轴箭头、彩色柱状图禁止无意义点标记，多子图用 `aligned_panel_session` 固定轴和文字对齐。导出前进行真实 artist/geometry QA，之后在论文尺寸检查最终成图；旧项目冻结主题不自动迁移。图像请求之外只可讨论或静态核查规则。
+
 ## 3. 增量输出与交接
 
 仅交付**真实新增证据 + 原始路径/协议/状态 + 决策或 UNKNOWN + 一项下一行动及权限依赖**。有意义的实验和失败补进 PD-RW 的 RESEARCH_RECORD.md；科学主张确有变化才更新 PAPER_BLUEPRINT.md 相应 SEC_ID。保留原本 RWF Run/STATE/ledger/bridge 及源数据，不重复堆砌日志、不新增 CLI 状态或自动生成稿件图片。其余技术约束见 [Architecture](docs/ARCHITECTURE.md) · [Contracts](docs/CONTRACTS.md) · [Sources](SOURCES.md)。

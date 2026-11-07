@@ -49,6 +49,19 @@ Use `artist.set_gid("series--model--SF")` (the helper sets this automatically) o
 
 Do **not** create images automatically from imports, initialization, ordinary tests or CI. A dedicated script may render only after a real, explicit user request for those specific figures. Automated tests should exercise theme parsing, template metadata, permission guards and XML **in memory**; no generated figure files, snapshots or contact sheets. An authorized plotting task can use its specific data and produce one or more SVG/PNG exports from the same Matplotlib figure object; use explicit figure size instead of silently changing physical canvas with `bbox_inches="tight"`.
 
+
+### PD-RW journal data figures: arrows, bars, aligned panels (opt-in profile)
+
+For newly requested PD-RW **publication data charts**, copy [figure_theme_pdrw.json](../styles/figure_theme_pdrw.json) into the project and pin that theme in each figure-v2 contract. This is an **explicit new style profile**; never silently change previously approved/frozen old project themes. A general RWF project may still use `GENERAL_JOURNAL` and `project_only`. Do not apply Cartesian arrows to heatmaps, confusion matrices or timeline tracks.
+
+- **Arrow endpoints**: `PD_RW_PUBLICATION` selects `axes.arrow_policy=cartesian`; the shared `figure_session` / `aligned_panel_session` places two tagged arrowheads at genuine Cartesian axes. The bottom/left spines remain one continuous axis. The pre-export artist audit rejects missing arrow objects, and the v2 SVG audit can verify arrow group IDs; **neither proves arrowheads are unclipped** without visual inspection at print width.
+- **Bar mark semantics**: `draw_rate_ablation` uses colored rectangles with no dot overlays. Pre-export checks reject added `PathCollection` or marked `Line2D` artists over bars. If independent observations genuinely matter, call `allow_observation_points(ax, source_ref=..., scientific_reason=...)` only with real provenance; error bars and their caps remain permitted. A duplicate decorative marker is never a scientific exception.
+- **Panel layout**: for comparable homogeneous subplots use `aligned_panel_session(template_id, rows=..., cols=..., explicitly_requested=True, user_request_ref=..., theme=project_theme)`; it creates one `GridSpec` with aligned data axes, and `add_panel_label` gives consistent panel-letter anchors. The pre-export audit checks row baselines/heights and column left edges/widths. Color bars/long tick labels require reserved margins and actual printed-size visual QA.
+- **Scale and typography**: identical metrics/comparison units share appropriate limits/ticks and same font hierarchy; different metrics are not forced onto mathematically false identical scales. Scientific uncertainty and raw independent observations must not be silently erased to satisfy visual rules. Check text baseline and legend/arrow clearance after rendering.
+- **One coherent execution**: new figure sets project theme once, draws under one request-gated session, runs internal artist/geometric checks, exports one non-overwriting SVG/PNG pair, and performs final visual inspection. Incremental fixes re-check affected content and final full-canvas readability; no image generation during CI.
+
+These checks enforce a plot-object/layout subset, not source metric correctness, actual font resolution, all possible marker types, pixel-level alignment or paper acceptance. RWF remains optional for PD-RW; when drawing with another backend, WorkBuddy must enforce equivalent semantics and inspect the actual output.
+
 ### QA and exceptions
 ### Review lessons from established GitHub projects
 

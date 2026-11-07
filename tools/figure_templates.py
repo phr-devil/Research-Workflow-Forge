@@ -79,19 +79,22 @@ def _build_figure(template_id: str, theme: dict, height_mm: float | None = None)
     fig._rwf_theme = deepcopy(theme)  # Not a permission / scientific receipt.
     fig._rwf_template_id = template_id
     ax = fig.add_axes(cfg["axes_box"])
-    ax.set_gid("template--" + template_id)
+    _prepare_axis(ax, theme, cfg, panel_id="main")
+    return fig, ax
+
+
+def _prepare_axis(ax, theme: dict, template: dict, *, panel_id: str) -> None:
+    """Centralized axis styling for single charts and aligned multi-panel charts."""
     ax.set_facecolor(theme["background"])
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.tick_params(colors=theme["text_color"], width=theme["axes"]["tick_width_pt"],
                    length=theme["axes"]["tick_length_pt"])
-    ax.xaxis.label.set_fontweight("bold")
-    ax.yaxis.label.set_fontweight("bold")
-    ax.xaxis.label.set_color(theme["text_color"])
-    ax.yaxis.label.set_color(theme["text_color"])
-    if theme["axes"]["arrow_policy"] == "cartesian" and cfg["kind"] == "cartesian":
-        add_cartesian_arrows(ax, line_width=theme["axes"]["line_width_pt"])
-    return fig, ax
+    for label in (ax.xaxis.label, ax.yaxis.label):
+        label.set_fontweight("bold")
+        label.set_color(theme["text_color"])
+    if theme["axes"]["arrow_policy"] == "cartesian" and template["kind"] == "cartesian":
+        add_cartesian_arrows(ax, line_width=theme["axes"]["line_width_pt"], panel_id=panel_id)
 
 
 @contextmanager
@@ -160,12 +163,141 @@ def apply_template_legend(ax, template_id: str, theme: dict):
     return ax.legend(loc="best", **opts)
 
 
-def add_cartesian_arrows(ax, *, line_width: float = 1.2) -> None:
-    """Only on genuine Cartesian axes; not on timelines or heatmaps."""
-    for xy, xytext in (((1.02, 0), (0.97, 0)), ((0, 1.02), (0, 0.97))):
-        ax.annotate("", xy=xy, xytext=xytext, xycoords="axes fraction",
-                    arrowprops={"arrowstyle": "-|>", "color": "black", "lw": line_width},
-                    annotation_clip=False)
+def add_cartesian_arrows(ax, *, line_width: float = 1.2,
+                         panel_id: str = "main") -> None:
+    """Arrowheads continue the bottom/left spines (not a second full-length axis)."""
+    for axis, xy, xytext in (
+        ("x", (1.025, 0), (0.972, 0)),
+        ("y", (0, 1.025), (0, 0.972)),
+    ):
+        annotation = ax.annotate(
+            "", xy=xy, xytext=xytext, xycoords="axes fraction",
+            arrowprops={"arrowstyle": "-|>", "color": "black", "lw": line_width,
+                        "mutation_scale": 9, "shrinkA": 0, "shrinkB": 0},
+            annotation_clip=False,
+        )
+        annotation.set_gid(f"axis-arrow-{axis}--{panel_id}")
+
+
+@contextmanager
+def aligned_panel_session(template_id: str, *, rows: int, cols: int,
+                          explicitly_requested: bool = False, user_request_ref: str = "",
+                          theme: dict | None = None, height_mm: float | None = None,
+                          wspace: float = 0.30, hspace: float = 0.35):
+    """Create exactly aligned data-area grids; returns (Figure, rows x columns Axes).
+
+    For heterogeneous chart types use separate suitable axes/templates instead.
+    This is request-gated, like figure_session, and does not create a preview.
+    """
+    require_drawing_request(explicitly_requested=explicitly_requested, user_request_ref=user_request_ref)
+    for name, value in (("rows", rows), ("cols", cols)):
+        if isinstance(value, bool) or not isinstance(value, int) or not 1 <= value <= 8:
+            raise ValueError(f"{name} must be an integer in 1..8")
+    if any(isinstance(value, bool) or not isinstance(value, (int, float)) or
+           not 0 <= value <= 2 for value in (wspace, hspace)):
+        raise ValueError("invalid grid spacing")
+    with figure_session(template_id, explicitly_requested=explicitly_requested,
+                        user_request_ref=user_request_ref, theme=theme,
+                        height_mm=height_mm) as (fig, initial_ax):
+        initial_ax.remove()
+        template = template_spec(template_id, load_registry())
+        x, y, width, height = template["axes_box"]
+        grid = fig.add_gridspec(rows, cols, left=x, right=x + width,
+                                bottom=y, top=y + height, wspace=wspace, hspace=hspace)
+        axes = []
+        for r in range(rows):
+            current = []
+            for c in range(cols):
+                ax = fig.add_subplot(grid[r, c])
+                panel_id = f"r{r}c{c}"
+                ax.set_gid("panel--" + panel_id)
+                _prepare_axis(ax, theme if theme is not None else fig._rwf_theme,
+                              template, panel_id=panel_id)
+                current.append(ax)
+            axes.append(current)
+        fig._rwf_panel_axes = axes
+        fig.align_labels([ax for row in axes for ax in row])
+        yield fig, axes
+
+
+def add_panel_label(ax, letter: str) -> None:
+    """Consistent panel-label anchor; keeps labels out of the plotting data area."""
+    if not isinstance(letter, str) or not letter or len(letter) > 3:
+        raise ValueError("panel label must be a short letter/id")
+    artist = ax.text(-0.11, 1.03, f"({letter})", transform=ax.transAxes,
+                     fontsize=10, fontweight="bold", ha="left", va="bottom")
+    artist.set_gid("panel-label--" + letter)
+
+
+def allow_observation_points(ax, *, source_ref: str, scientific_reason: str) -> None:
+    """An explicit, auditable exception for actual independent observations.
+
+    Never authorize a purely decorative second encoding of colored bars.
+    """
+    if (not isinstance(source_ref, str) or not source_ref.strip() or
+        not isinstance(scientific_reason, str) or len(scientific_reason.strip()) < 12):
+        raise ValueError("independent-observation source and scientific reason required")
+    ax._rwf_bar_point_exception = {
+        "source_ref": source_ref.strip(), "scientific_reason": scientific_reason.strip()}
+
+
+def audit_publication_format(fig) -> dict:
+    """Read existing artist/axes structure before export, no rendering or source verification.
+
+    Only the explicitly selected PD-RW publication profile is strict. Legacy
+    and independently frozen project themes remain unchanged.
+    """
+    theme = getattr(fig, "_rwf_theme", None) or {}
+    if theme.get("style_profile") != "PD_RW_PUBLICATION":
+        return {"status": "NOT_APPLICABLE_LEGACY_PROFILE"}
+    template_id = getattr(fig, "_rwf_template_id", None)
+    if template_id is None:
+        raise ValueError("missing figure template ID")
+    cfg = template_spec(template_id, load_registry())
+    panels = getattr(fig, "_rwf_panel_axes", None)
+    axes = [ax for row in panels for ax in row] if panels else list(fig.axes)
+    if not axes:
+        raise ValueError("no plot axes")
+    arrow_count = 0
+    for i, ax in enumerate(axes):
+        panel_id = next((f"r{r}c{c}" for r, row in enumerate(panels or [])
+                         for c, item in enumerate(row) if item is ax), "main")
+        if cfg["kind"] == "cartesian":
+            expected = {f"axis-arrow-{name}--{panel_id}" for name in ("x", "y")}
+            actual = {a.get_gid() for a in ax.texts if hasattr(a, "get_gid")}
+            if not expected.issubset(actual):
+                raise ValueError(f"Cartesian axis arrows missing in {panel_id}")
+            arrow_count += 2
+        has_bars = any(getattr(container, "patches", None) for container in ax.containers)
+        if not has_bars:
+            continue
+        # Marker artists from real error bars are not decorative overlay points.
+        caplines = {id(cap) for container in ax.containers
+                    if container.__class__.__name__ == "ErrorbarContainer"
+                    for cap in (container.lines[1] if getattr(container, "lines", None) else ())}
+        scatter = any(item.__class__.__name__ == "PathCollection" for item in ax.collections)
+        lines = any(id(line) not in caplines and
+                    str(line.get_marker()).lower() not in ("none", "", " ", "null")
+                    for line in ax.lines)
+        if (scatter or lines) and not getattr(ax, "_rwf_bar_point_exception", None):
+            raise ValueError(f"redundant point markers over colored bars in {panel_id}")
+    if panels:
+        tolerance = 1e-6
+        for row in panels:
+            positions = [ax.get_position().bounds for ax in row]
+            if any(abs(p[1] - positions[0][1]) > tolerance or
+                   abs(p[3] - positions[0][3]) > tolerance for p in positions[1:]):
+                raise ValueError("panel row axes are not aligned")
+        for c in range(len(panels[0])):
+            positions = [row[c].get_position().bounds for row in panels]
+            if any(abs(p[0] - positions[0][0]) > tolerance or
+                   abs(p[2] - positions[0][2]) > tolerance for p in positions[1:]):
+                raise ValueError("panel column axes are not aligned")
+    return {"status": "ARTIST_GEOMETRY_CHECKED_NOT_VISUAL_QA",
+            "axes": len(axes), "axis_arrow_objects": arrow_count,
+            "panel_grid": [len(panels), len(panels[0])] if panels else None,
+            "source_data_verified": False}
+
 
 
 def export_figure(fig, svg: Path, png: Path, *, explicitly_requested: bool = False,
@@ -185,6 +317,7 @@ def export_figure(fig, svg: Path, png: Path, *, explicitly_requested: bool = Fal
     import matplotlib.style as mplstyle
 
     theme = validate_theme(getattr(fig, "_rwf_theme", None) or load_theme())
+    audit_publication_format(fig)  # fail before writing either output; not visual/science QA
     # Prepare both exports before touching either destination. The two final
     # filenames are reserved with 'xb': no silent clobber and no stale lone SVG
     # if PNG rendering or writing fails. This occurs ONLY on authorized drawing.

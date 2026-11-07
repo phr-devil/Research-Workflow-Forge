@@ -53,6 +53,10 @@ Reference relevant parts of GitHub [scientific-visualization](https://github.com
 - Check actual rendered images at publication size for font substitution, overlap, arrow clipping, legends, margins, palette, meaningful units and accurate figure comparison. Automated checking cannot fully judge these.
 - Frozen chart choice after a first scientifically valid design; fix only affected images and run local regression checks. Use a project-wide theme version and template ID rather than independent styling per figure; compare style fingerprints, consistent axes boxes and actual tagged SVG paints. Contact sheets are also images; only build them within the original explicit batch image request.
 
+### PD-RW publication layout audit (only for previously requested images)
+
+`PD_RW_PUBLICATION` uses [figure_theme_pdrw.json](../styles/figure_theme_pdrw.json) and request-gated `aligned_panel_session`. Real artist QA requires X/Y arrow annotations on each Cartesian panel, rejects unapproved duplicate dots on colored bars while preserving real error bars/independent observations, and checks panel axes geometry. The actual SVG must still be inspected at manuscript size for arrow clipping, label and legend alignment, font fallback, cropping and color. Existing `GENERAL_JOURNAL`/legacy contract behavior is unchanged; do not equate structural QA with complete visual review. See [Figure Style System](FIGURE_STYLE_SYSTEM.md).
+
 ## 5. Outcome and handoff
 
 Figure-only reporting vocabulary (not research CLI enums):

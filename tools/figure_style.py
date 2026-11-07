@@ -64,6 +64,13 @@ def validate_theme(theme: dict) -> dict:
         n = marks.get(key) if isinstance(marks, dict) else None
         if isinstance(n, bool) or not isinstance(n, (float, int)) or not 0.1 <= n <= 25:
             raise ValueError(f"invalid marks.{key}")
+    if marks.get("bar_overlay_policy", "legacy") not in ("legacy", "no_redundant_points"):
+        raise ValueError("unsupported marks.bar_overlay_policy")
+    if theme["style_profile"] == "PD_RW_PUBLICATION":
+        if axes.get("arrow_policy") != "cartesian":
+            raise ValueError("PD-RW publication requires Cartesian arrowheads")
+        if marks.get("bar_overlay_policy") != "no_redundant_points":
+            raise ValueError("PD-RW publication requires bar marker policy")
     legend = theme.get("legend", {})
     if not isinstance(legend, dict) or legend.get("placement") not in (
         "outside_top", "outside_right", "inside_best", "none"
