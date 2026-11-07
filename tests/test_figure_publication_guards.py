@@ -22,11 +22,7 @@ class FakeAnnotation:
         return self.gid
 
 
-class FakeScatter:
-    pass
-
-
-FakeScatter.__name__ = "PathCollection"
+PathCollection = type("PathCollection", (), {})
 
 
 class FakeBar:
@@ -89,7 +85,7 @@ class FigurePublicationGuards(unittest.TestCase):
 
     def test_colored_bars_reject_redundant_points(self):
         ax = FakeAx()
-        ax.collections.append(FakeScatter())
+        ax.collections.append(PathCollection())
         with self.assertRaisesRegex(ValueError, "redundant"):
             audit_publication_format(FakeFig(self.theme, ax=ax))
         with self.assertRaises(ValueError):
@@ -118,6 +114,10 @@ class FigurePublicationGuards(unittest.TestCase):
         with self.assertRaises(PermissionError):
             with aligned_panel_session("rate_ablation", rows=2, cols=2):
                 self.fail("should never enter without authorization")
+
+    def test_arrow_gids_are_on_actual_arrow_patch(self):
+        src = (ROOT / "tools/figure_templates.py").read_text(encoding="utf-8")
+        self.assertIn("annotation.arrow_patch.set_gid(gid)", src)
 
     def test_documentation_and_no_image_fixture(self):
         doc = (ROOT / "docs/FIGURE_STYLE_SYSTEM.md").read_text(encoding="utf-8")

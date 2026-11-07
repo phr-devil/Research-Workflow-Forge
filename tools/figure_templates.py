@@ -176,7 +176,10 @@ def add_cartesian_arrows(ax, *, line_width: float = 1.2,
                         "mutation_scale": 9, "shrinkA": 0, "shrinkB": 0},
             annotation_clip=False,
         )
-        annotation.set_gid(f"axis-arrow-{axis}--{panel_id}")
+        gid = f"axis-arrow-{axis}--{panel_id}"
+        annotation.set_gid(gid)
+        if annotation.arrow_patch is not None:
+            annotation.arrow_patch.set_gid(gid)  # empty annotation text does not render an SVG id
 
 
 @contextmanager
@@ -210,7 +213,8 @@ def aligned_panel_session(template_id: str, *, rows: int, cols: int,
             for c in range(cols):
                 ax = fig.add_subplot(grid[r, c])
                 panel_id = f"r{r}c{c}"
-                ax.set_gid("panel--" + panel_id)
+                ax.set_gid("template--" + template_id if (r == 0 and c == 0)
+                           else "panel--" + panel_id)
                 _prepare_axis(ax, theme if theme is not None else fig._rwf_theme,
                               template, panel_id=panel_id)
                 current.append(ax)

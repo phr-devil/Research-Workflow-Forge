@@ -156,6 +156,31 @@ class FigureQATests(unittest.TestCase):
         no_text = b'<svg><g id="template--rate_ablation"/><g id="series--model--SF"><path style="fill: #769eb2"/></g></svg>'
         self.assertEqual(self._check_records([v2], svg_bytes=no_text)["status"], "QA_FAIL")
 
+    def test_pd_rw_svg_arrows_and_panels_without_rendering(self):
+        from tools.figure_qa import inspect_svg_publication_arrows
+        good = (b'<svg><g id="template--rate_ablation"/>'
+                b'<g id="axis-arrow-x--main"><path/></g>'
+                b'<g id="axis-arrow-y--main"><path/></g></svg>')
+        result = inspect_svg_publication_arrows(good, template_kind="cartesian")
+        self.assertEqual(result["cartesian_arrow_paths"], 2)
+        with self.assertRaisesRegex(ValueError, "Cartesian arrow"):
+            inspect_svg_publication_arrows(
+                b'<svg><g id="axis-arrow-x--main"/></svg>', template_kind="cartesian")
+        multi = (b'<svg><g id="template--rate_ablation"/>'
+                 b'<g id="axis-arrow-x--r0c0"/><g id="axis-arrow-y--r0c0"/>'
+                 b'<g id="panel--r0c1"/>'
+                 b'<g id="axis-arrow-x--r0c1"/><g id="axis-arrow-y--r0c1"/>'
+                 b'<g id="panel-label--a"/><g id="panel-label--b"/></svg>')
+        self.assertEqual(inspect_svg_publication_arrows(
+            multi, template_kind="cartesian", panel_grid={"rows": 1, "cols": 2}
+        )["panel_count"], 2)
+        with self.assertRaisesRegex(ValueError, "panel labels"):
+            inspect_svg_publication_arrows(
+                multi.replace(b'<g id="panel-label--b"/>', b""),
+                template_kind="cartesian", panel_grid={"rows": 1, "cols": 2})
+        self.assertEqual(inspect_svg_publication_arrows(
+            b"<svg/>", template_kind="matrix")["cartesian_arrow_paths"], 0)
+
     def test_actual_tagged_svg_paint(self):
         okay = b'<svg><g id="series--model--SF"><path style="stroke: #769eb2; fill: none"/></g></svg>'
         observed = inspect_svg_semantic_paints(okay, {"model:SF": "#769EB2"})

@@ -176,6 +176,44 @@ def inspect_svg_typography(svg_xml: bytes, expected_family: str) -> dict:
             "note": "Font metadata only; actual font rendering/substitution requires visual inspection"}
 
 
+def inspect_svg_publication_arrows(svg_xml: bytes, *, template_kind: str,
+                                   panel_grid: dict | None = None) -> dict:
+    """Verify exported SVG axis-arrow *paths*, not just requested theme JSON.
+
+    In matplotlib, an empty Annotation's Text.draw emits no SVG group; arrow
+    patch needs its own gid. Counts and panel tags are structural only and do
+    not prove visible placement or lack of clipping.
+    """
+    root = ET.fromstring(_safe_svg_xml(svg_xml))
+    ids = {node.attrib.get("id") for node in root.iter() if node.attrib.get("id")}
+    if panel_grid is None:
+        panel_ids = ["main"]
+    else:
+        if not isinstance(panel_grid, dict):
+            raise ValueError("style.panel_grid must be an object")
+        rows, cols = panel_grid.get("rows"), panel_grid.get("cols")
+        if any(isinstance(n, bool) or not isinstance(n, int) or not 1 <= n <= 8
+               for n in (rows, cols)):
+            raise ValueError("style.panel_grid rows/cols must be 1..8 integers")
+        panel_ids = [f"r{r}c{c}" for r in range(rows) for c in range(cols)]
+        for panel_id in panel_ids[1:]:
+            if "panel--" + panel_id not in ids:
+                raise ValueError("SVG missing panel group: " + panel_id)
+        if len(panel_ids) > 1:
+            labels = [x for x in ids if x.startswith("panel-label--")]
+            if len(labels) != len(panel_ids):
+                raise ValueError("SVG missing/duplicated panel labels")
+    if template_kind == "cartesian":
+        missing = [f"axis-arrow-{axis}--{panel_id}" for panel_id in panel_ids
+                   for axis in ("x", "y")
+                   if f"axis-arrow-{axis}--{panel_id}" not in ids]
+        if missing:
+            raise ValueError("SVG missing Cartesian arrow path groups: " + ", ".join(missing))
+    return {"panel_count": len(panel_ids),
+            "cartesian_arrow_paths": 2 * len(panel_ids) if template_kind == "cartesian" else 0,
+            "not_visual_geometry_verified": True}
+
+
 def _check_one(root: Path, record: dict) -> tuple[dict, dict]:
     version = record.get("schema_version")
     if version not in ("figure-v1", "figure-v2"):
@@ -238,6 +276,7 @@ def _check_one(root: Path, record: dict) -> tuple[dict, dict]:
     observed_paints = {}
     typography = None
     palette_report = None
+    publication_format = None
     if version == "figure-v2":
         from tools.figure_style import validate_style_lock
 
@@ -259,6 +298,14 @@ def _check_one(root: Path, record: dict) -> tuple[dict, dict]:
         if colors:
             observed_paints = inspect_svg_semantic_paints(svg_content, colors)
         typography = inspect_svg_typography(svg_content, lock["theme"]["font_family"])
+        if (lock["theme"]["style_profile"] == "PD_RW_PUBLICATION" and
+                record.get("figure_kind") == "PUBLICATION" and
+                record.get("figure_type", "data") == "data"):
+            from tools.figure_style import template_spec
+            kind = template_spec(lock["template_id"])["kind"]
+            publication_format = inspect_svg_publication_arrows(
+                svg_content, template_kind=kind,
+                panel_grid=style.get("panel_grid"))
         if record.get("figure_kind") == "PUBLICATION" and record.get("figure_type", "data") == "data":
             if not typography["text_elements"]:
                 raise ValueError("v2 publication data SVG has no editable text labels")
@@ -273,6 +320,7 @@ def _check_one(root: Path, record: dict) -> tuple[dict, dict]:
               "tagged_semantic_paints": observed_paints,
               "svg_typography": typography,
               "palette_report": palette_report,
+              "publication_format": publication_format,
               "evidence_metadata": evidence_metadata,
               "note": "User permission, actual data-to-mark linkage, white-pixel opacity, font substitution, rendered layout and science NOT verified"}
     cross = {"colors": {k: v.upper() for k, v in colors.items()},
