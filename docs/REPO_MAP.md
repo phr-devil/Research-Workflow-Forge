@@ -5,7 +5,7 @@
 | 当前需要什么 | 原始权威文档/代码 | 备注 |
 |---|---|---|
 | RWF 研究执行及权限 | [EXECUTION_POLICY](EXECUTION_POLICY.md)、[NEXT_ACTION_POLICY](NEXT_ACTION_POLICY.md) | 与 PD-RW 联用时仍服从 PD-RW 总控及用户真实授权 |
-| Task/Run/工件合同 | [ARTIFACT_CONTRACT](ARTIFACT_CONTRACT.md)、[CONTRACTS](CONTRACTS.md)、[core/](../core/README.md) | 仅在处理相应协议时加载 |
+| Task/Run/工件合同 | [ARTIFACT_CONTRACT](ARTIFACT_CONTRACT.md)、[CONTRACTS](CONTRACTS.md)、[core/](../core/cli.py) | 仅在处理相应协议时加载 |
 | 七个研究 Skill | [skills/](../skills/01_search/SKILL.md)、[AGENTS](../AGENTS.md) | 一次按阻碍选一个，不通读全部 |
 | PD-RW 科研记录交接 | [PD_RW_DUAL_DOCUMENT_HANDOFF](PD_RW_DUAL_DOCUMENT_HANDOFF.md) | 不创建第三份科研日志 |
 | 科研数据图 | [FIGURE_STYLE_SYSTEM](FIGURE_STYLE_SYSTEM.md)、[FIGURE_QA_CONTRACT](FIGURE_QA_CONTRACT.md) | 图像用户单独明确授权后才可生成 |
