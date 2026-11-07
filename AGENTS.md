@@ -17,6 +17,8 @@
 - **图片**：**只在用户明确要求绘制/修改具体图片时**才可调用绘图、重绘、预览或导出；科技图表、诊断图与稿件图一律不自动生成。获授权时读 [Figure QA Contract](docs/FIGURE_QA_CONTRACT.md) 与 [Figure Style](docs/FIGURE_STYLE_SYSTEM.md)。
 - **工具边界**：RWF 不自带通用自主编码 Agent、GPU 执行器或独立论文确认器。只有可复算的合法 DEV 预测/指标才能据实验证；外部代码、日志和 JSON 声明不自动成为已验证 Run，封存集不得用于开发。
 
+> **仓库职责地图（INDEX_ONLY，可选）**：[REPO_MAP.md](docs/REPO_MAP.md) 只说明 RWF 现有 `docs/skills/tools/core/adapters/tests` 职责与最短读取路线，**不是新增的科研规则或前置步骤**。已知道任务涉及哪个工具/Skill 时直接打开该原文件，不通读地图；与 PD-RW 联用时仍以 PD-RW 科研决策、用户原始授权及项目真实证据为准。
+
 ## 2. 当前阻碍 → 只加载相关 Skill
 
 | 目标 | Skill / 按需专题 |
