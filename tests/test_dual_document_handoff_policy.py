@@ -27,6 +27,16 @@ class DualDocumentHandoffTests(unittest.TestCase):
                        "SCIENCE_RESULT_HARVEST.md", "POST_ALGORITHM_SCIENCE_AUDIT.md"):
             self.assertIn(phrase, agent)
 
+    def test_compact_entry_and_lazy_policy(self):
+        agent = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        policy = (ROOT / "docs/EXECUTION_POLICY.md").read_text(encoding="utf-8")
+        self.assertLess(len(agent), 3500, "RWF AGENTS should only route to one Skill")
+        for marker in ("RULE_REPO", "RULE_COMMIT", "LOADED_FILES",
+                       "RULE_VERSION_UNVERIFIED", "七个 Skills"):
+            self.assertIn(marker, agent)
+        self.assertIn("only the sections applicable to the current blocker", policy)
+        self.assertNotIn("Read it once per research session", policy)
+
     def test_original_seven_skills_and_authority_retained(self):
         entry = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
         for sid in ("01_search", "02_evidence_data", "03_problem_design",
