@@ -10,6 +10,7 @@
 | PD-RW 科研记录交接 | [PD_RW_DUAL_DOCUMENT_HANDOFF](PD_RW_DUAL_DOCUMENT_HANDOFF.md) | 不创建第三份科研日志 |
 | 科研数据图 | [FIGURE_STYLE_SYSTEM](FIGURE_STYLE_SYSTEM.md)、[FIGURE_QA_CONTRACT](FIGURE_QA_CONTRACT.md) | 图像用户单独明确授权后才可生成 |
 | 已授权论文数据图执行 | [figure_templates](../tools/figure_templates.py)、[figure_qa](../tools/figure_qa.py)、[figure_theme_pdrw](../styles/figure_theme_pdrw.json) | 按需读对应 API；主题不迁移旧项目 |
+| 历史项目成功/失败/未知案例（只在用户要求复盘、盲回放、跨项目归因时） | [PD-RW 案例台账](https://github.com/phr-devil/Problem-Data-Research-Workflow/blob/main/LESSONS/CASE_REGISTRY.md) | PD-RW 唯一索引，RWF 不复制原始研究结论；用户本机 Run/归档仍为事实权威 |
 | 对外工具或跨项目桥接 | [adapters/](../adapters/pd_rw_bridge.py) | 不等于授予新的科学或数据权限 |
 | 纯离线回归验证 | [tests/](../tests/test_figure_style.py) | 只能证明对应静态/行为合同，不证明科研与视觉结果 |
 
