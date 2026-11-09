@@ -13,6 +13,7 @@
 
 - **授权**：[NEXT_ACTION_POLICY](docs/NEXT_ACTION_POLICY.md) 将授权内技术执行与用户必须决策的下载、安装、CPU/GPU、SEALED/CONFIRMATION、重大 Task 改变、HOLD/STOP、投稿、外传和付费分开。保存的许可字段或 Agent 建议不是原始用户授权。
 - **科研与 Q2 目标**：追求真实证据支持的 JCR Q2+ 投稿潜力（优先 Q1），不保证录用；DEV 增益、廉价实验和期刊元信息都不是独立科学确认。PD-RW 拥有科研选择和选刊判断，RWF 的廉价下一 Probe 排序不能替代。见 [HIGH_VALUE_RESEARCH_ENGINEERING](docs/HIGH_VALUE_RESEARCH_ENGINEERING.md)。
+- **科研创新边界**：RWF 支持**开放构思、严格证据、有限预算**：反向假说、跨学科原理、新机制/理论/评价可提出但不得越过 PD-RW 的学科和授权范围；题目改名、叠模块、文献元数据零命中、DEV 刷分或模型自评分不能证明创新。`novelty_check` 只预检来源，不作原创性裁判；`opportunity_review` 只排序下一证据行动，不代替科学选题。简单 Champion 是公平参照而非复杂算法准入门槛；只读想法自由，训练/数据/SEALED/写作授权不自动扩大。细则见 [HIGH_VALUE_RESEARCH_ENGINEERING](docs/HIGH_VALUE_RESEARCH_ENGINEERING.md)。
 - **写作**：允许更新 `PAPER_BLUEPRINT.md` 的 H1/H2 及逐节要点；论文正式标题、摘要、章节正文和初稿仍 `WRITING_LOCKED`，须用户审查真实科研成果总结后**另行明确授权**。参见 [Execution Policy](docs/EXECUTION_POLICY.md)；蓝图或 Run 不授权写稿。
 - **图片**：**只在用户明确要求绘制/修改具体图片时**才可调用绘图、重绘、预览或导出；科技图表、诊断图与稿件图一律不自动生成。获授权时读 [Figure QA Contract](docs/FIGURE_QA_CONTRACT.md) 与 [Figure Style](docs/FIGURE_STYLE_SYSTEM.md)。
 - **工具边界**：RWF 不自带通用自主编码 Agent、GPU 执行器或独立论文确认器。只有可复算的合法 DEV 预测/指标才能据实验证；外部代码、日志和 JSON 声明不自动成为已验证 Run，封存集不得用于开发。
