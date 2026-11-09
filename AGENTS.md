@@ -27,7 +27,7 @@
 | 负 Run、修复、止损 | `06_decision`；需要科学价值回收读 [SCIENCE_RESULT_HARVEST.md](docs/SCIENCE_RESULT_HARVEST.md) 或 [POST_ALGORITHM_SCIENCE_AUDIT.md](docs/POST_ALGORITHM_SCIENCE_AUDIT.md) |
 | 独立确认建议 | `07_confirmation`，SEALED 仍单独授权 |
 
-七个 Skills 是能力目录，不是强制七阶段；不要预读全部 Skills、长篇执行政策或 vendor 源码。
+研究方向的不同前提比较沿用 `BREADTH_SCAN → DEEP_FALSIFICATION → COMPETING_CHOICE`，不自动选第一个可行课题。**Load only the skill** needed for the current blocker. 七个 Skills 是能力目录，不是强制七阶段；不要预读全部 Skills、长篇执行政策或 vendor 源码。
 
 ## 3. 最短交接
 
