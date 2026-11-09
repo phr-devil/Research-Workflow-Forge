@@ -1,40 +1,34 @@
 # Research Workflow Forge｜Agent 入口 v0.15
 
-> **这是导航与权限摘要，不是第二个科研主控。** 在与 PD-RW 共同工作时，以 PD-RW 的科研选择/用户授权为准；RWF 负责可复核 DEV 工件、机制验证及必要的科研实验建议。完整规则在 [Execution Policy](docs/EXECUTION_POLICY.md)，按需读相关段落，不把所有专题和历史同时加载。
+> **轻量导航与最小权限摘要**。与 PD-RW 联用时，PD-RW/用户负责科研选题、主张和授权；RWF 只提供合法 DEV 执行、独立复算与技术建议。按任务只读一份 Skill，不把本入口变成第二套科研工作流。
 
-## 0. 最短读取顺序（新 Agent / 跨会话）
+## 0. 最短读取顺序与来源
 
-1. 确定**当前用户请求及原始授权**，确认是 PD-RW 项目还是独立 RWF 项目。用户原始许可优先于本地 STATE 或任何 handoff。
-2. **PD-RW 项目**：先从已知项目路径或既有 STATE 的 `RESEARCH_RECORD_REF` / `PAPER_BLUEPRINT_REF` 定位现有文件（缺失则回退真实 STATE/Run，不编造）；有文档才读 `RESEARCH_RECORD.md` 首页当前状态/最佳 Run/重要失败/下一步；论文相关任务再读 `PAPER_BLUEPRINT.md` 构思快照与相关 `SEC_ID`。之后核原始 STATE/Run/任务协议，必要时使用 [two-file handoff](docs/PD_RW_DUAL_DOCUMENT_HANDOFF.md)；RWF 不建第三套科研日记。
-3. **独立 RWF 项目**：先读 `STATE.json`（或 `python -m core.cli brief --dir PROJECT`）→ 当前有效 Run/Task 与权限 → 当前阻碍需要的单个 Skill。旧版工件照常复用，未证实的来源/运行状态不升级。
-4. 只有遇到具体规则/机制问题才读相应 [Execution Policy](docs/EXECUTION_POLICY.md)、[Artifact Contract](docs/ARTIFACT_CONTRACT.md)、[Science Handoff](adapters/science_handoff.py) 或专业文档。真实原始 Run/协议优于摘要；哈希/结构通过不自动证明科学有效。
+1. 先识别原始用户授权和科研归属。PD-RW 项目从真实项目路径/STATE 的 `RESEARCH_RECORD_REF`、`PAPER_BLUEPRINT_REF` 定位已有 `RESEARCH_RECORD.md` 当前快照、必要 `PAPER_BLUEPRINT.md` 的 `SEC_ID`；再查相关真实 Run/协议。仅需要对接时读 [PD_RW_DUAL_DOCUMENT_HANDOFF.md](docs/PD_RW_DUAL_DOCUMENT_HANDOFF.md)。
+2. 独立 RWF 项目从 `STATE.json`、有效 Run、Task 和当前阻碍恢复；不存在的记录不编造，旧项目不强制迁移。
+3. 冷启动/规则变化时核实际 Git commit 和已读文件：`RULE_REPO | RULE_COMMIT | LOADED_FILES`；本地非 Git 复制件或无法确认远端时记 `RULE_VERSION_UNVERIFIED`，不自称最新。已确认版本与任务不变就复用，不重复通读。
+4. 仅当阻碍涉及共享执行/授权合同才读 [Execution Policy](docs/EXECUTION_POLICY.md) **相关节**或 [NEXT_ACTION_POLICY](docs/NEXT_ACTION_POLICY.md)；仅检查工件协议才读 [Artifact Contract](docs/ARTIFACT_CONTRACT.md)。仓库索引 [REPO_MAP.md](docs/REPO_MAP.md) 只在不知文件位置时查。
 
 ## 1. 不可越过的边界
 
-- **授权**：[NEXT_ACTION_POLICY](docs/NEXT_ACTION_POLICY.md) 将授权内技术执行与用户必须决策的下载、安装、CPU/GPU、SEALED/CONFIRMATION、重大 Task 改变、HOLD/STOP、投稿、外传和付费分开。保存的许可字段或 Agent 建议不是原始用户授权。
-- **科研与 Q2 目标**：追求真实证据支持的 JCR Q2+ 投稿潜力（优先 Q1），不保证录用；DEV 增益、廉价实验和期刊元信息都不是独立科学确认。PD-RW 拥有科研选择和选刊判断，RWF 的廉价下一 Probe 排序不能替代。见 [HIGH_VALUE_RESEARCH_ENGINEERING](docs/HIGH_VALUE_RESEARCH_ENGINEERING.md)。
-- **科研创新边界**：RWF 支持**开放构思、严格证据、有限预算**：反向假说、跨学科原理、新机制/理论/评价可提出但不得越过 PD-RW 的学科和授权范围；题目改名、叠模块、文献元数据零命中、DEV 刷分或模型自评分不能证明创新。`novelty_check` 只预检来源，不作原创性裁判；`opportunity_review` 只排序下一证据行动，不代替科学选题。简单 Champion 是公平参照而非复杂算法准入门槛；只读想法自由，训练/数据/SEALED/写作授权不自动扩大。细则见 [HIGH_VALUE_RESEARCH_ENGINEERING](docs/HIGH_VALUE_RESEARCH_ENGINEERING.md)。
-- **写作**：允许更新 `PAPER_BLUEPRINT.md` 的 H1/H2 及逐节要点；论文正式标题、摘要、章节正文和初稿仍 `WRITING_LOCKED`，须用户审查真实科研成果总结后**另行明确授权**。参见 [Execution Policy](docs/EXECUTION_POLICY.md)；蓝图或 Run 不授权写稿。
-- **图片**：**只在用户明确要求绘制/修改具体图片时**才可调用绘图、重绘、预览或导出；科技图表、诊断图与稿件图一律不自动生成。获授权时读 [Figure QA Contract](docs/FIGURE_QA_CONTRACT.md) 与 [Figure Style](docs/FIGURE_STYLE_SYSTEM.md)。
-- **工具边界**：RWF 不自带通用自主编码 Agent、GPU 执行器或独立论文确认器。只有可复算的合法 DEV 预测/指标才能据实验证；外部代码、日志和 JSON 声明不自动成为已验证 Run，封存集不得用于开发。
+- **权威与授权**：重大 Task 改变、下载、安装、CPU/GPU、SEALED/CONFIRMATION、项目 STOP/PIVOT、付费、外传及投稿须由用户实际授权；RWF 的工具结果不能授权科研决策。见 [NEXT_ACTION_POLICY](docs/NEXT_ACTION_POLICY.md)。
+- **科研**：JCR **Q2+** 潜力（优先 Q1）不是 DEV 分数或期刊元数据直接证明；简单 Champion 是公平比较对象，不是复杂机制前置阶梯。`novelty_check` 只做来源预检，`opportunity_review` 只建议证据行动；见 [HIGH_VALUE_RESEARCH_ENGINEERING](docs/HIGH_VALUE_RESEARCH_ENGINEERING.md)。CI 不能证明真实科研能力。
+- **写作**：`PAPER_BLUEPRINT.md` 可以规划 H1/H2；投稿标题、摘要和正文默认 `WRITING_LOCKED`，须成果总结经用户审查并另行明确授权。RWF 不生成第三套科研记忆。
+- **图片**：只有**用户明确要求绘制/修改具体图片**才执行绘图、重绘或预览；图像授权与写作/实验权限相互独立。获授权才读 [Figure QA Contract](docs/FIGURE_QA_CONTRACT.md) / [Figure Style](docs/FIGURE_STYLE_SYSTEM.md)。
 
-> **仓库职责地图（INDEX_ONLY，可选）**：[REPO_MAP.md](docs/REPO_MAP.md) 只说明 RWF 现有 `docs/skills/tools/core/adapters/tests` 职责与最短读取路线，**不是新增的科研规则或前置步骤**。已知道任务涉及哪个工具/Skill 时直接打开该原文件，不通读地图；与 PD-RW 联用时仍以 PD-RW 科研决策、用户原始授权及项目真实证据为准。
+## 2. 当前阻碍 → 一项 Skill
 
-## 2. 当前阻碍 → 只加载相关 Skill
+| 目标 | 仅加载当前 Skill；补充专业规则按需 |
+|---|---|
+| 方向/文献/数据库 | `01_search`；数据证据才补 `02_evidence_data` |
+| 科学 Task/可辨识假说 | `03_problem_design` |
+| 合法 DEV 协议/强简单基线 | `04_feasibility` |
+| 算法/机制编码 | `05_algorithm` |
+| 负 Run、修复、止损 | `06_decision`；需要科学价值回收读 [SCIENCE_RESULT_HARVEST.md](docs/SCIENCE_RESULT_HARVEST.md) 或 [POST_ALGORITHM_SCIENCE_AUDIT.md](docs/POST_ALGORITHM_SCIENCE_AUDIT.md) |
+| 独立确认建议 | `07_confirmation`，SEALED 仍单独授权 |
 
-| 目标 | Skill / 按需专题 |
-| --- | --- |
-| 研究方向/文献/数据 | `01_search`，按需 `02_evidence_data`；未知方向先 `BREADTH_SCAN → DEEP_FALSIFICATION → COMPETING_CHOICE`，比较不同失败前提，不能只选第一个可行题目 |
-| 科学 Task 与可辨识假设 | `03_problem_design`，按需 `docs/HIGH_VALUE_RESEARCH_ENGINEERING.md` |
-| DEV 协议、简单基线/评估 | `04_feasibility` |
-| 算法编码/误差与机制实验 | `05_algorithm` |
-| 负结果、修复、收窄或转向 | `06_decision`；按需 [Science Result Harvest](docs/SCIENCE_RESULT_HARVEST.md) 或 [Post-Algorithm Audit](docs/POST_ALGORITHM_SCIENCE_AUDIT.md) |
-| 独立科学主张/确认方案 | `07_confirmation`，按真实 SEALED 权限；PD-RW 负责最终主张决策 |
+七个 Skills 是能力目录，不是强制七阶段；不要预读全部 Skills、长篇执行政策或 vendor 源码。
 
-既有有效 Run 直接续做，不重新开选题、下载或重复训练；强简单基线和可区分的科学预言优先于盲目复杂化。七个 Skills 是能力，不是七次强制审批。**Load only the skill needed for the current blocker**；不要预读所有 Skills、vendor 源码或实验历史。
+## 3. 最短交接
 
-- **已明确要求的 PD-RW 正式数据图**：读取 [Figure Style System](docs/FIGURE_STYLE_SYSTEM.md) 的 PD-RW 图表段落，新项目复用 [figure_theme_pdrw.json](styles/figure_theme_pdrw.json)，对适用 Cartesian 图强制双轴箭头、彩色柱状图禁止无意义点标记，多子图用 `aligned_panel_session` 固定轴和文字对齐。导出前进行真实 artist/geometry QA，之后在论文尺寸检查最终成图；旧项目冻结主题不自动迁移。图像请求之外只可讨论或静态核查规则。
-
-## 3. 增量输出与交接
-
-仅交付**真实新增证据 + 原始路径/协议/状态 + 决策或 UNKNOWN + 一项下一行动及权限依赖**。有意义的实验和失败补进 PD-RW 的 RESEARCH_RECORD.md；科学主张确有变化才更新 PAPER_BLUEPRINT.md 相应 SEC_ID。保留原本 RWF Run/STATE/ledger/bridge 及源数据，不重复堆砌日志、不新增 CLI 状态或自动生成稿件图片。其余技术约束见 [Architecture](docs/ARCHITECTURE.md) · [Contracts](docs/CONTRACTS.md) · [Sources](SOURCES.md)。
+只输出新增证据和路径、协议/关键不确定性、技术建议与 AUTH；必要时同步原 `RESEARCH_RECORD.md` 或 `PAPER_BLUEPRINT.md` 相应字段。重大创新主张和科研路线由 PD-RW/用户判断，真实测评另按受测版本和外部证据进行。后续规则优先合并现有权威文件，不在入口继续堆叠。
