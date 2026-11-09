@@ -1,6 +1,6 @@
 # AI Research Execution Policy · v0.15
 
-This file is the **single shared source** for execution efficiency. Read it once per research session; each Skill adds only its specific task. Requirements are defaults unless scientific correctness, actual permissions or the user's instruction require otherwise.
+This is the **single shared source** of execution-policy detail, not a mandatory full-context preload. Read **only the sections applicable to the current blocker**, after the compact [AGENTS.md](../AGENTS.md) route and current Skill; consult additional sections only when a real dependency or conflict arises. Reuse already verified rules within the same version/session. Requirements are defaults unless scientific correctness, actual permissions or the user's instruction require otherwise. A cached/non-Git copy without verified commit provenance must not be reported as the newest policy.
 
 ## Next-step user/Agent handoff (mandatory)
 
